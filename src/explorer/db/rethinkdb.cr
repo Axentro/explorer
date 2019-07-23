@@ -93,7 +93,8 @@ module Explorer
 
       def self.blocks
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).without("transactions").order_by(::RethinkDB.desc("index")).default("[{}]").run(conn)
+          # ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).without("transactions").order_by(::RethinkDB.desc("index")).default("[{}]").run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).order_by(::RethinkDB.desc("index")).default("[{}]").run(conn)
         end
       end
 
