@@ -19,7 +19,7 @@ TODO: Write usage instructions here
 
 ### Run the explorer
 
-    DEBUG=1 crystal run src/explorer.c
+    DEBUG=1 crystal run src/explorer.cr
 
 ### RethinkDB docker doc
 
