@@ -1,0 +1,37 @@
+name: explorer
+version: 0.1.0
+
+authors:
+  - Christian Kakesa <christian.kakesa@gmail.com>
+
+# scripts:
+#   postinstall: cd src/explorer/web/static && mint build --skip-service-worker
+
+targets:
+  explorer:
+    main: src/explorer.cr
+
+dependencies:
+  baked_file_system:
+    github: schovi/baked_file_system
+  crystal-rethinkdb:
+    github: kingsleyh/crystal-rethinkdb
+  pool:
+    github: ysbaddaden/pool
+  # rocksdb:
+  #   github: maiha/rocksdb.cr
+  #   version: 0.5.1
+  router:
+    github: tbrand/router.cr
+  # sqlite3:
+  #   github: crystal-lang/crystal-sqlite3
+  tokoroten:
+    github: tbrand/tokoroten
+  
+development_dependencies:
+  ameba:
+    github: veelenga/ameba
+
+crystal: 0.29.0
+
+license: MIT

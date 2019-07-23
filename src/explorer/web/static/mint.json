@@ -1,0 +1,41 @@
+{
+  "name": "explorer",
+  "source-directories": [
+    "source"
+  ],
+  "test-directories": [
+    "tests"
+  ],
+  "application": {
+    "name": "SushiChain Explorer",
+    "title": "SushiChain - Explorer",
+    "orientation": "portrait",
+    "theme-color": "#00a0e8",
+    "meta": {
+      "charset": "utf-8",
+      "description": "SushiChain - Blockchain Explorer.",
+      "keywords": [
+        "sushichain",
+        "crypto",
+        "currency",
+        "blockchain",
+        "mining",
+        "dapps",
+        "distributed",
+        "explorer"
+      ],
+      "viewport": "width=device-width, initial-scale=1, shrink-to-fit=no",
+      "author": "sushichain.io",
+      "twitter:card": "summary",
+      "twitter:site": "@sushichainhq",
+      "og:url": "https://sushichain.io",
+      "og:type": "website",
+      "og:title": "SushiChain - Explorer",
+      "og:description": "SushiChain is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
+      "og:image": "/images/sushichain.png"
+    },
+    "icon": "assets/sushichain.png",
+    "head": "assets/head.html"
+    
+  }
+}
