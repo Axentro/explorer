@@ -31,8 +31,8 @@ CONFIG = Config.new
 
 OptionParser.parse! do |parser|
   parser.banner = "Usage: explorer [arguments]"
-  parser.on("-n NODE_URL", "--node=NODE_URL", "Safe SushiChain node URL") { |node_url| CONFIG.node = node_url }
-  parser.on("-s NODE_PUBSUB_URL", "--node-pubsub=NODE_PUBSUB_URL", "Safe SushiChain node pubsub URL") { |node_pubsub_url| CONFIG.node_pubsub = node_pubsub_url }
+  parser.on("-n NODE_URL", "--node=NODE_URL", "Safe SushiChain node URL. '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
+  parser.on("-s NODE_PUBSUB_URL", "--node-pubsub=NODE_PUBSUB_URL", "Safe SushiChain node pubsub URL. '#{CONFIG.node_pubsub}' by default") { |node_pubsub_url| CONFIG.node_pubsub = node_pubsub_url }
   parser.on("-h HOST", "--host=HOST", "Binding host, '#{CONFIG.host}' by default") { |host| CONFIG.host = host }
   parser.on("-p PORT", "--port=NAME", "Binding port. #{CONFIG.port} by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB8URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
