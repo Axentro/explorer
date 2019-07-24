@@ -1,14 +1,6 @@
-# explorer
+# SushiChain Blockchain Explorer
 
-TODO: Write a description here
-
-## Installation
-
-TODO: Write installation instructions here
-
-## Usage
-
-TODO: Write usage instructions here
+SushiChain Explorer is an open source utility to browse activity on the Blockchain.
 
 ## Development
 
@@ -23,7 +15,7 @@ TODO: Write usage instructions here
 
 ### RethinkDB docker doc
 
-* https://docs.docker.com/samples/library/rethinkdb/
+* [https://docs.docker.com/samples/library/rethinkdb/](https://docs.docker.com/samples/library/rethinkdb/)
 
 ```bash
 docker run --name rethinkdb -v "$PWD:/data" -d rethinkdb
@@ -62,7 +54,6 @@ r.db('rethinkdb').table('users').insert({id: 'sushixplorer', password: 'sushixpl
 r.dbCreate('sushixplorer_test');
 r.db('sushixplorer_test').grant('sushixplorer', {read: true, write: true, config: true});
 ```
-
 
 ## Contributing
 
