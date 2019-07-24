@@ -3,7 +3,7 @@ require "./types/*"
 module Explorer
   class NodeApi
     @@pool : ConnectionPool(HTTP::Client) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
-      HTTP::Client.new(URI.parse(NODE_URL))
+      HTTP::Client.new(URI.parse(CONFIG.node))
     end
 
     def self.pool

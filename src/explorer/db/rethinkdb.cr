@@ -5,7 +5,8 @@ module Explorer
     class RethinkDB
       include ::RethinkDB::Shortcuts
 
-      DB_NAME                   = ENV.fetch("APP_DB_NAME", "sushixplorer_test")
+      DB_URI = URI.parse(CONFIG.db)
+      DB_NAME                   = DB_URI.path[1..-1]
       DB_TABLE_NAME_BLOCK       = "blocks"
       DB_TABLE_NAME_TRANSACTION = "transactions"
       DB_TABLE_LIST             = [DB_TABLE_NAME_BLOCK, DB_TABLE_NAME_TRANSACTION]
@@ -13,11 +14,11 @@ module Explorer
       # TODO(fenicks): Add connection parameter in Config static class who parameters are set in command line else in environment variables
       @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
         ::RethinkDB.connect(
-          host: ENV.fetch("APP_DB_HOST", "localhost"),
-          port: ENV["APP_DB_PORT"]?.try(&.to_i32) || 28015,
+          host: DB_URI.host,
+          port: DB_URI.port || 28015,
           db: DB_NAME,
-          user: ENV.fetch("APP_DB_USER", "sushixplorer"),
-          password: ENV.fetch("APP_DB_PASSWORD", "sushixplorer")
+          user: DB_URI.user,
+          password: DB_URI.password
         )
       end
 
