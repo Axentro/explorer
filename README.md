@@ -13,47 +13,51 @@ SushiChain Explorer is an open source utility to browse activity on the Blockcha
 
     DEBUG=1 crystal run src/explorer.cr
 
+### Compile the binary
+
+    shards build --production
+
+Start the compiled web application (static files are in binary)
+
+    ./bin/explorer
+
 ### RethinkDB docker doc
 
-* [https://docs.docker.com/samples/library/rethinkdb/](https://docs.docker.com/samples/library/rethinkdb/)
+[Link to RethinkDB docker documentation](https://docs.docker.com/samples/library/rethinkdb/)
 
-```bash
-docker run --name rethinkdb -v "$PWD:/data" -d rethinkdb
+    docker run --name rethinkdb -v "$PWD:/data" -d rethinkdb
 
-# Connect the instance to an application
+    # Connect the instance to an application
 
-docker run --name some-app --link rethinkdb:rdb -d application-that-uses-rdb
+    docker run --name some-app --link rethinkdb:rdb -d application-that-uses-rdb
 
-# Connecting to the web admin interface on the same host
+    # Connecting to the web admin interface on the same host
 
-$BROWSER "http://$(docker inspect --format \
-  '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080"
+    $BROWSER "http://$(docker inspect --format \
+      '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080"
 
-# Connecting to the web admin interface on a remote / virtual host via SSH
-# Where remote is an alias for the remote user@hostname:
+    # Connecting to the web admin interface on a remote / virtual host via SSH
+    # Where remote is an alias for the remote user@hostname:
 
-# start port forwarding
-ssh -fNTL 8080:$(docker inspect --format \
-  '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080 localhost
+    # start port forwarding
+    ssh -fNTL 8080:$(docker inspect --format \
+      '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080 localhost
 
-ssh -fNTL 28015:$(docker inspect --format \
-  '{{ .NetworkSettings.IPAddress }}' rethinkdb):28015 localhost
+    ssh -fNTL 28015:$(docker inspect --format \
+      '{{ .NetworkSettings.IPAddress }}' rethinkdb):28015 localhost
 
-# open interface in browser
-xdg-open http://localhost:8080
+    # open interface in browser
+    xdg-open http://localhost:8080
 
-# stop port forwarding
-kill $(lsof -t -i @localhost:8080 -sTCP:listen)
-kill $(lsof -t -i @localhost:28015 -sTCP:listen)
-```
+    # stop port forwarding
+    kill $(lsof -t -i @localhost:8080 -sTCP:listen)
+    kill $(lsof -t -i @localhost:28015 -sTCP:listen)
 
 ### Create RethinkDB database and user
 
-```javascript
-r.db('rethinkdb').table('users').insert({id: 'sushixplorer', password: 'sushixplorer'});
-r.dbCreate('sushixplorer_test');
-r.db('sushixplorer_test').grant('sushixplorer', {read: true, write: true, config: true});
-```
+    r.db('rethinkdb').table('users').insert({id: 'sushixplorer', password: 'sushixplorer'});
+    r.dbCreate('sushixplorer_test');
+    r.db('sushixplorer_test').grant('sushixplorer', {read: true, write: true, config: true});
 
 ## Contributing
 
@@ -65,4 +69,4 @@ r.db('sushixplorer_test').grant('sushixplorer', {read: true, write: true, config
 
 ## Contributors
 
-- [Christian Kakesa](https://github.com/your-github-user) - creator and maintainer
+* [Christian Kakesa](https://github.com/your-github-user) - creator and maintainer
