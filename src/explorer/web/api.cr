@@ -37,9 +37,7 @@ module Explorer::Web
       # Generate virtual filesystem routes from "public" folder
       Filesystem.files.each do |file|
         get file.path do |context, _params|
-          # context.response.print Filesystem.serve(file, context)
           Filesystem.serve(file, context)
-          # context
         end
       end
       api_routes_v1
