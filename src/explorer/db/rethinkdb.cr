@@ -5,7 +5,7 @@ module Explorer
     class RethinkDB
       include ::RethinkDB::Shortcuts
 
-      DB_URI = URI.parse(CONFIG.db)
+      DB_URI                    = URI.parse(CONFIG.db)
       DB_NAME                   = DB_URI.path[1..-1]
       DB_TABLE_NAME_BLOCK       = "blocks"
       DB_TABLE_NAME_TRANSACTION = "transactions"
@@ -92,17 +92,24 @@ module Explorer
         end
       end
 
-      def self.blocks
+      def self.blocks(limit : Int32 = 0)
         @@pool.connection do |conn|
-          # ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).without("transactions").order_by(::RethinkDB.desc("index")).default("[{}]").run(conn)
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).order_by(::RethinkDB.desc("index")).default("[{}]").run(conn)
+          if limit < 0
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
+          else
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).order_by(::RethinkDB.desc("index")).default("[]").limit(limit).run(conn)
+          end
         end
       end
 
       # Transaction
-      def self.transactions
+      def self.transactions(limit : Int32 = 0)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).pluck("transactions").order_by(::RethinkDB.desc("transactions.id")).default("[{}]").run(conn)
+          if limit < 0
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).pluck("transactions").order_by(::RethinkDB.desc("transactions.timestamp")).default("[]").run(conn)
+          else
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).pluck("transactions").order_by(::RethinkDB.desc("transactions.timestamp")).default("[]").limit(limit).run(conn)
+          end
         end
       end
       # def self.transactions

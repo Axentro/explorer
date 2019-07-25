@@ -18,18 +18,26 @@ module Explorer::Web
     def api_routes_v1
       prefix = "/api/v1"
 
-      # /blocks => list of all blocks
-      get "#{prefix}/blocks" do |context, _params|
-        content_type_json(context)
-        context.response.print R.blocks
-        context
+      # /blocks
+      ["#{prefix}/blocks", "#{prefix}/blocks/limit/:limit"].each do |route|
+        get route do |context, params|
+          content_type_json(context)
+          limit = -1
+          limit = params["limit"].to_i32 if params["limit"]?
+          context.response.print R.blocks(limit)
+          context
+        end
       end
 
-      # /transactioncs list of all transactions
-      get "#{prefix}/transactions" do |context, _params|
-        content_type_json(context)
-        context.response.print R.transactions
-        context
+      # /transactions
+      ["#{prefix}/transactions", "#{prefix}/transactions/limit/:limit"].each do |route|
+        get route do |context, params|
+          content_type_json(context)
+          limit = -1
+          limit = params["limit"].to_i32 if params["limit"]?
+          context.response.print R.transactions(limit)
+          context
+        end
       end
     end
 
