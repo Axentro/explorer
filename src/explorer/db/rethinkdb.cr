@@ -40,9 +40,11 @@ module Explorer
       end
 
       def self.build_indexes
-        DB_TABLE_LIST.each do |table|
-          build_index("index", table)
-        end
+        # Block
+        build_index("index", DB_TABLE_NAME_BLOCK)
+
+        # Transaction
+        build_index("timestamp", DB_TABLE_NAME_TRANSACTION)
       end
 
       def self.build_index(index_field : String, table : String)
@@ -79,9 +81,15 @@ module Explorer
 
       def self.add_block(block : Block)
         @@pool.connection do |conn|
-          t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK)
-          if t.filter({index: block["index"]}).run(conn).size == 0
-            t.insert(block).run(conn)
+          b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK)
+          if b.filter({index: block["index"]}).run(conn).size == 0
+            b.insert(block).run(conn)
+            t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTION)
+            block[:transactions].each do |tx|
+              @@pool.connection do |conn|
+                t.insert(tx).run(conn)
+              end
+            end
           end
         end
       end
@@ -99,18 +107,18 @@ module Explorer
           else
             ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).order_by(::RethinkDB.desc("index")).default("[]").limit(limit).run(conn)
           end
-        end
+        end.raw.to_json
       end
 
       # Transaction
       def self.transactions(limit : Int32 = 0)
-        @@pool.connection do |conn|
+         @@pool.connection do |conn|
           if limit < 0
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).pluck("transactions").order_by(::RethinkDB.desc("transactions.timestamp")).default("[]").run(conn)
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTION).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
           else
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCK).pluck("transactions").order_by(::RethinkDB.desc("transactions.timestamp")).default("[]").limit(limit).run(conn)
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTION).order_by(::RethinkDB.desc("timestamp")).default("[]").limit(limit).run(conn)
           end
-        end
+        end.raw.to_json
       end
       # def self.transactions
       #   @@pool.connection do |conn|
