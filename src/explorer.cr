@@ -35,7 +35,7 @@ OptionParser.parse! do |parser|
   parser.on("-s NODE_PUBSUB_URL", "--node-pubsub=NODE_PUBSUB_URL", "Safe SushiChain node pubsub URL. '#{CONFIG.node_pubsub}' by default") { |node_pubsub_url| CONFIG.node_pubsub = node_pubsub_url }
   parser.on("-h HOST", "--host=HOST", "Binding host, '#{CONFIG.host}' by default") { |host| CONFIG.host = host }
   parser.on("-p PORT", "--port=NAME", "Binding port. #{CONFIG.port} by default") { |port| CONFIG.port = port.to_i32 }
-  parser.on("-d DB_URL", "--db=DB8URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
+  parser.on("-d DB_URL", "--db=DB_URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
   parser.on("--help", "Show this help") { puts parser; exit 0 }
 end
 
