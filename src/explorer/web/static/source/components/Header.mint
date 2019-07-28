@@ -36,27 +36,6 @@ component Header {
           id="navbarSushichainExplorer"
           class="navbar-menu">
 
-          <div class="navbar-start">
-            <div class="navbar-item">
-              <div class="field">
-                <div class="control has-icons-left">
-                  <input
-                    id="input-search-form"
-                    class="input"
-                    type="text"
-                    name="search"
-                    placeholder="Search for blocks, transactions or addresses"/>
-
-                  <span class="icon is-small is-left">
-                    <i
-                      class="fas fa-search"
-                      aria-hidden="true"/>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="navbar-end">
             <a
               class="navbar-item"

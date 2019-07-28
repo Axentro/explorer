@@ -1,60 +1,76 @@
 component Home {
+  connect Stores.Blocks exposing { blocks }
+
+  fun renderBlockLine (block : Block) : Html {
+    <tr>
+      <td>
+        <a href="/blocks/show/<{Number.toString(block.index)}>">
+          <{ Number.toString(block.index) }>
+        </a>
+      </td>
+
+      <td>
+        <{ DDate.formatFromTS(block.timestamp) }>
+      </td>
+
+      <td>
+        <{ Number.toString(Array.size(block.transactions)) }>
+      </td>
+    </tr>
+  }
+
+  connect Stores.Transactions exposing { transactions }
+
+  fun renderTransactionLine (transaction : Transaction) : Html {
+    <tr>
+      <td>
+        <a href="/transactions/show/<{ transaction.id }>">
+          <{ SString.substring(transaction.id, 0, 16) + "..." }>
+        </a>
+      </td>
+
+      <td>
+        <{ DDate.formatFromTS(transaction.timestamp) }>
+      </td>
+
+      <td>
+        <{ transaction.action }>
+      </td>
+
+      <td>
+        <{ transaction.token }>
+      </td>
+    </tr>
+  }
+
   fun render : Html {
     <>
       <div class="container is-fluid">
-        <div class="card has-margin-top-15 has-margin-top-5-mobile">
-          <header class="card-header">
-            <p class="card-header-title">
-              "Blockchain Explorer"
-            </p>
-          </header>
-
-          <div class="card-content">
-            <div class="content">
-              <p class="control has-icons-left">
-                <input
-                  class="input is-large"
-                  type="text"
-                  placeholder="search"/>
-
-                <span class="icon is-medium is-left">
-                  <i
-                    class="fas fa-search"
-                    aria-hidden="true"/>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card has-margin-top-15 has-margin-top-5-mobile">
-          <header class="card-header">
-            <p class="card-header-title">
-              "Market"
-            </p>
-          </header>
-
-          <div class="card-content">
-            <div class="content">
-              <p>
-                "data..."
-              </p>
-            </div>
-          </div>
-        </div>
+        <Search/>
 
         <div class="columns">
           <div class="column">
             <div class="card has-margin-top-15 has-margin-top-5-mobile">
               <header class="card-header">
                 <p class="card-header-title">
-                  "Explore Blocks"
+                  "Latest Blocks"
+                </p>
+
+                <p class="card-header-title">
+                  <a
+                    class="button is-link is-medium"
+                    href="/blocks"
+                    aria-label="list of blocks">
+
+                    "View all"
+
+                  </a>
                 </p>
               </header>
 
               <div class="card-content">
                 <div class="content">
-                  <table class="table">
+                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
                     <thead>
                       <tr>
                         <th>
@@ -66,15 +82,7 @@ component Home {
                         </th>
 
                         <th>
-                          "Transactions"
-                        </th>
-
-                        <th>
-                          "Address"
-                        </th>
-
-                        <th>
-                          "Size"
+                          "Number of tx"
                         </th>
                       </tr>
                     </thead>
@@ -90,41 +98,13 @@ component Home {
                         </th>
 
                         <th>
-                          "Transactions"
-                        </th>
-
-                        <th>
-                          "Address"
-                        </th>
-
-                        <th>
-                          "Size"
+                          "Number of tx"
                         </th>
                       </tr>
                     </tfoot>
 
                     <tbody>
-                      <tr>
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-                      </tr>
+                      <{ Array.map(renderBlockLine, blocks) }>
                     </tbody>
                   </table>
                 </div>
@@ -136,13 +116,24 @@ component Home {
             <div class="card has-margin-top-15 has-margin-top-5-mobile">
               <header class="card-header">
                 <p class="card-header-title">
-                  "Explore Transactions"
+                  "Transactions"
+                </p>
+
+                <p class="card-header-title">
+                  <a
+                    class="button is-link is-flex is-medium is-pulled-left"
+                    href="/transactions"
+                    aria-label="list of transactions">
+
+                    "View all"
+
+                  </a>
                 </p>
               </header>
 
               <div class="card-content">
                 <div class="content">
-                  <table class="table">
+                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
                     <thead>
                       <tr>
                         <th>
@@ -150,15 +141,15 @@ component Home {
                         </th>
 
                         <th>
-                          "Type"
-                        </th>
-
-                        <th>
                           "Time"
                         </th>
 
                         <th>
-                          "Length"
+                          "Action"
+                        </th>
+
+                        <th>
+                          "Token"
                         </th>
                       </tr>
                     </thead>
@@ -170,37 +161,21 @@ component Home {
                         </th>
 
                         <th>
-                          "Type"
-                        </th>
-
-                        <th>
                           "Time"
                         </th>
 
                         <th>
-                          "Length"
+                          "Action"
+                        </th>
+
+                        <th>
+                          "Token"
                         </th>
                       </tr>
                     </tfoot>
 
                     <tbody>
-                      <tr>
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-
-                        <td>
-                          "..."
-                        </td>
-                      </tr>
+                      <{ Array.map(renderTransactionLine, transactions) }>
                     </tbody>
                   </table>
                 </div>

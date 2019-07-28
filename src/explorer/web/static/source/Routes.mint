@@ -12,6 +12,10 @@ routes {
   }
 
   / {
-    Application.setPage("home")
+    sequence {
+      Application.setPage("home")
+      Stores.Blocks.load()
+      Stores.Transactions.load()
+    }
   }
 }
