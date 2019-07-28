@@ -12,10 +12,11 @@ module Explorer
         L.debug "Node last index: #{node_block_index.inspect}"
         if db_block_index != node_block_index
           # Ensure to clean database if SushiChain node is on anoher chain or something is really bad !
-          if node_block_index < db_block_index
-            R.clean_tables
-            db_block_index = 0
-          end
+          # Not safe for now, need a rewrite
+          # if node_block_index < db_block_index
+          #   R.clean_tables
+          #   db_block_index = 0
+          # end
           L.warn "Blockchain sync started..."
           Range.new(db_block_index, node_block_index).each do |iter|
             L.debug "Synchronizing block index #{iter}"
@@ -27,7 +28,19 @@ module Explorer
         else
           L.info "Blockchain is already synced..."
         end
+      rescue ex
+        L.error "[Explorer::Sync::Blockchain.sync] #{ex.message}"
+        exit -42
       end
+
+      # TODO(fenicks): write a new sync method who check all blocks and transactions at startup and rebuild addresses stored
+      # TODO(fenicks): invoke sync method only if "--sync-db" or "-s" is specified in command line
+      # TODO(fenicks): we need block comparisaon or blok validation mecanism ?
+      # def self.sync_db
+      #   node_block_index = NodeApi.last_block_index
+      #   Range.new(0, node_block_index).each do |iter|
+      #   end
+      # end
 
       # SushiChain live update from node websocket
       def self.event(ws_pubsub_url : String)
@@ -47,7 +60,7 @@ module Explorer
         end
 
         L.info "Start listening block creation from SushiChain node websocket (#{ws_pubsub_url})..."
-        spawn do
+        begin
           socket.run
         rescue e : Exception
           L.error e.message.not_nil!

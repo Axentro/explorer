@@ -19,7 +19,6 @@ struct Config
 
   def initialize(
     @node : String = "http://localhost:3000",
-    @node_pubsub : String = "ws://localhost:3000/pubsub",
     @host : String = "0.0.0.0",
     @port : Int32 = 3100,
     @db : String = "rethinkdb://sushixplorer:sushixplorer@localhost:28015/sushixplorer_test"
@@ -32,7 +31,6 @@ CONFIG = Config.new
 OptionParser.parse! do |parser|
   parser.banner = "Usage: explorer [arguments]"
   parser.on("-n NODE_URL", "--node=NODE_URL", "Safe SushiChain node URL. '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
-  parser.on("-s NODE_PUBSUB_URL", "--node-pubsub=NODE_PUBSUB_URL", "Safe SushiChain node pubsub URL. '#{CONFIG.node_pubsub}' by default") { |node_pubsub_url| CONFIG.node_pubsub = node_pubsub_url }
   parser.on("-h HOST", "--host=HOST", "Binding host, '#{CONFIG.host}' by default") { |host| CONFIG.host = host }
   parser.on("-p PORT", "--port=NAME", "Binding port. #{CONFIG.port} by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB_URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
@@ -41,23 +39,24 @@ end
 
 # Database setup
 begin
-  R.build_tables
-  R.build_indexes
+  R.setup_database
 rescue ex
   L.error "[Database setup] #{ex.message}"
   exit -42
 end
 
-# Node data synchronization
-begin
-  Explorer::Sync::Blockchain.sync
-rescue ex
-  L.error "[Explorer::Sync::Blockchain.sync] #{ex.message}"
-  exit -42
+# SushiChain block live update from 'pubsub' SushiChain websocket
+spawn do
+  loop do
+    Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
+    sleep 0.1.seconds
+  end
 end
 
-# SushiChain block live update
-Explorer::Sync::Blockchain.event(CONFIG.node_pubsub)
+# Node data synchronization
+spawn do
+  Explorer::Sync::Blockchain.sync
+end
 
 # Run the explorer web application
 Explorer::Web::Api.new(CONFIG.host, CONFIG.port, L).run

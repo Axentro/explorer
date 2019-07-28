@@ -11,7 +11,6 @@ module Explorer
       DB_TABLE_NAME_TRANSACTION = "transactions"
       DB_TABLE_LIST             = [DB_TABLE_NAME_BLOCK, DB_TABLE_NAME_TRANSACTION]
 
-      # TODO(fenicks): Add connection parameter in Config static class who parameters are set in command line else in environment variables
       @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
         ::RethinkDB.connect(
           host: DB_URI.host,
@@ -20,6 +19,11 @@ module Explorer
           user: DB_URI.user,
           password: DB_URI.password
         )
+      end
+
+      def self.setup_database
+        build_tables
+        build_indexes
       end
 
       def self.build_tables
@@ -112,7 +116,7 @@ module Explorer
 
       # Transaction
       def self.transactions(limit : Int32 = 0)
-         @@pool.connection do |conn|
+        @@pool.connection do |conn|
           if limit < 0
             ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTION).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
           else
