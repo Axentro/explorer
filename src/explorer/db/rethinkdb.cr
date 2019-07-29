@@ -21,7 +21,7 @@ module Explorer
       @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
         ::RethinkDB.connect(
           host: DB_URI.host,
-          port: DB_URI.port || 28015,
+          port: DB_URI.port,
           db: DB_NAME,
           user: DB_URI.user,
           password: DB_URI.password
