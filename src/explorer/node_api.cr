@@ -25,7 +25,7 @@ module Explorer
       end
       0.to_u64
     rescue ex
-      L.warn "Can't retriev blobk size: #{ex.message}"
+      L.warn "Can't retrieve blobk size: #{ex.message}"
       0.to_u64
     end
 
