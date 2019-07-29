@@ -67,6 +67,8 @@ module Explorer
           L.error e.message.not_nil!
           socket_close
         end
+      rescue ex
+        L.error "[Explorer::Sync::Blockchain.event] #{ex.message}"
       end
 
       private def self.socket
