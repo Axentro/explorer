@@ -8,6 +8,7 @@ module Explorer
       def self.sync
         db_block_index = R.last_block_index
         node_block_index = NodeApi.last_block_index
+        raise "Could synchronize the database. [node_block_index == #{node_block_index}]" if node_block_index == 0
         L.debug "DB last index: #{db_block_index.inspect}"
         L.debug "Node last index: #{node_block_index.inspect}"
         if db_block_index != node_block_index
