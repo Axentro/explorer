@@ -49,7 +49,7 @@ end
 spawn do
   loop do
     Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
-    sleep 0.1.seconds
+    sleep 1.second
   end
 end
 
