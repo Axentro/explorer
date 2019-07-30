@@ -1,5 +1,5 @@
 store Application {
-  state limitItemList : Number = 15
+  state limitItemList : Number = 10
   state page : Page = Page::Home
   state anchor : Maybe(String) = Maybe.nothing()
 
