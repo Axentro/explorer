@@ -116,7 +116,7 @@ component Pages.Home {
             <div class="card has-margin-top-15 has-margin-top-5-mobile">
               <header class="card-header">
                 <p class="card-header-title">
-                  "Transactions"
+                  "Latest Transactions"
                 </p>
 
                 <p class="card-header-title">
