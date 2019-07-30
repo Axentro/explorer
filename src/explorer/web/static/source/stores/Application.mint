@@ -1,8 +1,9 @@
 store Application {
-  state page : String = ""
+  state limitItemList : Number = 15
+  state page : Page = Page::Home
   state anchor : Maybe(String) = Maybe.nothing()
 
-  fun setPage (page : String) : Promise(Never, Void) {
+  fun setPage (page : Page) : Promise(Never, Void) {
     sequence {
       Http.abortAll()
       next { page = page }

@@ -1,10 +1,10 @@
-component Home {
+component Pages.Home {
   connect Stores.Blocks exposing { blocks }
 
   fun renderBlockLine (block : Block) : Html {
     <tr>
       <td>
-        <a href="/blocks/show/<{Number.toString(block.index)}>">
+        <a href={"/blocks/show/" + Number.toString(block.index)}>
           <{ Number.toString(block.index) }>
         </a>
       </td>
@@ -24,7 +24,7 @@ component Home {
   fun renderTransactionLine (transaction : Transaction) : Html {
     <tr>
       <td>
-        <a href="/transactions/show/<{ transaction.id }>">
+        <a href={"/transactions/show/" + transaction.id}>
           <{ SString.substring(transaction.id, 0, 16) + "..." }>
         </a>
       </td>

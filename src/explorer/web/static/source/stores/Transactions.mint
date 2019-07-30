@@ -1,10 +1,10 @@
 store Stores.Transactions {
   state transactions : Array(Transaction) = []
 
-  fun load : Promise(Never, Void) {
+  fun load (limit : Number) : Promise(Never, Void) {
     sequence {
       response =
-        "/api/v1/transactions/limit/10"
+        "/api/v1/transactions/limit/" + Number.toString(limit)
         |> Http.get()
         |> Http.send()
 

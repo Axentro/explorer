@@ -1,10 +1,10 @@
 store Stores.Blocks {
   state blocks : Array(Block) = []
 
-  fun load : Promise(Never, Void) {
+  fun load (limit : Number) : Promise(Never, Void) {
     sequence {
       response =
-        "/api/v1/blocks/limit/10"
+        "/api/v1/blocks/limit/" + Number.toString(limit)
         |> Http.get()
         |> Http.send()
 
