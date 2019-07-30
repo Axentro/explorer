@@ -33,7 +33,7 @@ Start the compiled web application (static files are in binary)
 
     # Connecting to the web admin interface on the same host
 
-    $BROWSER "http://$(docker inspect --format \
+    xdg-open "http://$(docker inspect --format \
       '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080"
 
     # Connecting to the web admin interface on a remote / virtual host via SSH
