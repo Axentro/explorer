@@ -1,5 +1,6 @@
 component Pages.Home {
   connect Stores.Blocks exposing { blocks }
+  connect Stores.Transactions exposing { transactions }
 
   fun renderBlockLine (block : Block) : Html {
     <tr>
@@ -18,8 +19,6 @@ component Pages.Home {
       </td>
     </tr>
   }
-
-  connect Stores.Transactions exposing { transactions }
 
   fun renderTransactionLine (transaction : Transaction) : Html {
     <tr>
@@ -41,6 +40,26 @@ component Pages.Home {
         <{ transaction.token }>
       </td>
     </tr>
+  }
+
+  use Provider.Tick {
+    ticks =
+      () : Promise(Never, Void) {
+        sequence {
+          /* load data each Application.refreshHomePageInSecond seconds */
+          if (DDate.tsModulo(Application.refreshHomePageInSecond)) {
+            parallel {
+              /* load blocks */
+              Stores.Blocks.load(Application.limitHomeItemList)
+
+              /* load transactions */
+              Stores.Transactions.load(Application.limitHomeItemList)
+            }
+          } else {
+            next {  }
+          }
+        }
+      }
   }
 
   fun render : Html {

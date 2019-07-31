@@ -10,4 +10,13 @@ module DDate {
     })()
     `
   }
+
+  fun tsModulo (seconds : Number) : Bool {
+    `
+    (() => {
+      let s = Date.now() / 1000 | 0;
+      return (s % #{seconds}) == 0;
+    })()
+    `
+  }
 }

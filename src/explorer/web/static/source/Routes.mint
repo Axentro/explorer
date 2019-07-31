@@ -56,8 +56,8 @@ routes {
   / {
     parallel {
       Application.setPage(Page::Home)
-      Stores.Blocks.load(Application.limitItemList)
-      Stores.Transactions.load(Application.limitItemList)
+      Stores.Blocks.load(Application.limitHomeItemList)
+      Stores.Transactions.load(Application.limitHomeItemList)
     }
   }
 }
