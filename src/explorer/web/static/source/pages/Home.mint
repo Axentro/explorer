@@ -42,22 +42,15 @@ component Pages.Home {
     </tr>
   }
 
-  use Provider.Tick {
+  use Provider.TTick {
     ticks =
       () : Promise(Never, Void) {
-        sequence {
-          /* load data each Application.refreshHomePageInSecond seconds */
-          if (DDate.tsModulo(Application.refreshHomePageInSecond)) {
-            parallel {
-              /* load blocks */
-              Stores.Blocks.load(Application.limitHomeItemList)
+        parallel {
+          /* load blocks */
+          Stores.Blocks.load(Application.limitHomeItemList)
 
-              /* load transactions */
-              Stores.Transactions.load(Application.limitHomeItemList)
-            }
-          } else {
-            next {  }
-          }
+          /* load transactions */
+          Stores.Transactions.load(Application.limitHomeItemList)
         }
       }
   }
