@@ -5,5 +5,5 @@ record Block {
   prevHash : String using "prev_hash",
   merkleTreeRoot : String using "merkle_tree_root",
   timestamp : Number,
-  nextDifficulty : Number using "next_difficulty"
+  nextDifficulty : Number using "difficulty"
 }
