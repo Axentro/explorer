@@ -8,6 +8,7 @@ SushiChain Explorer is an open source utility to browse activity on the Blockcha
 
     cd src/explorer/web/static
     mint build --skip-service-worker
+    cd ./../../../..
 
 ### Run the explorer
 
