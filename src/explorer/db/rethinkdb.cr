@@ -18,7 +18,7 @@ module Explorer
                                     DB_TABLE_NAME_DOMAINS,
                                     DB_TABLE_NAME_TOKENS]
 
-      @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
+      @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 10, timeout: 0.1) do
         ::RethinkDB.connect(
           host: DB_URI.host,
           port: DB_URI.port,
