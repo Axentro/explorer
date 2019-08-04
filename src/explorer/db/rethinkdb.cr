@@ -106,8 +106,8 @@ module Explorer
             b.insert(block).run(conn)
             t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
             block[:transactions].each do |tx|
-              @@pool.connection do |conn|
-                t.insert(tx).run(conn)
+              @@pool.connection do |t_conn|
+                t.insert(tx).run(t_conn)
               end
             end
           end
@@ -120,26 +120,55 @@ module Explorer
         end
       end
 
-      def self.blocks(limit : Int32 = 0)
+      def self.blocks(top : Int32 = -1)
         @@pool.connection do |conn|
-          if limit < 0
+          if top < 0
             ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
           else
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").limit(limit).run(conn)
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").limit(top).run(conn)
           end
         end.raw.to_json
       end
 
-      # Transaction
-      def self.transactions(limit : Int32 = 0)
+      def self.blocks(from : Int32, to : Int32)
         @@pool.connection do |conn|
-          if limit < 0
+          from = 0 if from < 0
+          to = 0 if to < 0
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(from, to + 1, {index: "index"}).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
+        end.raw.to_json
+      end
+
+      def self.block(index : Int32)
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).filter({index: index}).min("index").default("{}").run(conn)
+        end.raw.to_json
+      end
+
+      # Transaction
+      def self.transactions(top : Int32 = -1)
+        @@pool.connection do |conn|
+          if top < 0
             ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
           else
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").limit(limit).run(conn)
+            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").limit(top).run(conn)
           end
         end.raw.to_json
       end
+
+      def self.transactions(page : Int32, length : Int32)
+        @@pool.connection do |conn|
+          page = 0 if page < 0
+          length = 0 if length < 0
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(page, length + 1, {index: "timestamp"}).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
+        end.raw.to_json
+      end
+
+      def self.transaction(txid : String)
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).get(txid).default("{}").run(conn)
+        end.raw.to_json
+      end
+
       # def self.transactions
       #   @@pool.connection do |conn|
       #     ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("id")).default("[{}]").run(conn)

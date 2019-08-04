@@ -47,10 +47,10 @@ component Pages.Home {
       () : Promise(Never, Void) {
         parallel {
           /* load blocks */
-          Stores.Blocks.load(Application.limitHomeItemList)
+          Stores.Blocks.loadTop(Application.limitHomeItemList)
 
           /* load transactions */
-          Stores.Transactions.load(Application.limitHomeItemList)
+          Stores.Transactions.loadTop(Application.limitHomeItemList)
         }
       }
   }

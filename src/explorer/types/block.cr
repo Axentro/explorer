@@ -9,7 +9,7 @@ module Explorer
       prev_hash: String,
       merkle_tree_root: String,
       timestamp: Int64,
-      next_difficulty: Int32,
+      difficulty: Int32,
     )
 
     struct BlockchainSize

@@ -19,25 +19,63 @@ module Explorer::Web
       prefix = "/api/v1"
 
       # /blocks
-      ["#{prefix}/blocks", "#{prefix}/blocks/limit/:limit"].each do |route|
+      ["#{prefix}/blocks",
+       "#{prefix}/blocks/top/:top",
+       "#{prefix}/blocks/from/:from/to/:to"].each do |route|
         get route do |context, params|
           content_type_json(context)
-          limit = -1
-          limit = params["limit"].to_i32 if params["limit"]?
-          context.response.print R.blocks(limit)
+          if params["top"]? # /blocks/top/:top
+            top = begin params["top"].to_i32 rescue 1 end
+            context.response.print R.blocks(top)
+          elsif params["from"]? && params["to"]? # /blocks/from/:from/to/:to
+            from = begin params["from"].to_i32 rescue 0 end
+            to = begin params["to"].to_i32 rescue 0 end
+            context.response.print R.blocks(from, to)
+          else                                  # /blocks
+            context.response.print R.blocks(-1) # `-1` is for all blocks
+          end
           context
         end
       end
 
+      # /block
+      get "#{prefix}/block/:index" do |context, params|
+        content_type_json(context)
+        index = begin
+          params["index"].to_i32
+        rescue
+          0
+        end
+        context.response.print R.block(index)
+        context
+      end
+
       # /transactions
-      ["#{prefix}/transactions", "#{prefix}/transactions/limit/:limit"].each do |route|
+      ["#{prefix}/transactions",
+      "#{prefix}/transactions/top/:top",
+      "#{prefix}/transactions/page/:page/length/:length"].each do |route|
         get route do |context, params|
           content_type_json(context)
-          limit = -1
-          limit = params["limit"].to_i32 if params["limit"]?
-          context.response.print R.transactions(limit)
+          if params["top"]? # /transactions/top/:top
+            top = begin params["top"].to_i32 rescue 1 end
+            context.response.print R.transactions(top)
+          elsif params["page"]? && params["length"]? # /transactions/page/:page/length/:length
+            page = begin params["page"].to_i32 rescue 0 end
+            length = begin params["length"].to_i32 rescue 0 end
+            context.response.print R.transactions(page, length)
+          else                                  # /transactions
+            context.response.print R.transactions(-1) # `-1` is for all transactions
+          end
           context
         end
+      end
+
+      # /transaction
+      get "#{prefix}/transaction/:txid" do |context, params|
+        content_type_json(context)
+        txid = params["txid"]? || "0"
+        context.response.print R.transaction(txid)
+        context
       end
     end
 

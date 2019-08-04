@@ -5,5 +5,23 @@ record Block {
   prevHash : String using "prev_hash",
   merkleTreeRoot : String using "merkle_tree_root",
   timestamp : Number,
-  nextDifficulty : Number using "next_difficulty"
+  difficulty : Number
+}
+
+module Block {
+  fun empty : Block {
+    {
+      index = -1,
+      transactions = [],
+      nonce = 0,
+      prevHash = "",
+      merkleTreeRoot = "",
+      timestamp = 0,
+      difficulty = 0
+    }
+  }
+
+  fun decode (object : Object) : Result(Object.Error, Block) {
+    decode object as Block
+  }
 }

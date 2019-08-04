@@ -26,7 +26,10 @@ routes {
   }
 
   /blocks/show/:index (index : Number) {
-    Application.setPage(Page::Blocks.Show)
+    parallel {
+      Application.setPage(Page::Blocks.Show)
+      Stores.Blocks.getBlock(index)
+    }
   }
 
   /domains {
@@ -50,14 +53,17 @@ routes {
   }
 
   /transactions/show/:txid (txid : String) {
-    Application.setPage(Page::Transactions.Show)
+    parallel {
+      Application.setPage(Page::Transactions.Show)
+      Stores.Transactions.getTransaction(txid)
+    }
   }
 
   / {
     parallel {
       Application.setPage(Page::Home)
-      Stores.Blocks.load(Application.limitHomeItemList)
-      Stores.Transactions.load(Application.limitHomeItemList)
+      Stores.Blocks.loadTop(Application.limitHomeItemList)
+      Stores.Transactions.loadTop(Application.limitHomeItemList)
     }
   }
 }
