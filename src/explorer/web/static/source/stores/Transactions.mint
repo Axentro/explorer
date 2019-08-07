@@ -73,4 +73,42 @@ store Stores.Transactions {
       }
     }
   }
+
+  fun getTransactions (page : Number) : Promise(Never, Void) {
+    sequence {
+      Debug.log("getTransactions wit page")
+
+      response =
+        "/api/v1/transactions/page/" + Number.toString(page) + "/length/-1"
+        |> Http.get()
+        |> Http.send()
+
+      try {
+        object =
+          response.body
+          |> Json.parse()
+          |> Maybe.toResult("Json error when retrieving transactions")
+
+        data =
+          decode object as Array(Transaction)
+
+        next { transactions = data }
+      } catch Object.Error => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      } catch String => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      }
+    } catch Http.ErrorResponse => error {
+      sequence {
+        Debug.log(error)
+        Promise.never()
+      }
+    }
+  }
 }

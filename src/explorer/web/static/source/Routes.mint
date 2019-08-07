@@ -22,7 +22,10 @@ routes {
   }
 
   /blocks {
-    Application.setPage(Page::Blocks)
+    parallel {
+      Application.setPage(Page::Blocks)
+      Stores.Blocks.getBlocks(1)
+    }
   }
 
   /blocks/show/:index (index : Number) {
@@ -49,7 +52,10 @@ routes {
   }
 
   /transactions {
-    Application.setPage(Page::Transactions)
+    parallel {
+      Application.setPage(Page::Transactions)
+      Stores.Transactions.getTransactions(1)
+    }
   }
 
   /transactions/show/:txid (txid : String) {

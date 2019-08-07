@@ -15,13 +15,14 @@ require "./explorer/web/api"
 L = Explorer::Logger.instance
 
 struct Config
-  property node, node_pubsub, host, port, db
+  property node, node_pubsub, host, port, db, per_page
 
   def initialize(
     @node : String = "http://localhost:3000",
     @host : String = "0.0.0.0",
     @port : Int32 = 3100,
-    @db : String = "rethinkdb://sushixplorer:sushixplorer@localhost:28015/sushixplorer_test"
+    @db : String = "rethinkdb://sushixplorer:sushixplorer@localhost:28015/sushixplorer_test",
+    @per_page = 25
   )
   end
 end
@@ -34,6 +35,7 @@ OptionParser.parse! do |parser|
   parser.on("-h HOST", "--host=HOST", "Binding host, '#{CONFIG.host}' by default") { |host| CONFIG.host = host }
   parser.on("-p PORT", "--port=NAME", "Binding port. #{CONFIG.port} by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB_URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
+  parser.on("--per-page=PER_PAGE", "Number of lines for list pages. '#{CONFIG.per_page}' by default") { |per_page| CONFIG.per_page = per_page.to_i32 }
   parser.on("--help", "Show this help") { puts parser; exit 0 }
 end
 

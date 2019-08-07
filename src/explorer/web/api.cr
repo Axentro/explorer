@@ -21,18 +21,20 @@ module Explorer::Web
       # /blocks
       ["#{prefix}/blocks",
        "#{prefix}/blocks/top/:top",
-       "#{prefix}/blocks/from/:from/to/:to"].each do |route|
+       "#{prefix}/blocks/page/:page/length/:length"].each do |route|
         get route do |context, params|
           content_type_json(context)
           if params["top"]? # /blocks/top/:top
             top = begin params["top"].to_i32 rescue 1 end
+            L.debug("#{prefix}/blocks/top/:top ==> #{top}")
             context.response.print R.blocks(top)
-          elsif params["from"]? && params["to"]? # /blocks/from/:from/to/:to
-            from = begin params["from"].to_i32 rescue 0 end
-            to = begin params["to"].to_i32 rescue 0 end
-            context.response.print R.blocks(from, to)
-          else                                  # /blocks
-            context.response.print R.blocks(-1) # `-1` is for all blocks
+          elsif params.["page"]? && params["length"]? # /blocks/page/:page/length/:length
+            page = begin params["page"].to_i32 rescue 0 end
+            length = begin params["length"].to_i32 rescue 0 end
+            L.debug("#{prefix}/blocks/page/:page/length/:length ==> #{page} - #{length}")
+            context.response.print R.blocks(page, length)
+          else                              # /blocks
+            context.response.print R.blocks # All blocks
           end
           context
         end
@@ -52,19 +54,21 @@ module Explorer::Web
 
       # /transactions
       ["#{prefix}/transactions",
-      "#{prefix}/transactions/top/:top",
-      "#{prefix}/transactions/page/:page/length/:length"].each do |route|
+       "#{prefix}/transactions/top/:top",
+       "#{prefix}/transactions/page/:page/length/:length"].each do |route|
         get route do |context, params|
           content_type_json(context)
           if params["top"]? # /transactions/top/:top
             top = begin params["top"].to_i32 rescue 1 end
+            L.debug("#{prefix}/transactions/top/:top ==> #{top}")
             context.response.print R.transactions(top)
           elsif params["page"]? && params["length"]? # /transactions/page/:page/length/:length
             page = begin params["page"].to_i32 rescue 0 end
             length = begin params["length"].to_i32 rescue 0 end
+            L.debug("#{prefix}/transactions/page/:page/length/:length ==> #{page} - #{length}")
             context.response.print R.transactions(page, length)
-          else                                  # /transactions
-            context.response.print R.transactions(-1) # `-1` is for all transactions
+          else                                    # /transactions
+            context.response.print R.transactions # All transactions
           end
           context
         end

@@ -130,11 +130,17 @@ module Explorer
         end.raw.to_json
       end
 
-      def self.blocks(from : Int32, to : Int32)
+      def self.blocks(page : Int32, length : Int32)
         @@pool.connection do |conn|
-          from = 0 if from < 0
-          to = 0 if to < 0
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(from, to + 1, {index: "index"}).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
+          page = 1 if page <= 0
+          length = CONFIG.per_page if length < 0
+          L.debug("[blocks] page: #{page} - length: #{length}")
+
+          start = (page - 1) * length
+          last = start + length
+          L.debug("[blocks] start: #{start} - last: #{last}")
+          # ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(start, last, {index: "index"}).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, length).default("[]").run(conn)
         end.raw.to_json
       end
 
@@ -157,9 +163,14 @@ module Explorer
 
       def self.transactions(page : Int32, length : Int32)
         @@pool.connection do |conn|
-          page = 0 if page < 0
-          length = 0 if length < 0
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(page, length + 1, {index: "timestamp"}).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
+          page = 1 if page <= 0
+          length = CONFIG.per_page if length < 0
+          L.debug("[transactions] page: #{page} - length: #{length}")
+
+          start = (page - 1) * length
+          last = start + length
+          L.debug("[transactions] start: #{start} - last: #{last}")
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).slice(start, last).default("[]").run(conn)
         end.raw.to_json
       end
 

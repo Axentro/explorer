@@ -23,23 +23,3 @@ record Transaction {
   timestamp : Number,
   scaled : Number
 }
-
-module Transaction {
-  fun empty : Transaction {
-    {
-      id = "",
-      action = "",
-      senders = [],
-      recipients = [],
-      message = "",
-      token = "",
-      prevHash = "",
-      timestamp = 0,
-      scaled = 0
-    }
-  }
-
-  fun decode (object : Object) : Result(Object.Error, Transaction) {
-    decode object as Transaction
-  }
-}

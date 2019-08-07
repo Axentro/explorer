@@ -73,4 +73,40 @@ store Stores.Blocks {
       }
     }
   }
+
+  fun getBlocks (page : Number) : Promise(Never, Void) {
+    sequence {
+      response =
+        "/api/v1/blocks/page/" + Number.toString(page) + "/length/-1"
+        |> Http.get()
+        |> Http.send()
+
+      try {
+        object =
+          response.body
+          |> Json.parse()
+          |> Maybe.toResult("Json error when retrieving blocks")
+
+        data =
+          decode object as Array(Block)
+
+        next { blocks = data }
+      } catch Object.Error => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      } catch String => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      }
+    } catch Http.ErrorResponse => error {
+      sequence {
+        Debug.log(error)
+        Promise.never()
+      }
+    }
+  }
 }

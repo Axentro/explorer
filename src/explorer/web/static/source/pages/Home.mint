@@ -2,46 +2,6 @@ component Pages.Home {
   connect Stores.Blocks exposing { blocks }
   connect Stores.Transactions exposing { transactions }
 
-  fun renderBlockLine (block : Block) : Html {
-    <tr>
-      <td>
-        <a href={"/blocks/show/" + Number.toString(block.index)}>
-          <{ Number.toString(block.index) }>
-        </a>
-      </td>
-
-      <td>
-        <{ DDate.formatFromTS(block.timestamp) }>
-      </td>
-
-      <td>
-        <{ Number.toString(Array.size(block.transactions)) }>
-      </td>
-    </tr>
-  }
-
-  fun renderTransactionLine (transaction : Transaction) : Html {
-    <tr>
-      <td>
-        <a href={"/transactions/show/" + transaction.id}>
-          <{ SString.substring(transaction.id, 0, 16) + "..." }>
-        </a>
-      </td>
-
-      <td>
-        <{ DDate.formatFromTS(transaction.timestamp) }>
-      </td>
-
-      <td>
-        <{ transaction.action }>
-      </td>
-
-      <td>
-        <{ transaction.token }>
-      </td>
-    </tr>
-  }
-
   use Provider.TTick {
     ticks =
       () : Promise(Never, Void) {
@@ -115,7 +75,7 @@ component Pages.Home {
                   </tfoot>
 
                   <tbody>
-                    <{ Array.map(renderBlockLine, blocks) }>
+                    <{ Array.map(Block.renderBlockLine, blocks) }>
                   </tbody>
                 </table>
               </div>
@@ -186,7 +146,11 @@ component Pages.Home {
                   </tfoot>
 
                   <tbody>
-                    <{ Array.map(renderTransactionLine, transactions) }>
+                    <{
+                      Array.map(
+                        Transaction.renderTransactionLineShrink,
+                        transactions)
+                    }>
                   </tbody>
                 </table>
               </div>
