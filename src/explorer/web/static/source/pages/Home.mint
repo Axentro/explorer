@@ -43,35 +43,11 @@ component Pages.Home {
               <div class="content">
                 <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
                   <thead>
-                    <tr>
-                      <th>
-                        "Index"
-                      </th>
-
-                      <th>
-                        "Time"
-                      </th>
-
-                      <th>
-                        "Number of tx"
-                      </th>
-                    </tr>
+                    <{ Block.renderHeaderFooterTable() }>
                   </thead>
 
                   <tfoot>
-                    <tr>
-                      <th>
-                        "Index"
-                      </th>
-
-                      <th>
-                        "Time"
-                      </th>
-
-                      <th>
-                        "Number of tx"
-                      </th>
-                    </tr>
+                    <{ Block.renderHeaderFooterTable() }>
                   </tfoot>
 
                   <tbody>
@@ -106,43 +82,11 @@ component Pages.Home {
               <div class="content">
                 <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
                   <thead>
-                    <tr>
-                      <th>
-                        "Transaction ID"
-                      </th>
-
-                      <th>
-                        "Time"
-                      </th>
-
-                      <th>
-                        "Action"
-                      </th>
-
-                      <th>
-                        "Token"
-                      </th>
-                    </tr>
+                    <{ Transaction.renderHeaderFooterTable() }>
                   </thead>
 
                   <tfoot>
-                    <tr>
-                      <th>
-                        "Transaction ID"
-                      </th>
-
-                      <th>
-                        "Time"
-                      </th>
-
-                      <th>
-                        "Action"
-                      </th>
-
-                      <th>
-                        "Token"
-                      </th>
-                    </tr>
+                    <{ Transaction.renderHeaderFooterTable() }>
                   </tfoot>
 
                   <tbody>
