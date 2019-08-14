@@ -10,7 +10,7 @@ shards:
 
   crystal-rethinkdb:
     github: kingsleyh/crystal-rethinkdb
-    version: 0.1.6
+    version: 0.1.7
 
   pool:
     github: ysbaddaden/pool
@@ -23,8 +23,4 @@ shards:
   router:
     github: tbrand/router.cr
     version: 0.2.7
-
-  tokoroten:
-    github: tbrand/tokoroten
-    version: 0.1.3
 

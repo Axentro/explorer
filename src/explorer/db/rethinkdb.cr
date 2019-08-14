@@ -41,7 +41,7 @@ module Explorer
 
       def self.build_table(t : String)
         @@pool.connection do |conn|
-          if ::RethinkDB.db(DB_NAME).table_list.run(conn).includes?(t)
+          if ::RethinkDB.db(DB_NAME).table_list.run(conn).as_a.includes?(t)
             L.info "Table [#{t}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table_create(t).run(conn)
@@ -69,7 +69,7 @@ module Explorer
 
       def self.build_index(index_field : String, table : String)
         @@pool.connection do |conn|
-          if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).includes?(index_field)
+          if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.includes?(index_field)
             L.info "Index [#{index_field}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field).run(conn)
