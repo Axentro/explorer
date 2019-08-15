@@ -139,7 +139,6 @@ module Explorer
           start = (page - 1) * length
           last = start + length
           L.debug("[blocks] start: #{start} - last: #{last}")
-          # ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).between(start, last, {index: "index"}).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, length).default("[]").run(conn)
         end.raw.to_json
       end
@@ -179,14 +178,6 @@ module Explorer
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).get(txid).default("{}").run(conn)
         end.raw.to_json
       end
-
-      # def self.transactions
-      #   @@pool.connection do |conn|
-      #     ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("id")).default("[{}]").run(conn)
-      #   end
-      # end
-      # def self.add_transaction(tr : Transaction)
-      # def self.add_transactions(trs : Array(Transaction))
     end
 
     include Explorer::Types
