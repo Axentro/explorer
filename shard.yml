@@ -4,9 +4,6 @@ version: 0.1.0
 authors:
   - Christian Kakesa <christian.kakesa@gmail.com>
 
-# scripts:
-#   postinstall: cd src/explorer/web/static && mint build --skip-service-worker
-
 targets:
   explorer:
     main: src/explorer.cr
@@ -27,7 +24,7 @@ dependencies:
   #   github: crystal-lang/crystal-sqlite3
   # tokoroten:
   #   github: tbrand/tokoroten
-  
+
 development_dependencies:
   ameba:
     github: veelenga/ameba
