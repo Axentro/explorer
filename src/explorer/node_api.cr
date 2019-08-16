@@ -44,7 +44,7 @@ module Explorer
         end
       end
     rescue ex
-      L.warn "Can't retriev blobk size: #{ex.message}"
+      L.warn "Can't retrieve blobk size: #{ex.message}"
       nil
     end
   end
