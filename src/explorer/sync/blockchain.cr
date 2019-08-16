@@ -12,6 +12,8 @@ module Explorer
         L.debug "DB last index: #{db_block_index.inspect}"
         L.debug "Node last index: #{node_block_index.inspect}"
         if db_block_index != node_block_index
+          # /!\ node_block_index - 1: last block is send and stored when connected to the /pubsub event
+          node_block_index -= 1
           # Ensure to clean database if SushiChain node is on anoher chain or something is really bad !
           # Not safe for now, need a rewrite
           # if node_block_index < db_block_index
