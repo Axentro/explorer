@@ -28,10 +28,6 @@ Start the compiled web application (static files are in binary)
 
     docker run --name rethinkdb -v "$PWD:/data" -d rethinkdb
 
-    # Connect the instance to an application
-
-    docker run --name some-app --link rethinkdb:rdb -d application-that-uses-rdb
-
     # Connecting to the web admin interface on the same host
 
     xdg-open "http://$(docker inspect --format \
