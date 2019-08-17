@@ -49,7 +49,7 @@ store Stores.Blocks {
         object =
           response.body
           |> Json.parse()
-          |> Maybe.toResult("Json error when retrieving blocks")
+          |> Maybe.toResult("Json error when retrieving block")
 
         data =
           Block.decode(object)
