@@ -50,7 +50,11 @@ end
 # SushiChain block live update from 'pubsub' SushiChain websocket
 spawn do
   loop do
-    Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
+    begin
+      Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
+    rescue ex
+      L.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex.message}"
+    end
     sleep 1.second
   end
 end
