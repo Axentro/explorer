@@ -52,6 +52,31 @@ module Explorer::Web
         context
       end
 
+      # /tokens
+      ["#{prefix}/tokens",
+       "#{prefix}/tokens/page/:page/length/:length"].each do |route|
+        get route do |context, params|
+          content_type_json(context)
+          if params.["page"]? && params["length"]? # /tokens/page/:page/length/:length
+            page = begin params["page"].to_i32 rescue 0 end
+            length = begin params["length"].to_i32 rescue 0 end
+            L.debug("#{prefix}/tokens/page/:page/length/:length ==> #{page} - #{length}")
+            context.response.print R.tokens(page, length)
+          else                              # /tokens
+            context.response.print R.tokens # All tokens
+          end
+          context
+        end
+      end
+
+      # /token
+      get "#{prefix}/token/:name" do |context, params|
+        content_type_json(context)
+        name = params["name"]? || ""
+        context.response.print R.token(name)
+        context
+      end
+
       # /transactions
       ["#{prefix}/transactions",
        "#{prefix}/transactions/top/:top",

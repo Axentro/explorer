@@ -44,11 +44,17 @@ routes {
   }
 
   /tokens {
-    Application.setPage(Page::Tokens)
+    parallel {
+      Application.setPage(Page::Tokens)
+      Stores.Tokens.getTokens(1)
+    }
   }
 
   /tokens/show/:name (name : String) {
-    Application.setPage(Page::Tokens.Show)
+    parallel {
+      Application.setPage(Page::Tokens.Show)
+      Stores.Tokens.getToken(name)
+    }
   }
 
   /transactions {

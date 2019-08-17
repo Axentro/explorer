@@ -100,25 +100,36 @@ module Explorer
       end
 
       def self.add_block(block : Block)
+        # Insert the block
         @@pool.connection do |conn|
           b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
-          if b.filter({index: block["index"]}).run(conn).size == 0
+          if b.filter({index: block[:index]}).run(conn).size == 0
             b.insert(block).run(conn)
-            t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
-            block[:transactions].each do |tx|
-              @@pool.connection do |t_conn|
-                t.insert(tx).run(t_conn)
-              end
-            end
           end
+        end
+        # Add default SUSHI token
+        token_add({name: "SUSHI", timestamp: block[:timestamp]}) if block[:index] == 0
+        # Add transaction
+        t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
+        block[:transactions].each do |tx|
+          # Insert transaction
+          @@pool.connection do |t_conn|
+            t.insert(tx).run(t_conn)
+          end
+          # Add token created
+          token_add({name: tx[:token], timestamp: tx[:timestamp]}) if tx[:action] == "create_token"
+
+          # TODO(fenicks): Add collected addresses
+
+          # TODO(fenicks): Add collected human readable address (SCARS/domains)
         end
       end
 
-      def self.add_blocks(blocks : Array(Block))
-        blocks.each do |b|
-          add_block(b)
-        end
-      end
+      # def self.add_blocks(blocks : Array(Block))
+      #   blocks.each do |b|
+      #     add_block(b)
+      #   end
+      # end
 
       def self.blocks(top : Int32 = -1)
         @@pool.connection do |conn|
@@ -148,6 +159,48 @@ module Explorer
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).filter({index: index}).min("index").default("{}").run(conn)
         end.raw.to_json
       end
+
+      # Token
+      def self.tokens
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).order_by(::RethinkDB.asc("timestamp")).default("[]").run(conn)
+        end.raw.to_json
+      end
+
+      def self.tokens(page : Int32, length : Int32)
+        @@pool.connection do |conn|
+          page = 1 if page <= 0
+          length = CONFIG.per_page if length < 0
+          L.debug("[tokens] page: #{page} - length: #{length}")
+
+          start = (page - 1) * length
+          last = start + length
+          L.debug("[tokens] start: #{start} - last: #{last}")
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).order_by(::RethinkDB.asc("timestamp")).slice(start, last).default("[]").run(conn)
+        end.raw.to_json
+      end
+
+      def self.token(name : String)
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).filter({name: name}).min("name").default("{}").run(conn)
+        end.raw.to_json
+      end
+
+      def self.token_add(token : Token)
+        @@pool.connection do |conn|
+          t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS)
+          if t.filter({name: token[:name]}).run(conn).size == 0
+            t.insert(token).run(conn)
+            L.debug("[#{DB_TABLE_NAME_TOKENS}] added: #{token[:name]}")
+          end
+        end
+      end
+
+      # def self.tokens_add(transactions : Array(Transaction))
+      #   transactions.each do |t|
+      #     token_add(t)
+      #   end
+      # end
 
       # Transaction
       def self.transactions(top : Int32 = -1)
