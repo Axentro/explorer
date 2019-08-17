@@ -31,7 +31,7 @@ module Block {
     </tr>
   }
 
-  fun renderBlockLine (block : Block) : Html {
+  fun renderLine (block : Block) : Html {
     <tr>
       <td>
         <a href={"/blocks/show/" + Number.toString(block.index)}>

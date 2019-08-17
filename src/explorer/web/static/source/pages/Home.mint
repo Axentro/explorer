@@ -51,7 +51,7 @@ component Pages.Home {
                   </tfoot>
 
                   <tbody>
-                    <{ Array.map(Block.renderBlockLine, blocks) }>
+                    <{ Array.map(Block.renderLine, blocks) }>
                   </tbody>
                 </table>
               </div>
@@ -90,11 +90,7 @@ component Pages.Home {
                   </tfoot>
 
                   <tbody>
-                    <{
-                      Array.map(
-                        Transaction.renderTransactionLineShrink,
-                        transactions)
-                    }>
+                    <{ Array.map(Transaction.renderLineShrink, transactions) }>
                   </tbody>
                 </table>
               </div>

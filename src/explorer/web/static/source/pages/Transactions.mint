@@ -24,7 +24,7 @@ component Pages.Transactions {
               </tfoot>
 
               <tbody>
-                <{ Array.map(Transaction.renderTransactionLine, transactions) }>
+                <{ Array.map(Transaction.renderLine, transactions) }>
               </tbody>
             </table>
           </div>

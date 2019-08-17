@@ -24,7 +24,7 @@ component Pages.Blocks {
               </tfoot>
 
               <tbody>
-                <{ Array.map(Block.renderBlockLine, blocks) }>
+                <{ Array.map(Block.renderLine, blocks) }>
               </tbody>
             </table>
           </div>

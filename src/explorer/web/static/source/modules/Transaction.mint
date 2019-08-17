@@ -45,7 +45,7 @@ module Transaction {
     </tr>
   }
 
-  fun renderTransactionLine (transaction : Transaction) : Html {
+  fun renderLine (transaction : Transaction) : Html {
     <tr>
       <td>
         <a href={"/transactions/show/" + transaction.id}>
@@ -75,7 +75,7 @@ module Transaction {
     </tr>
   }
 
-  fun renderTransactionLineShrink (transaction : Transaction) : Html {
+  fun renderLineShrink (transaction : Transaction) : Html {
     <tr>
       <td>
         <a href={"/transactions/show/" + transaction.id}>

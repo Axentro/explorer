@@ -104,11 +104,7 @@ component Pages.Blocks.Show {
               </tfoot>
 
               <tbody>
-                <{
-                  Array.map(
-                    Transaction.renderTransactionLine,
-                    block.transactions)
-                }>
+                <{ Array.map(Transaction.renderLine, block.transactions) }>
               </tbody>
             </table>
           </div>
