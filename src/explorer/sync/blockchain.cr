@@ -79,7 +79,6 @@ module Explorer
 
       private def self.socket_close
         L.warn "SushiChain node socket closed"
-        exit -42
       end
     end
   end
