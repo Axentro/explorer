@@ -99,7 +99,7 @@ module Explorer
         (res["index"].try(&.to_s) || 0).to_u64
       end
 
-      def self.add_block(block : Block)
+      def self.block_add(block : Block)
         # Insert the block
         @@pool.connection do |conn|
           b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
@@ -125,9 +125,9 @@ module Explorer
         end
       end
 
-      # def self.add_blocks(blocks : Array(Block))
+      # def self.blocks_add(blocks : Array(Block))
       #   blocks.each do |b|
-      #     add_block(b)
+      #     block_add(b)
       #   end
       # end
 

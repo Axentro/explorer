@@ -25,7 +25,7 @@ module Explorer
             L.debug "Synchronizing block index #{iter}"
             block = NodeApi.block(iter.to_u64)
             L.debug "[Blockchain.sync] block to add: #{block}"
-            R.add_block(block) if block
+            R.block_add(block) if block
           end
           L.warn "Blockchain sync finished [#{(node_block_index - db_block_index) + 1} blocks added]..."
         else
@@ -53,7 +53,7 @@ module Explorer
           L.debug "[Blockchain.event][raw message]: #{message}"
           block = Block.from_json(message)
           if block.not_nil!
-            R.add_block(block)
+            R.block_add(block)
             L.info "Block ##{block["index"]} added"
           end
         end
