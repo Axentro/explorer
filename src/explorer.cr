@@ -55,7 +55,7 @@ spawn do
     rescue ex
       L.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex.message}"
     end
-    sleep 1.second
+    sleep 5.seconds
   end
 end
 
