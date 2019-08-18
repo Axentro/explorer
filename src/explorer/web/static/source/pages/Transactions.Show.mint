@@ -104,6 +104,70 @@ component Pages.Transactions.Show {
           </tr>
         </tbody>
       </table>
+
+      <div class="card has-margin-top-15 has-margin-top-5-mobile">
+        <header class="card-header">
+          <p class="card-header-title">
+            <{ "Senders (" + Number.toString(Array.size(transaction.senders)) + ")" }>
+          </p>
+        </header>
+
+        if (Array.size(transaction.senders) > 0) {
+          <div class="card-content">
+            <div class="content">
+              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                  <{ Transaction.renderSendersHeaderFooterTable() }>
+                </thead>
+
+                <tfoot>
+                  <{ Transaction.renderSendersHeaderFooterTable() }>
+                </tfoot>
+
+                <tbody>
+                  <{ Array.map(Transaction.renderSendersLine, transaction.senders) }>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        } else {
+          <></>
+        }
+      </div>
+
+      <div class="card has-margin-top-15 has-margin-top-5-mobile">
+        <header class="card-header">
+          <p class="card-header-title">
+            <{ "Recipients (" + Number.toString(Array.size(transaction.recipients)) + ")" }>
+          </p>
+        </header>
+
+        if (Array.size(transaction.recipients) > 0) {
+          <div class="card-content">
+            <div class="content">
+              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                  <{ Transaction.renderRecipientsHeaderFooterTable() }>
+                </thead>
+
+                <tfoot>
+                  <{ Transaction.renderRecipientsHeaderFooterTable() }>
+                </tfoot>
+
+                <tbody>
+                  <{
+                    Array.map(
+                      Transaction.renderRecipientsLine,
+                      transaction.recipients)
+                  }>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        } else {
+          <></>
+        }
+      </div>
     </div>
   }
 }

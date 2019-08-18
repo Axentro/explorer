@@ -104,4 +104,84 @@ module Transaction {
       </td>
     </tr>
   }
+
+  fun renderSendersHeaderFooterTable : Html {
+    <tr>
+      <th>
+        "Address"
+      </th>
+
+      <th>
+        "Public key"
+      </th>
+
+      <th>
+        "Amount"
+      </th>
+
+      <th>
+        "Fee"
+      </th>
+
+      <th>
+        "SignR"
+      </th>
+
+      <th>
+        "SignS"
+      </th>
+    </tr>
+  }
+
+  fun renderSendersLine (sender : Sender) : Html {
+    <tr>
+      <td>
+        <{ sender.address }>
+      </td>
+
+      <td>
+        <{ sender.publicKey }>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(sender.amount)) }>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(sender.fee)) }>
+      </td>
+
+      <td>
+        <{ sender.signR }>
+      </td>
+
+      <td>
+        <{ sender.signS }>
+      </td>
+    </tr>
+  }
+
+  fun renderRecipientsHeaderFooterTable : Html {
+    <tr>
+      <th>
+        "Address"
+      </th>
+
+      <th>
+        "Amount"
+      </th>
+    </tr>
+  }
+
+  fun renderRecipientsLine (recipient : Recipient) : Html {
+    <tr>
+      <td>
+        <{ recipient.address }>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(recipient.amount)) }>
+      </td>
+    </tr>
+  }
 }
