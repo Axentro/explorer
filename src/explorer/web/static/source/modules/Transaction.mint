@@ -112,23 +112,11 @@ module Transaction {
       </th>
 
       <th>
-        "Public key"
-      </th>
-
-      <th>
         "Amount"
       </th>
 
       <th>
         "Fee"
-      </th>
-
-      <th>
-        "SignR"
-      </th>
-
-      <th>
-        "SignS"
       </th>
     </tr>
   }
@@ -140,23 +128,11 @@ module Transaction {
       </td>
 
       <td>
-        <{ sender.publicKey }>
-      </td>
-
-      <td>
         <{ NNumber.toScale8(Number.toString(sender.amount)) }>
       </td>
 
       <td>
         <{ NNumber.toScale8(Number.toString(sender.fee)) }>
-      </td>
-
-      <td>
-        <{ sender.signR }>
-      </td>
-
-      <td>
-        <{ sender.signS }>
       </td>
     </tr>
   }
