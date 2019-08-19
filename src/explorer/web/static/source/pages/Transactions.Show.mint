@@ -71,7 +71,11 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <{ transaction.message }>
+              if ("0" == transaction.message) {
+                "-"
+              } else {
+                transaction.message
+              }
             </td>
           </tr>
 
@@ -91,7 +95,11 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <{ transaction.prevHash }>
+              if ("0" == transaction.prevHash) {
+                "-"
+              } else {
+                transaction.prevHash
+              }
             </td>
           </tr>
 
@@ -111,7 +119,11 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <{ Number.toString(transaction.scaled) }>
+              if (transaction.scaled == 1) {
+                "yes"
+              } else {
+                "no"
+              }
             </td>
           </tr>
         </tbody>
