@@ -36,6 +36,7 @@ OptionParser.parse! do |parser|
   parser.on("-p PORT", "--port=NAME", "Binding port. #{CONFIG.port} by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB_URL", "Database URL. '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
   parser.on("--per-page=PER_PAGE", "Number of lines for list pages. '#{CONFIG.per_page}' by default") { |per_page| CONFIG.per_page = per_page.to_i32 }
+  parser.on("--truncate-tables", "Truncate all tables in database") { R.clean_tables }
   parser.on("--help", "Show this help") { puts parser; exit 0 }
 end
 
