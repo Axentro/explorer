@@ -101,21 +101,29 @@ module Explorer
 
       def self.block_add(block : Block)
         # Insert the block
+        b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
         @@pool.connection do |conn|
-          b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
           if b.filter({index: block[:index]}).run(conn).size == 0
             b.insert(block).run(conn)
+            # Add block_index field in each transaction
+            b.filter({index: block[:index]}).update do |doc|
+              {
+                transactions: doc[:transactions].merge({block_index: block[:index]}),
+              }
+            end.run(conn)
           end
         end
+
         # Add default SUSHI token
         token_add({name: "SUSHI", timestamp: block[:timestamp]}) if block[:index] == 0
+
         # Add transaction
         t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
+        @@pool.connection do |conn|
+          t.insert(b.filter({index: block[:index]}).pluck("transactions").coerce_to("array")[0]["transactions"]).run(conn)
+        end
+
         block[:transactions].each do |tx|
-          # Insert transaction
-          @@pool.connection do |t_conn|
-            t.insert(tx).run(t_conn)
-          end
           # Add token created
           token_add({name: tx[:token], timestamp: tx[:timestamp]}) if tx[:action] == "create_token"
 

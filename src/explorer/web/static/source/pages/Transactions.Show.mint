@@ -25,6 +25,18 @@ component Pages.Transactions.Show {
 
           <tr>
             <th>
+              "Block index"
+            </th>
+
+            <td>
+              <a href={"/blocks/show/" + Number.toString(transaction.blockIndex)}>
+                <{ Number.toString(transaction.blockIndex) }>
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <th>
               "Action"
             </th>
 

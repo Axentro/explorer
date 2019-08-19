@@ -2,6 +2,7 @@ module Transaction {
   fun empty : Transaction {
     {
       id = "",
+      blockIndex = 0,
       action = "",
       senders = [],
       recipients = [],
@@ -21,6 +22,10 @@ module Transaction {
     <tr>
       <th>
         "Transaction ID"
+      </th>
+
+      <th>
+        "Block index"
       </th>
 
       <th>
@@ -54,6 +59,12 @@ module Transaction {
       </td>
 
       <td>
+        <a href={"/blocks/show/" + Number.toString(transaction.blockIndex)}>
+          <{ Number.toString(transaction.blockIndex) }>
+        </a>
+      </td>
+
+      <td>
         <{ DDate.formatFromTS(transaction.timestamp) }>
       </td>
 
@@ -80,6 +91,12 @@ module Transaction {
       <td>
         <a href={"/transactions/show/" + transaction.id}>
           <{ SString.substring(transaction.id, 0, 16) + "..." }>
+        </a>
+      </td>
+
+      <td>
+        <a href={"/blocks/show/" + Number.toString(transaction.blockIndex)}>
+          <{ Number.toString(transaction.blockIndex) }>
         </a>
       </td>
 
