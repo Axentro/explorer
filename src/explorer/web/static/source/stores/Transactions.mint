@@ -76,8 +76,6 @@ store Stores.Transactions {
 
   fun getTransactions (page : Number) : Promise(Never, Void) {
     sequence {
-      Debug.log("getTransactions wit page")
-
       response =
         "/api/v1/transactions/page/" + Number.toString(page) + "/length/-1"
         |> Http.get()
