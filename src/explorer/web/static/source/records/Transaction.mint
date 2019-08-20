@@ -14,7 +14,7 @@ record Recipient {
 
 record Transaction {
   id : String,
-  blockIndex : Number using "block_index",
+  blockIndex : Maybe(Number) using "block_index",
   action : String,
   senders : Array(Sender),
   recipients : Array(Recipient),

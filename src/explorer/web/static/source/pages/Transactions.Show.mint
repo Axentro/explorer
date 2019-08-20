@@ -29,8 +29,8 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <a href={"/blocks/show/" + Number.toString(transaction.blockIndex)}>
-                <{ Number.toString(transaction.blockIndex) }>
+              <a href={"/blocks/show/" + Number.toString(Maybe.withDefault(0, transaction.blockIndex))}>
+                <{ Number.toString(Maybe.withDefault(0, transaction.blockIndex)) }>
               </a>
             </td>
           </tr>

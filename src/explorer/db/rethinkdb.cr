@@ -106,6 +106,7 @@ module Explorer
           if b.filter({index: block[:index]}).run(conn).size == 0
             b.insert(block).run(conn)
             # Add block_index field in each transaction
+            # TODO(fenicks): If Mint Maybe(Transaction) i fixed, try to do a less consuming insert: directly in transation source object ? @see "Add Transaction"
             b.filter({index: block[:index]}).update do |doc|
               {
                 transactions: doc[:transactions].merge({block_index: block[:index]}),
