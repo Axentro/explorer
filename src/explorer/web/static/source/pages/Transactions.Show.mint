@@ -85,7 +85,18 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <{ transaction.token }>
+              <span
+                class={
+                  "tag " + if (transaction.token == "SUSHI") {
+                    "is-info"
+                  } else {
+                    "is-light"
+                  }
+                }>
+
+                <{ transaction.token }>
+
+              </span>
             </td>
           </tr>
 
