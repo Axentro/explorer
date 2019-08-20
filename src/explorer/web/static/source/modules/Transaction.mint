@@ -155,7 +155,11 @@ module Transaction {
       </th>
 
       <th>
-        "Fee"
+        "Fee "
+
+        <span class="tag is-info">
+          "SUSHI"
+        </span>
       </th>
     </tr>
   }
