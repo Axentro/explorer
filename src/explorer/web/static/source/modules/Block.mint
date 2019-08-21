@@ -6,7 +6,7 @@ module Block {
       nonce = 0,
       prevHash = "",
       merkleTreeRoot = "",
-      timestamp = 0,
+      timestamp = Time.now(),
       difficulty = 0
     }
   }

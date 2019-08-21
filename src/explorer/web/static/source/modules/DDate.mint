@@ -1,5 +1,5 @@
 module DDate {
-  fun formatFromTS (timestamp : Number) : String {
+  fun formatFromTS (timestamp : Time) : String {
     `
     (() => {
         let locale = navigator.language || navigator.userLanguage || "en-US";
