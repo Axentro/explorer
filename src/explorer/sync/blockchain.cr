@@ -38,7 +38,7 @@ module Explorer
 
       # TODO(fenicks): write a new sync method who check all blocks and transactions at startup and rebuild addresses stored
       # TODO(fenicks): invoke sync method only if "--sync-db" or "-s" is specified in command line
-      # TODO(fenicks): we need block comparisaon or blok validation mecanism ?
+      # TODO(fenicks): we need block comparison or block validation mecanism ?
       # def self.sync_db
       #   node_block_index = NodeApi.last_block_index
       #   Range.new(0, node_block_index).each do |iter|
