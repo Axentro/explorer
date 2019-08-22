@@ -4,6 +4,6 @@ record Block {
   nonce : Number,
   prevHash : String using "prev_hash",
   merkleTreeRoot : String using "merkle_tree_root",
-  timestamp : Time,
+  timestamp : Number,
   difficulty : Number
 }

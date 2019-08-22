@@ -21,6 +21,6 @@ record Transaction {
   message : String,
   token : String,
   prevHash : String using "prev_hash",
-  timestamp : Time,
+  timestamp : Number,
   scaled : Number
 }

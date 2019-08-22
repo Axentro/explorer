@@ -2,7 +2,7 @@ module Token {
   fun empty : Token {
     {
       name = "",
-      timestamp = Time.now()
+      timestamp = 0
     }
   }
 

@@ -9,7 +9,7 @@ module Transaction {
       message = "",
       token = "",
       prevHash = "",
-      timestamp = Time.now(),
+      timestamp = 0,
       scaled = 0
     }
   }

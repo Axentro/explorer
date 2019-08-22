@@ -1,4 +1,4 @@
 record Token {
   name : String,
-  timestamp : Time
+  timestamp : Number
 }
