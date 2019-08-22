@@ -5,7 +5,7 @@ module Explorer::Web
     def initialize(@explorer_bind_host : String, @explorer_bind_port : Int32, @log = Explorer::Logger.new(STDOUT))
     end
 
-    # TODO(fenicks): Generate Mint files
+    # TODO(fenicks): Generate Mint files before building static binary
     def web_routes
       get "/" do |context, _params|
         content_type_html(context)
