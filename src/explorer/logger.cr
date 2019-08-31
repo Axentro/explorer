@@ -1,5 +1,7 @@
 module Explorer
   class Logger < ::Logger
+    STDOUT.sync = true
+
     def log(severity, message, progname = nil)
       return if severity < level || !@io
       msg = case severity
