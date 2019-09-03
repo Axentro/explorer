@@ -29,7 +29,7 @@ component Pages.Addresses.Show {
             </th>
 
             <td>
-              <{ Number.toString(address.amount) }>
+              <{ NNumber.toScale8(Number.toString(address.amount)) }>
             </td>
           </tr>
 

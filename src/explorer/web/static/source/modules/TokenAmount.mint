@@ -36,7 +36,7 @@ module TokenAmount {
       </td>
 
       <td>
-        <{ Number.toString(tm.amount) }>
+        <{ NNumber.toScale8(Number.toString(tm.amount)) }>
       </td>
     </tr>
   }
