@@ -14,11 +14,17 @@ enum Page {
 
 routes {
   /addresses {
-    Application.setPage(Page::Addresses)
+    parallel {
+      Application.setPage(Page::Addresses)
+      Stores.Addresses.getAddresses(1)
+    }
   }
 
-  /addresses/show/:name (name : String) {
-    Application.setPage(Page::Addresses.Show)
+  /addresses/show/:address (address : String) {
+    parallel {
+      Application.setPage(Page::Addresses.Show)
+      Stores.Addresses.getAddress(address)
+    }
   }
 
   /blocks {

@@ -18,6 +18,31 @@ module Explorer::Web
     def api_routes_v1
       prefix = "/api/v1"
 
+      # /addresses
+      ["#{prefix}/addresses",
+       "#{prefix}/addresses/page/:page/length/:length"].each do |route|
+        get route do |context, params|
+          content_type_json(context)
+          if params.["page"]? && params["length"]? # /addresses/page/:page/length/:length
+            page = begin params["page"].to_i32 rescue 0 end
+            length = begin params["length"].to_i32 rescue 0 end
+            L.debug("#{prefix}/addresses/page/:page/length/:length ==> #{page} - #{length}")
+            context.response.print R.addresses(page, length)
+          else                                 # /addresses
+            context.response.print R.addresses # All tokens
+          end
+          context
+        end
+      end
+
+      # /address
+      get "#{prefix}/address/:name" do |context, params|
+        content_type_json(context)
+        name = params["name"]? || ""
+        context.response.print R.address(name)
+        context
+      end
+
       # /blocks
       ["#{prefix}/blocks",
        "#{prefix}/blocks/top/:top",
