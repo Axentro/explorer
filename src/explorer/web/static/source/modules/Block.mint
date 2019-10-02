@@ -7,7 +7,11 @@ module Block {
       prevHash = "",
       merkleTreeRoot = "",
       timestamp = 0,
-      difficulty = 0
+      difficulty = 0,
+      publicKey = "",
+      signR = "",
+      signS = "",
+      hash = ""
     }
   }
 

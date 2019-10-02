@@ -372,11 +372,11 @@ module Explorer
               scaled:    t[:scaled],
             }
           end,
-          nonce:            block[:nonce],
+          nonce:            block[:nonce]?,
           prev_hash:        block[:prev_hash],
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],
-          difficulty:       block[:difficulty],
+          difficulty:       block[:difficulty]?,
         }
       end
 

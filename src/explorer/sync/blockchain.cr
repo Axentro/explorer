@@ -51,7 +51,7 @@ module Explorer
 
         socket.on_message do |message|
           L.debug "[Blockchain.event][raw message]: #{message}"
-          block = Block.from_json(message)
+          block : Block = Block.from_json(message)
           if block.not_nil!
             R.block_add(block)
             L.info "Block ##{block["index"]} added"
