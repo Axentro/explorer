@@ -10,7 +10,7 @@ shards:
 
   crystal-rethinkdb:
     github: kingsleyh/crystal-rethinkdb
-    version: 0.1.8
+    version: 0.1.9
 
   pool:
     github: ysbaddaden/pool
