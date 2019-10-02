@@ -61,7 +61,11 @@ module Explorer
 
         # Addresses
         build_index("address", DB_TABLE_NAME_ADDRESSES)
-        # build_index("amount_numeric", DB_TABLE_NAME_ADDRESSES) # TODO(fenicks): build a numeric index for sorting query
+        build_index("amount", DB_TABLE_NAME_ADDRESSES)
+        # TODO(fenicks): Fix RethinkDB driver to support slice after 
+        # build_index("amount_length", DB_TABLE_NAME_ADDRESSES) do |doc|
+        #   doc["amount"].split("").count
+        # end
         build_index("timestamps", DB_TABLE_NAME_ADDRESSES)
 
         # Domains
@@ -71,12 +75,27 @@ module Explorer
         build_index("name", DB_TABLE_NAME_TOKENS)
       end
 
+      # TODO(fenicks): FIXME ; try in a same method an optional block parameter to avoid code duplication ?
       def self.build_index(index_field : String, table : String)
         @@pool.connection do |conn|
           if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.includes?(index_field)
             L.info "Index [#{index_field}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field).run(conn)
+            L.info "Table [#{index_field}] created"
+          end
+        end
+      end
+
+      # TODO(fenicks): FIXME ; try in a same method an optional block parameter to avoid code duplication ?
+      def self.build_index(index_field : String, table : String)
+        @@pool.connection do |conn|
+          if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.includes?(index_field)
+            L.info "Index [#{index_field}] already exists"
+          else
+            ::RethinkDB.db(DB_NAME).table(table).index_create(index_field) do |doc|
+              yield(doc)
+            end.run(conn)
             L.info "Table [#{index_field}] created"
           end
         end
@@ -111,8 +130,16 @@ module Explorer
           start = (page - 1) * length
           last = start + length
           L.debug("[addresses] start: #{start} - last: #{last}")
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).order_by(::RethinkDB.desc("amount")).slice(start, last).default("[]").run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
+            # TODO(fenicks): Fix order_by(:field, index: :my_index) in rethinkdb crystal driver
+            # .order_by(:amount, index: ::RethinkDB.desc("amount_length"))
+            .order_by(::RethinkDB.desc("amount"))
+            .slice(start, last)
+            .default("{}")
+            .run(conn)
         end.to_json
+      rescue e
+        L.error("#{e}")
       end
 
       def self.address(address : String)
