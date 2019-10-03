@@ -22,5 +22,6 @@ record Transaction {
   token : String,
   prevHash : String using "prev_hash",
   timestamp : Number,
-  scaled : Number
+  scaled : Number,
+  kind : String
 }

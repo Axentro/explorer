@@ -1,13 +1,15 @@
 record Block {
   index : Number,
   transactions : Array(Transaction),
-  nonce : Number,
+  nonce : Maybe(Number),
   prevHash : String using "prev_hash",
   merkleTreeRoot : String using "merkle_tree_root",
   timestamp : Number,
-  difficulty : Number,
-  publicKey : String using "public_key",
-  signR : String using "sign_r",
-  signS : String using "sign_s",
-  hash : String
+  difficulty : Maybe(Number),
+  kind : String,
+  address : String,
+  publicKey : Maybe(String) using "public_key",
+  signR : Maybe(String) using "sign_r",
+  signS : Maybe(String) using "sign_s",
+  hash : Maybe(String)
 }

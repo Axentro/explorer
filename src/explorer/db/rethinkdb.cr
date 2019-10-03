@@ -62,7 +62,7 @@ module Explorer
         # Addresses
         build_index("address", DB_TABLE_NAME_ADDRESSES)
         build_index("amount", DB_TABLE_NAME_ADDRESSES)
-        # TODO(fenicks): Fix RethinkDB driver to support slice after 
+        # TODO(fenicks): Fix RethinkDB driver to support slice after
         # build_index("amount_length", DB_TABLE_NAME_ADDRESSES) do |doc|
         #   doc["amount"].split("").count
         # end
@@ -397,6 +397,7 @@ module Explorer
               prev_hash: t[:prev_hash],
               timestamp: t[:timestamp],
               scaled:    t[:scaled],
+              kind:      t[:kind],
             }
           end,
           nonce:            block[:nonce]?,
@@ -404,6 +405,12 @@ module Explorer
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],
           difficulty:       block[:difficulty]?,
+          kind: block[:kind],
+          address: block[:address],
+          public_key: block[:public_key]?,
+          sign_r: block[:sign_r]?,
+          sign_s: block[:sign_s]?,
+          hash: block[:hash]?,
         }
       end
 

@@ -33,14 +33,14 @@ module Explorer
     struct BlockchainSize
       JSON.mapping(
         status: String,
-        result: NamedTuple(size: UInt64)
+        result: NamedTuple(size: UInt64),
       )
     end
 
     struct BlockResult
       JSON.mapping(
         status: String,
-        result: Block
+        result: Block,
       )
     end
   end

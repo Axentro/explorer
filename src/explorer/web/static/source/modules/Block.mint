@@ -3,15 +3,17 @@ module Block {
     {
       index = -1,
       transactions = [],
-      nonce = 0,
+      nonce = Maybe.just(0),
       prevHash = "",
       merkleTreeRoot = "",
       timestamp = 0,
-      difficulty = 0,
-      publicKey = "",
-      signR = "",
-      signS = "",
-      hash = ""
+      difficulty = Maybe.just(0),
+      kind = "",
+      address = "",
+      publicKey = Maybe.just(""),
+      signR = Maybe.just(""),
+      signS = Maybe.just(""),
+      hash = Maybe.just("")
     }
   }
 

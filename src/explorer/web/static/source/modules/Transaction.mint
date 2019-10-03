@@ -10,7 +10,8 @@ module Transaction {
       token = "",
       prevHash = "",
       timestamp = 0,
-      scaled = 0
+      scaled = 0,
+      kind = ""
     }
   }
 

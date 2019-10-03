@@ -30,6 +30,7 @@ module Explorer
       prev_hash: String,
       timestamp: Int64,
       scaled: Int32,
+      kind: String,
     )
   end
 end

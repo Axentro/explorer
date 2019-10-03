@@ -39,7 +39,7 @@ component Pages.Blocks.Show {
             </th>
 
             <td>
-              <{ Number.toString(block.nonce) }>
+              <{ Number.toString(Maybe.withDefault(0, block.nonce)) }>
             </td>
           </tr>
 
@@ -79,7 +79,7 @@ component Pages.Blocks.Show {
             </th>
 
             <td>
-              <{ Number.toString(block.difficulty) }>
+              <{ Number.toString(Maybe.withDefault(0, block.difficulty)) }>
             </td>
           </tr>
         </tbody>
