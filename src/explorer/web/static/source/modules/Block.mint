@@ -46,7 +46,7 @@ module Block {
       </td>
 
       <td>
-        <{ DDate.formatFromTS(block.timestamp) }>
+        <{ DDate.formatFromTSM(block.timestamp) }>
       </td>
 
       <td>

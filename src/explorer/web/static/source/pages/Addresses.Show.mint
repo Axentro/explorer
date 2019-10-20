@@ -49,7 +49,7 @@ component Pages.Addresses.Show {
             </th>
 
             <td>
-              <{ DDate.formatFromTS(address.timestamp) }>
+              <{ DDate.formatFromTSM(address.timestamp) }>
             </td>
           </tr>
         </tbody>

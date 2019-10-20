@@ -120,7 +120,7 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
-              <{ DDate.formatFromTS(transaction.timestamp) }>
+              <{ DDate.formatFromTSM(transaction.timestamp) }>
             </td>
           </tr>
 

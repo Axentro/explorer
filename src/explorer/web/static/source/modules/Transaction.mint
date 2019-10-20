@@ -66,7 +66,7 @@ module Transaction {
       </td>
 
       <td>
-        <{ DDate.formatFromTS(transaction.timestamp) }>
+        <{ DDate.formatFromTSM(transaction.timestamp) }>
       </td>
 
       <td>
@@ -113,7 +113,7 @@ module Transaction {
       </td>
 
       <td>
-        <{ DDate.formatFromTS(transaction.timestamp) }>
+        <{ DDate.formatFromTSM(transaction.timestamp) }>
       </td>
 
       <td>

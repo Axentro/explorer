@@ -154,7 +154,7 @@ module Explorer
           if token == "SUSHI"
             if a.filter({address: address}).run(conn).size == 0
               # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
-              a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: Time.utc_now.to_unix}).run(conn)
+              a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: Time.utc_now.to_unix * 1000}).run(conn)
               L.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
             else
               # TODO(fenicks): Fix getting value in update RethinkDB update block
@@ -172,7 +172,7 @@ module Explorer
           else # tokens
             token_amount = amount
             if a.filter({address: address}).run(conn).size == 0
-              a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: Time.utc_now.to_unix}).run(conn)
+              a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: Time.utc_now.to_unix * 1000}).run(conn)
               L.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
             else
               if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0

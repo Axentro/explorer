@@ -69,7 +69,7 @@ component Pages.Blocks.Show {
             </th>
 
             <td>
-              <{ DDate.formatFromTS(block.timestamp) }>
+              <{ DDate.formatFromTSM(block.timestamp) }>
             </td>
           </tr>
 

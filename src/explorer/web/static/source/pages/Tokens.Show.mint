@@ -29,7 +29,7 @@ component Pages.Tokens.Show {
             </th>
 
             <td>
-              <{ DDate.formatFromTS(token.timestamp) }>
+              <{ DDate.formatFromTSM(token.timestamp) }>
             </td>
           </tr>
         </tbody>
