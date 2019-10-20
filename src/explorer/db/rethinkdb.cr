@@ -148,13 +148,13 @@ module Explorer
         end.to_json
       end
 
-      def self.address_add(who : String, token : String, address : String, amount : String, fee : String = "0")
+      def self.address_add(who : String, token : String, address : String, amount : String, timestamp : Int64, fee : String = "0")
         a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
         @@pool.connection do |conn|
           if token == "SUSHI"
             if a.filter({address: address}).run(conn).size == 0
               # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
-              a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: Time.utc_now.to_unix * 1000}).run(conn)
+              a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: timestamp}).run(conn)
               L.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
             else
               # TODO(fenicks): Fix getting value in update RethinkDB update block
@@ -172,7 +172,7 @@ module Explorer
           else # tokens
             token_amount = amount
             if a.filter({address: address}).run(conn).size == 0
-              a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: Time.utc_now.to_unix * 1000}).run(conn)
+              a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: timestamp}).run(conn)
               L.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
             else
               if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0
@@ -250,12 +250,12 @@ module Explorer
           tx[:senders].each do |s|
             amount = s[:amount]
             amount = "0" if tx[:action] == "create_token"
-            address_add("sender", tx[:token], s[:address], amount, s[:fee])
+            address_add("sender", tx[:token], s[:address], amount, tx[:timestamp], s[:fee])
             L.debug "[CREATE TOKEN SENDER] : #{tx[:token]}, #{s[:address]}, amount:#{amount}, fee:#{s[:fee]}" if tx[:action] == "create_token"
           end
 
           tx[:recipients].each do |r|
-            address_add("recipient", tx[:token], r[:address], r[:amount])
+            address_add("recipient", tx[:token], r[:address], r[:amount], tx[:timestamp])
             L.debug "[CREATE TOKEN RECIPIENT] : #{tx[:token]}, #{r[:address]}, amount:#{r[:amount]}" if tx[:action] == "create_token"
           end
 
