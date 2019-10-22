@@ -70,6 +70,7 @@ module Explorer
 
         # Domains
         build_index("name", DB_TABLE_NAME_DOMAINS)
+        build_index("address", DB_TABLE_NAME_DOMAINS)
 
         # Tokens
         build_index("name", DB_TABLE_NAME_TOKENS)
@@ -260,6 +261,10 @@ module Explorer
           end
 
           # TODO(fenicks): Add collected human readable address (SCARS/domains)
+          if tx[:action] == "scars_buy"
+            domain_address = tx[:senders].first?.try(&.[:address])
+            domain_add({name: tx[:message], address: domain_address, timestamp: tx[:timestamp]}) if domain_address
+          end
         end
       end
 
@@ -296,6 +301,21 @@ module Explorer
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).filter({index: index}).min("index").default("{}").run(conn)
         end.to_json
+      end
+
+      # Domain
+      # # scars_buy, scars_sell, scars_cancel
+      def self.domain_add(domain : Domain)
+        @@pool.connection do |conn|
+          t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS)
+          if t.filter({name: domain[:name]}).run(conn).size == 0
+            t.insert(domain).run(conn)
+            L.debug("[#{DB_TABLE_NAME_DOMAINS}] added: #{domain[:name]}")
+          else
+            t.filter({name: domain[:name]}).update({address: domain[:address]}).run(conn)
+            L.debug("[#{DB_TABLE_NAME_DOMAINS}] updated: #{domain[:address]} to #{domain[:name]}")
+          end
+        end
       end
 
       # Token
@@ -405,12 +425,12 @@ module Explorer
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],
           difficulty:       block[:difficulty]?,
-          kind: block[:kind],
-          address: block[:address],
-          public_key: block[:public_key]?,
-          sign_r: block[:sign_r]?,
-          sign_s: block[:sign_s]?,
-          hash: block[:hash]?,
+          kind:             block[:kind],
+          address:          block[:address],
+          public_key:       block[:public_key]?,
+          sign_r:           block[:sign_r]?,
+          sign_s:           block[:sign_s]?,
+          hash:             block[:hash]?,
         }
       end
 
