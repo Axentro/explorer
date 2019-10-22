@@ -21,7 +21,7 @@ module Explorer
           #   db_block_index = 0
           # end
           L.warn "Blockchain sync started..."
-          Range.new(db_block_index, node_block_index).each do |iter|
+          Range.new(db_block_index, node_block_index * 2).each do |iter| # TODO(fenicks): remove x2 and update the web service to get highest index for SLOW and FAST block
             L.debug "Synchronizing block index #{iter}"
             block = NodeApi.block(iter.to_u64)
             L.debug "[Blockchain.sync] block to add: #{block}"
