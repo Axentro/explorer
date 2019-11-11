@@ -2,7 +2,7 @@ version: 1.0
 shards:
   ameba:
     github: veelenga/ameba
-    version: 0.10.0
+    version: 0.10.1
 
   baked_file_system:
     github: schovi/baked_file_system
@@ -10,7 +10,7 @@ shards:
 
   crystal-rethinkdb:
     github: kingsleyh/crystal-rethinkdb
-    version: 0.1.9
+    version: 0.1.10
 
   pool:
     github: ysbaddaden/pool
