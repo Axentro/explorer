@@ -38,6 +38,10 @@ OptionParser.parse do |parser|
   parser.on("--per-page=PER_PAGE", "Number of lines for list pages. '#{CONFIG.per_page}' by default") { |per_page| CONFIG.per_page = per_page.to_i32 }
   parser.on("--truncate-tables", "Truncate all tables in database") { R.clean_tables }
   parser.on("--help", "Show this help") { puts parser; exit 0 }
+  parser.invalid_option do |flag|
+    STDERR.puts "ERROR: #{flag} is not a valid option."
+    STDERR.puts parser
+  end
 end
 
 # Database setup
