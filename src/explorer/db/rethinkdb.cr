@@ -235,7 +235,7 @@ module Explorer
         end
 
         # Add default SUSHI token
-        token_add({name: "SUSHI", timestamp: block_scale[:timestamp]}) if block_scale[:index] == 2
+        token_add({name: "SUSHI", timestamp: 0.to_i64}) if block_scale[:index] == 0
 
         # Add transaction
         t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
