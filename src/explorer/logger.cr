@@ -16,7 +16,7 @@ module Explorer
             else
               message
             end
-      write(severity, Time.now, progname || @progname, msg)
+      write(severity, Time.local, progname || @progname, msg)
     end
 
     def self.instance : Explorer::Logger

@@ -29,7 +29,7 @@ end
 
 CONFIG = Config.new
 
-OptionParser.parse! do |parser|
+OptionParser.parse do |parser|
   parser.banner = "Usage: explorer [arguments]"
   parser.on("-n NODE_URL", "--node=NODE_URL", "Safe SushiChain node URL. '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
   parser.on("-h HOST", "--host=HOST", "Binding host, '#{CONFIG.host}' by default") { |host| CONFIG.host = host }
