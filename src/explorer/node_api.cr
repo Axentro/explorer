@@ -47,6 +47,25 @@ module Explorer
       L.warn "Can't retrieve the block: #{ex.message}"
       nil
     end
+
+    def self.blockchain : Array(Block)?
+      pool.connection do |http|
+        http.exec(HTTP::Request.new("GET", "/api/v1/blockchain")) do |response|
+          if response.status_code == 200
+            json_str = response.body_io.gets
+            if json_str && !json_str.strip.empty?
+              return BlockchainResult.from_json(json_str).result
+            end
+          else
+            L.warn "Node api (/api/v1/blockchain) failure"
+            return nil
+          end
+        end
+      end
+    rescue ex
+      L.warn "Can't retrieve the blockchain: #{ex.message}"
+      nil
+    end
   end
 
   include Explorer::Types

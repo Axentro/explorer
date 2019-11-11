@@ -6,31 +6,10 @@ module Explorer
     class Blockchain
       # Initialize the chain at start
       def self.sync
-        db_block_index = R.last_block_index
-        node_block_index = NodeApi.last_block_index
-        raise "Could not synchronize the database. Node is empty! [node_block_index == #{node_block_index}]" if node_block_index == 0
-        L.debug "DB last index: #{db_block_index.inspect}"
-        L.debug "Node last index: #{node_block_index.inspect}"
-        if db_block_index != node_block_index
-          # /!\ node_block_index - 1: last block is send and stored when connected to the /pubsub event
-          node_block_index -= 1
-          # Ensure to clean database if SushiChain node is on anoher chain or something is really bad !
-          # Not safe for now, need a rewrite
-          # if node_block_index < db_block_index
-          #   R.clean_tables
-          #   db_block_index = 0
-          # end
-          L.warn "Blockchain sync started..."
-          Range.new(db_block_index, node_block_index * 2).each do |iter| # TODO(fenicks): remove x2 and update the web service to get highest index for SLOW and FAST block
-            L.debug "Synchronizing block index #{iter}"
-            block = NodeApi.block(iter.to_u64)
-            L.debug "[Blockchain.sync] block to add: #{block}"
-            R.block_add(block) if block
-          end
-          L.warn "Blockchain sync finished [#{(node_block_index - db_block_index) + 1} blocks added]..."
-        else
-          L.info "Blockchain is already synced..."
+        (NodeApi.blockchain || [] of Block).each do |block|
+          R.block_add(block)
         end
+        L.info "Blockchain is synced now"
       rescue ex
         L.error "[Explorer::Sync::Blockchain.sync] #{ex.message}"
         exit -42

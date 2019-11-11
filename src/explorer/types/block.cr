@@ -43,5 +43,12 @@ module Explorer
         result: Block,
       )
     end
+
+    struct BlockchainResult
+      JSON.mapping(
+        status: String,
+        result: Array(Block),
+      )
+    end
   end
 end
