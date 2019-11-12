@@ -228,12 +228,6 @@ module Explorer
         @@pool.connection do |conn|
           if b.filter({index: block_scale[:index]}).run(conn).size == 0
             b.insert(block_scale).run(conn)
-            # Add block_index field in each transaction
-            b.filter({index: block_scale[:index]}).update do |doc|
-              {
-                transactions: doc[:transactions].merge({block_index: block_scale[:index]}),
-              }
-            end.run(conn)
           end
         end
 
@@ -394,6 +388,7 @@ module Explorer
           transactions: block[:transactions].map do |t|
             {
               id:      t[:id],
+              block_index: block[:index],
               action:  t[:action],
               senders: t[:senders].map do |s|
                 {
