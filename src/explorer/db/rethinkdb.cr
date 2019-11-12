@@ -220,6 +220,9 @@ module Explorer
 
       def self.block_add(block : Block)
         block_scale = scale_decimal(block)
+        # Add default SUSHI token
+        token_add({name: "SUSHI", timestamp: 0.to_i64}) if block_scale[:index] == 0
+
         # Insert the block
         b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
         @@pool.connection do |conn|
@@ -233,9 +236,6 @@ module Explorer
             end.run(conn)
           end
         end
-
-        # Add default SUSHI token
-        token_add({name: "SUSHI", timestamp: 0.to_i64}) if block_scale[:index] == 0
 
         # Add transaction
         t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
