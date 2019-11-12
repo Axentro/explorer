@@ -303,8 +303,7 @@ module Explorer
         end.to_json
       end
 
-      # Domain
-      # # scars_buy, scars_sell, scars_cancel
+      # Domain (Scars): scars_buy, scars_sell, scars_cancel
       def self.domain_add(domain : Domain)
         @@pool.connection do |conn|
           t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS)
