@@ -77,6 +77,31 @@ module Explorer::Web
         context
       end
 
+      # /domains
+      ["#{prefix}/domains",
+       "#{prefix}/domains/page/:page/length/:length"].each do |route|
+        get route do |context, params|
+          content_type_json(context)
+          if params.["page"]? && params["length"]? # /domains/page/:page/length/:length
+            page = begin params["page"].to_i32 rescue 0 end
+            length = begin params["length"].to_i32 rescue 0 end
+            L.debug("#{prefix}/domains/page/:page/length/:length ==> #{page} - #{length}")
+            context.response.print R.domains(page, length)
+          else                               # /domains
+            context.response.print R.domains # All domains
+          end
+          context
+        end
+      end
+
+      # /domain
+      get "#{prefix}/domain/:name" do |context, params|
+        content_type_json(context)
+        name = params["name"]? || ""
+        context.response.print R.domain(name)
+        context
+      end
+
       # /tokens
       ["#{prefix}/tokens",
        "#{prefix}/tokens/page/:page/length/:length"].each do |route|

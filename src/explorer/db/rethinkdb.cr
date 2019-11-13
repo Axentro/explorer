@@ -298,6 +298,31 @@ module Explorer
       end
 
       # Domain (Scars): scars_buy, scars_sell, scars_cancel
+      def self.domains
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).order_by(::RethinkDB.asc("timestamp")).default("[]").run(conn)
+        end.to_json
+      end
+
+      def self.domains(page : Int32, length : Int32)
+        @@pool.connection do |conn|
+          page = 1 if page <= 0
+          length = CONFIG.per_page if length < 0
+          L.debug("[domains] page: #{page} - length: #{length}")
+
+          start = (page - 1) * length
+          last = start + length
+          L.debug("[domains] start: #{start} - last: #{last}")
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).order_by(::RethinkDB.asc("timestamp")).slice(start, last).default("[]").run(conn)
+        end.to_json
+      end
+
+      def self.domain(name : String)
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({name: name}).min("name").default("{}").run(conn)
+        end.to_json
+      end
+
       def self.domain_add(domain : Domain)
         @@pool.connection do |conn|
           t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS)

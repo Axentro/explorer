@@ -42,11 +42,17 @@ routes {
   }
 
   /domains {
-    Application.setPage(Page::Domains)
+    parallel {
+      Application.setPage(Page::Domains)
+      Stores.Domains.getDomains(1)
+    }
   }
 
   /domains/show/:name (name : String) {
-    Application.setPage(Page::Domains.Show)
+    parallel {
+      Application.setPage(Page::Domains.Show)
+      Stores.Domains.getDomain(name)
+    }
   }
 
   /tokens {
