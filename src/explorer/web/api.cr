@@ -7,10 +7,13 @@ module Explorer::Web
 
     # TODO(fenicks): Generate Mint files before building static binary
     def web_routes
-      get "/*" do |context, _|
-        content_type_html(context)
-        context.response.print File.read("./src/explorer/web/static/dist/index.html")
-        context
+      ["/",
+       "/*"].each do |route|
+        get route do |context, _|
+          content_type_html(context)
+          context.response.print File.read("./src/explorer/web/static/dist/index.html")
+          context
+        end
       end
     end
 
