@@ -31,8 +31,30 @@ module Explorer
       end
 
       def self.setup_database
+        build_db
         build_tables
         build_indexes
+      end
+
+      def self.build_db
+        conn = ::RethinkDB.connect(
+          host: DB_URI.host,
+          port: DB_URI.port
+        )
+        if ::RethinkDB.db_list.run(conn).as_a.includes?(DB_NAME)
+          L.info "Database [#{DB_NAME}] already exists"
+        else
+          ::RethinkDB.db_create(DB_NAME).run(conn)
+          L.info "Database [#{DB_NAME}] created"
+          if DB_URI.user
+            ::RethinkDB.db("rethinkdb").table("users").insert({id: DB_URI.user, password: DB_URI.password}).run(conn)
+            L.info "User [#{DB_URI.user}] created"
+            ::RethinkDB.db(DB_NAME).grant(DB_URI.user, {read: true, write: true, config: true}).run(conn)
+            L.info "User [#{DB_URI.user}] granted for the database #{DB_NAME}"
+          end
+        end
+      rescue e
+        L.warn("Error when building the database: #{e}")
       end
 
       def self.build_tables
@@ -97,22 +119,24 @@ module Explorer
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field) do |doc|
               yield(doc)
             end.run(conn)
-            L.info "Table [#{index_field}] created"
+            L.info "Index [#{index_field}] created"
           end
         end
       end
 
-      def self.clean_table(t : String)
-        @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(t).delete.run(conn)
-          L.info "Table [#{t}] cleaned"
+      def self.clean_db
+        conn = ::RethinkDB.connect(
+          host: DB_URI.host,
+          port: DB_URI.port
+        )
+        ::RethinkDB.db_drop(DB_NAME).run(conn)
+        L.info "Database [#{DB_NAME}] droped"
+        if DB_URI.user
+          ::RethinkDB.db("rethinkdb").table("users").get(DB_URI.user).delete.run(conn)
+          L.info "User [#{DB_URI.user}] removed"
         end
-      end
-
-      def self.clean_tables
-        DB_TABLE_LIST.each do |table|
-          clean_table(table)
-        end
+      rescue e
+        L.warn "Error when cleaning the database: #{e}"
       end
 
       # Address
@@ -412,10 +436,10 @@ module Explorer
           index:        block[:index],
           transactions: block[:transactions].map do |t|
             {
-              id:      t[:id],
+              id:          t[:id],
               block_index: block[:index],
-              action:  t[:action],
-              senders: t[:senders].map do |s|
+              action:      t[:action],
+              senders:     t[:senders].map do |s|
                 {
                   address:    s[:address],
                   public_key: s[:public_key],
