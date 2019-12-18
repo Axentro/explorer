@@ -1,6 +1,8 @@
 module Explorer::Web
   class Filesystem
-    BakedFileSystem.load("./static/dist", __DIR__)
+    extend BakedFileSystem
+
+    bake_folder "./static/dist"
 
     def self.serve(file, context)
       req = context.request

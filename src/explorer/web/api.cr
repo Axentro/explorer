@@ -11,7 +11,7 @@ module Explorer::Web
        "/*"].each do |route|
         get route do |context, _|
           content_type_html(context)
-          context.response.print File.read("./src/explorer/web/static/dist/index.html")
+          context.response.print Filesystem.get?("index.html").try(&.gets_to_end)
           context
         end
       end
