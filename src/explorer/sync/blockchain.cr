@@ -6,6 +6,7 @@ module Explorer
     class Blockchain
       # Initialize the chain at start
       def self.sync
+        L.info "Blockchain sync started"
         (NodeApi.blockchain || [] of Block).each do |block|
           R.block_add(block)
         end
