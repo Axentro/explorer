@@ -186,9 +186,9 @@ module Explorer
               result = a.filter({address: address}).run(conn).to_a.first
               a.filter({address: address}).update({durability: "hard"}) do
                 result_amount : BigInt = if who == "sender"
-                  BigInt.new(result["amount"].to_s) - BigInt.new(amount) - BigInt.new(fee)
+                  BigInt.new(result["amount"].to_s) - (BigInt.new(amount) + BigInt.new(fee))
                 else
-                  BigInt.new(result["amount"].to_s) + BigInt.new(amount) - BigInt.new(fee)
+                  BigInt.new(result["amount"].to_s) + BigInt.new(amount) # - BigInt.new(fee)
                 end
                 {amount: result_amount.to_s}
               end.run(conn)
