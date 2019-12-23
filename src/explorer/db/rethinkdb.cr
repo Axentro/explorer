@@ -30,31 +30,31 @@ module Explorer
         )
       end
 
-      def self.setup_database
-        build_db
+      def self.db_setup
+        @@pool.connection do |conn|
+          unless ::RethinkDB.db_list.run(conn).as_a.includes?(DB_NAME)
+            L.warn "Database [#{DB_NAME}] doesn't exist"
+            ::RethinkDB.db_create(DB_NAME).run(conn)
+            L.info "Database [#{DB_NAME}] create"
+          end
+        end
         build_tables
         build_indexes
       end
 
-      def self.build_db
-        conn = ::RethinkDB.connect(
-          host: DB_URI.host,
-          port: DB_URI.port
-        )
-        if ::RethinkDB.db_list.run(conn).as_a.includes?(DB_NAME)
-          L.info "Database [#{DB_NAME}] already exists"
-        else
-          ::RethinkDB.db_create(DB_NAME).run(conn)
-          L.info "Database [#{DB_NAME}] created"
-          if DB_URI.user
-            ::RethinkDB.db("rethinkdb").table("users").insert({id: DB_URI.user, password: DB_URI.password}).run(conn)
-            L.info "User [#{DB_URI.user}] created"
-            ::RethinkDB.db(DB_NAME).grant(DB_URI.user, {read: true, write: true, config: true}).run(conn)
-            L.info "User [#{DB_URI.user}] granted for the database #{DB_NAME}"
+      def self.db_cleanup
+        DB_TABLE_LIST.each do |table|
+          @@pool.connection do |conn|
+            ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.each do |idx|
+              ::RethinkDB.db(DB_NAME).table(table).index_drop(idx.to_s).run(conn)
+              L.info "Index [#{idx}] from the table [#{table}] droped"
+            end
+            ::RethinkDB.db(DB_NAME).table_drop(table).run(conn)
+            L.info "Table [#{table}] droped"
           end
         end
       rescue e
-        L.warn("Error when building the database: #{e}")
+        L.warn "Error when droping tables and their indexes: #{e}"
       end
 
       def self.build_tables
@@ -105,7 +105,7 @@ module Explorer
             L.info "Index [#{index_field}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field).run(conn)
-            L.info "Table [#{index_field}] created"
+            L.info "Index [#{index_field}] created"
           end
         end
       end
@@ -122,21 +122,6 @@ module Explorer
             L.info "Index [#{index_field}] created"
           end
         end
-      end
-
-      def self.clean_db
-        conn = ::RethinkDB.connect(
-          host: DB_URI.host,
-          port: DB_URI.port
-        )
-        ::RethinkDB.db_drop(DB_NAME).run(conn)
-        L.info "Database [#{DB_NAME}] droped"
-        if DB_URI.user
-          ::RethinkDB.db("rethinkdb").table("users").get(DB_URI.user).delete.run(conn)
-          L.info "User [#{DB_URI.user}] removed"
-        end
-      rescue e
-        L.warn "Error when cleaning the database: #{e}"
       end
 
       # Address

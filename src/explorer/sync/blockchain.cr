@@ -34,7 +34,7 @@ module Explorer
           block : Block = Block.from_json(message)
           if block.not_nil!
             R.block_add(block)
-            L.info "Block ##{block["index"]} added"
+            L.info "Block ##{block[:index]} added"
           end
         end
 
