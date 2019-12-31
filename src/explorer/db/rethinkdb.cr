@@ -241,7 +241,7 @@ module Explorer
               b.insert(scaled_block).run(conn)
             rescue e
               L.warn "[BLOCK:#{scaled_block[:index]}]: #{e}"
-              L.warn "#{scaled_block[:nonce]?}"
+              L.warn "#{scaled_block}"
             end
           end
         end
