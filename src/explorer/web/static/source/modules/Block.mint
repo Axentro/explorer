@@ -40,7 +40,7 @@ module Block {
   fun renderLine (block : Block) : Html {
     <tr>
       <td>
-        <span class="icon is-medium is-left">
+        <span class="icon is-small is-left">
           <i
             class={
               "fas " + if (block.index % 2 == 0) {
