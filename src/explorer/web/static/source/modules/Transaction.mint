@@ -60,6 +60,18 @@ module Transaction {
       </td>
 
       <td>
+        <span class="icon is-medium is-left">
+          <i
+            class={
+              "fas " + if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
+                "fa-building"
+              } else {
+                "fa-bolt"
+              }
+            }
+            aria-hidden="true"/>
+        </span>
+
         <a href={"/blocks/show/" + Number.toString(Maybe.withDefault(0, transaction.blockIndex))}>
           <{ Number.toString(Maybe.withDefault(0, transaction.blockIndex)) }>
         </a>
