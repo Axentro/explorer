@@ -40,6 +40,18 @@ module Block {
   fun renderLine (block : Block) : Html {
     <tr>
       <td>
+        <span class="icon is-medium is-left">
+          <i
+            class={
+              "fas " + if (block.index % 2 == 0) {
+                "fa-building"
+              } else {
+                "fa-bolt"
+              }
+            }
+            aria-hidden="true"/>
+        </span>
+
         <a href={"/blocks/show/" + Number.toString(block.index)}>
           <{ Number.toString(block.index) }>
         </a>
