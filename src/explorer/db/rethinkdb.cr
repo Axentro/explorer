@@ -228,25 +228,31 @@ module Explorer
       end
 
       def self.block_add(block : Block)
-        block_scale = scale_decimal(block)
+        scaled_block = scale_decimal(block)
+
         # Add default SUSHI token
-        token_add({name: "SUSHI", timestamp: 0.to_i64}) if block_scale[:index] == 0
+        token_add({name: "SUSHI", timestamp: 0.to_i64}) if scaled_block[:index] == 0
 
         # Insert the block
         b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
         @@pool.connection do |conn|
-          if b.filter({index: block_scale[:index]}).run(conn).size == 0
-            b.insert(block_scale).run(conn)
+          if b.filter({index: scaled_block[:index]}).run(conn).size == 0
+            begin
+              b.insert(scaled_block).run(conn)
+            rescue e
+              L.warn "[BLOCK:#{scaled_block[:index]}]: #{e}"
+              L.warn "#{scaled_block[:nonce]?}"
+            end
           end
         end
 
         # Add transaction
         t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS)
         @@pool.connection do |conn|
-          t.insert(b.filter({index: block_scale[:index]}).pluck("transactions").coerce_to("array")[0]["transactions"]).run(conn)
+          t.insert(b.filter({index: scaled_block[:index]}).pluck("transactions").coerce_to("array")[0]["transactions"]).run(conn)
         end
 
-        block_scale[:transactions].each do |tx|
+        scaled_block[:transactions].each do |tx|
           # Add token created
           token_add({name: tx[:token], timestamp: tx[:timestamp]}) if tx[:action] == "create_token"
 
