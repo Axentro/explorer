@@ -12,7 +12,7 @@ module Explorer
         end
         L.info "Blockchain is synced now"
       rescue ex
-        L.error "[Explorer::Sync::Blockchain.sync] #{ex.message}"
+        L.error "[Explorer::Sync::Blockchain.sync] #{ex}"
         exit -42
       end
 
@@ -46,11 +46,11 @@ module Explorer
         begin
           socket.run
         rescue e : Exception
-          L.error e.message.not_nil!
+          L.error "#{e}"
           socket_close
         end
       rescue ex
-        L.error "[Explorer::Sync::Blockchain.event] #{ex.message}"
+        L.error "[Explorer::Sync::Blockchain.event] #{ex}"
       end
 
       private def self.socket

@@ -48,7 +48,7 @@ end
 begin
   R.db_setup
 rescue ex
-  L.error "[Database setup] #{ex.message} - #{ex.class}"
+  L.error "[Database setup] #{ex} - #{ex.class}"
   exit -42
 end
 
@@ -58,7 +58,7 @@ spawn do
     begin
       Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
     rescue ex
-      L.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex.message}"
+      L.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex}"
     end
     sleep 5.seconds
   end

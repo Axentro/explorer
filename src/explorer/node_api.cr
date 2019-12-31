@@ -25,7 +25,7 @@ module Explorer
       end
       0.to_u64
     rescue ex
-      L.warn "Can't retrieve block size: #{ex.message}"
+      L.warn "Can't retrieve block size: #{ex}"
       0.to_u64
     end
 
@@ -44,7 +44,7 @@ module Explorer
         end
       end
     rescue ex
-      L.warn "Can't retrieve the block: #{ex.message}"
+      L.warn "Can't retrieve the block: #{ex}"
       nil
     end
 
@@ -63,7 +63,7 @@ module Explorer
         end
       end
     rescue ex
-      L.warn "Can't retrieve the blockchain: #{ex.message}"
+      L.warn "Can't retrieve the blockchain: #{ex}"
       nil
     end
   end

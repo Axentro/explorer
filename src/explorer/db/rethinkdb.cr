@@ -149,7 +149,7 @@ module Explorer
             .run(conn)
         end.to_json
       rescue e
-        L.error("#{e}")
+        L.error "#{e}"
       end
 
       def self.address(address : String)
