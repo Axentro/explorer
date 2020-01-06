@@ -192,7 +192,9 @@ module Transaction {
   fun renderSendersLine (sender : Sender) : Html {
     <tr>
       <td>
-        <{ sender.address }>
+        <a href={"/addresses/show/" + sender.address}>
+          <{ sender.address }>
+        </a>
       </td>
 
       <td>
@@ -220,7 +222,9 @@ module Transaction {
   fun renderRecipientsLine (recipient : Recipient) : Html {
     <tr>
       <td>
-        <{ recipient.address }>
+        <a href={"/addresses/show/" + recipient.address}>
+          <{ recipient.address }>
+        </a>
       </td>
 
       <td>
