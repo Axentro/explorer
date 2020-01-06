@@ -10,7 +10,7 @@ shards:
 
   crystal-rethinkdb:
     github: fenicks/crystal-rethinkdb
-    commit: 49b2f35d3ce851de15755332830f492f3e196b94
+    commit: 493b4d280285dc01a0425bec930d780722422d51
 
   pool:
     github: ysbaddaden/pool

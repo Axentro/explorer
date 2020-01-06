@@ -14,6 +14,8 @@ dependencies:
     version: 0.9.8
   crystal-rethinkdb:
     github: fenicks/crystal-rethinkdb
+    branch: master
+    # path: /home/christian/workspace/crystal-rethinkdb
   pool:
     github: ysbaddaden/pool
   # rocksdb:
