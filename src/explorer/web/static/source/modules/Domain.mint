@@ -40,7 +40,9 @@ module Domain {
       </td>
 
       <td>
-        <{ domain.address }>
+        <a href={"/addresses/show/" + domain.address}>
+          <{ domain.address }>
+        </a>
       </td>
 
       <td>
