@@ -113,8 +113,12 @@ module Transaction {
   fun renderLineShrink (transaction : Transaction) : Html {
     <tr>
       <td>
-        <a href={"/transactions/show/" + transaction.id}>
+        <a
+          href={"/transactions/show/" + transaction.id}
+          title={transaction.id}>
+
           <{ SString.substring(transaction.id, 0, 16) + "..." }>
+
         </a>
       </td>
 
@@ -192,8 +196,12 @@ module Transaction {
   fun renderSendersLine (sender : Sender) : Html {
     <tr>
       <td>
-        <a href={"/addresses/show/" + sender.address}>
-          <{ sender.address }>
+        <a
+          href={"/addresses/show/" + sender.address}
+          title={sender.address}>
+
+          <{ SString.substring(sender.address, 0, 16) + "..." }>
+
         </a>
       </td>
 
@@ -222,8 +230,12 @@ module Transaction {
   fun renderRecipientsLine (recipient : Recipient) : Html {
     <tr>
       <td>
-        <a href={"/addresses/show/" + recipient.address}>
-          <{ recipient.address }>
+        <a
+          href={"/addresses/show/" + recipient.address}
+          title={recipient.address}>
+
+          <{ SString.substring(recipient.address, 0, 16) + "..." }>
+
         </a>
       </td>
 
