@@ -50,12 +50,6 @@ Start the compiled web application (static files are in binary)
     kill $(lsof -t -i @localhost:8080 -sTCP:listen)
     kill $(lsof -t -i @localhost:28015 -sTCP:listen)
 
-### Create RethinkDB database and user
-
-    r.db('rethinkdb').table('users').insert({id: 'sushixplorer', password: 'sushixplorer'});
-    r.dbCreate('sushixplorer_test');
-    r.db('sushixplorer_test').grant('sushixplorer', {read: true, write: true, config: true});
-
 ## Contributing
 
 1. Fork it (<https://github.com/your-github-user/explorer/fork>)
