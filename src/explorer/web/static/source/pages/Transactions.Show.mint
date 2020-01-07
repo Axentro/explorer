@@ -140,67 +140,69 @@ component Pages.Transactions.Show {
         </tbody>
       </table>
 
-      <div class="card has-margin-top-15 has-margin-top-5-mobile">
-        <header class="card-header">
-          <p class="card-header-title">
-            <{ "Senders (" + Number.toString(Array.size(transaction.senders)) + ")" }>
-          </p>
-        </header>
-
+      <div class="columns">
         if (Array.size(transaction.senders) > 0) {
-          <div class="card-content">
-            <div class="content">
-              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                <thead>
-                  <{ Transaction.renderSendersHeaderFooterTable() }>
-                </thead>
+          <div class="column">
+            <div class="card has-margin-top-15 has-margin-top-5-mobile">
+              <header class="card-header">
+                <p class="card-header-title">
+                  <{ "Senders (" + Number.toString(Array.size(transaction.senders)) + ")" }>
+                </p>
+              </header>
 
-                <tfoot>
-                  <{ Transaction.renderSendersHeaderFooterTable() }>
-                </tfoot>
+              <div class="card-content">
+                <div class="content">
+                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                    <thead>
+                      <{ Transaction.renderSendersHeaderFooterTable() }>
+                    </thead>
 
-                <tbody>
-                  <{ Array.map(Transaction.renderSendersLine, transaction.senders) }>
-                </tbody>
-              </table>
+                    <tfoot>
+                      <{ Transaction.renderSendersHeaderFooterTable() }>
+                    </tfoot>
+
+                    <tbody>
+                      <{ Array.map(Transaction.renderSendersLine, transaction.senders) }>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
-        } else {
-          <></>
         }
-      </div>
-
-      <div class="card has-margin-top-15 has-margin-top-5-mobile">
-        <header class="card-header">
-          <p class="card-header-title">
-            <{ "Recipients (" + Number.toString(Array.size(transaction.recipients)) + ")" }>
-          </p>
-        </header>
 
         if (Array.size(transaction.recipients) > 0) {
-          <div class="card-content">
-            <div class="content">
-              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                <thead>
-                  <{ Transaction.renderRecipientsHeaderFooterTable() }>
-                </thead>
+          <div class="column">
+            <div class="card has-margin-top-15 has-margin-top-5-mobile">
+              <header class="card-header">
+                <p class="card-header-title">
+                  <{ "Recipients (" + Number.toString(Array.size(transaction.recipients)) + ")" }>
+                </p>
+              </header>
 
-                <tfoot>
-                  <{ Transaction.renderRecipientsHeaderFooterTable() }>
-                </tfoot>
+              <div class="card-content">
+                <div class="content">
+                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                    <thead>
+                      <{ Transaction.renderRecipientsHeaderFooterTable() }>
+                    </thead>
 
-                <tbody>
-                  <{
-                    Array.map(
-                      Transaction.renderRecipientsLine,
-                      transaction.recipients)
-                  }>
-                </tbody>
-              </table>
+                    <tfoot>
+                      <{ Transaction.renderRecipientsHeaderFooterTable() }>
+                    </tfoot>
+
+                    <tbody>
+                      <{
+                        Array.map(
+                          Transaction.renderRecipientsLine,
+                          transaction.recipients)
+                      }>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
-        } else {
-          <></>
         }
       </div>
     </div>
