@@ -50,4 +50,30 @@ module Domain {
       </td>
     </tr>
   }
+
+  fun renderInAddressHeaderFooterTable : Html {
+    <tr>
+      <th>
+        "Name"
+      </th>
+
+      <th>
+        "Time"
+      </th>
+    </tr>
+  }
+
+  fun renderInAddressLine (domain : Domain) : Html {
+    <tr>
+      <td>
+        <a href={"/domains/show/" + domain.name}>
+          <{ domain.name }>
+        </a>
+      </td>
+
+      <td>
+        <{ DDate.formatFromTSM(domain.timestamp) }>
+      </td>
+    </tr>
+  }
 }

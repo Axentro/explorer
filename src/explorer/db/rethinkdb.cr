@@ -127,7 +127,11 @@ module Explorer
       # Address
       def self.addresses
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
+          .map do |doc|
+            doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
+          end
+          .order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
         end.to_json
       end
 
@@ -141,6 +145,9 @@ module Explorer
           last = start + length
           L.debug("[addresses] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
+            .map do |doc|
+              doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
+            end
             # TODO(fenicks): Fix order_by(:field, index: :my_index) in rethinkdb crystal driver
             # .order_by(:amount, index: ::RethinkDB.desc("amount_length"))
             .order_by(::RethinkDB.desc("amount"))
@@ -154,7 +161,9 @@ module Explorer
 
       def self.address(address : String)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).filter({address: address}).min("address").default("{}").run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).filter({address: address}).map do |doc|
+            doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
+          end.min("address").default("{}").run(conn)
         end.to_json
       end
 

@@ -4,6 +4,7 @@ module Address {
       address = "",
       amount = 0,
       tokenAmounts = [],
+      domains = [],
       timestamp = 0
     }
   }
@@ -31,6 +32,10 @@ module Address {
       </th>
 
       <th>
+        "Number of domains"
+      </th>
+
+      <th>
         "Time"
       </th>
     </tr>
@@ -50,6 +55,10 @@ module Address {
 
       <td>
         <{ Number.toString(Array.size(address.tokenAmounts)) }>
+      </td>
+
+      <td>
+        <{ Number.toString(Array.size(address.domains)) }>
       </td>
 
       <td>
