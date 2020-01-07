@@ -12,6 +12,8 @@ component Pages.Blocks {
           </p>
         </header>
 
+        <Paginate controller="blocks"/>
+
         <div class="card-content">
           <div class="content">
             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
@@ -29,6 +31,8 @@ component Pages.Blocks {
             </table>
           </div>
         </div>
+
+        <Paginate controller="blocks"/>
       </div>
     </div>
   }

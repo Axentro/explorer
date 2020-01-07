@@ -7,7 +7,7 @@ module Explorer::Web
     def initialize(@explorer_bind_host : String, @explorer_bind_port : Int32)
     end
 
-    # TODO(fenicks): Generate Mint files before building static binary
+    # Default routes, @see("web/static/source/Routes.mint")
     def web_routes
       ["/",
        "/*"].each do |route|

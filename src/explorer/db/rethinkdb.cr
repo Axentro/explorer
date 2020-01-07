@@ -296,10 +296,9 @@ module Explorer
       def self.blocks(top : Int32 = -1)
         @@pool.connection do |conn|
           if top < 0
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").run(conn)
-          else
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").limit(top).run(conn)
+            top = CONFIG.per_page
           end
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).default("[]").limit(top).run(conn)
         end.to_json
       end
 
@@ -412,10 +411,9 @@ module Explorer
       def self.transactions(top : Int32 = -1)
         @@pool.connection do |conn|
           if top < 0
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
-          else
-            ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").limit(top).run(conn)
+            top = CONFIG.per_page
           end
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).default("[]").limit(top).run(conn)
         end.to_json
       end
 

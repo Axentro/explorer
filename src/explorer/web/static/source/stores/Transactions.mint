@@ -2,7 +2,7 @@ store Stores.Transactions {
   state transactions : Array(Transaction) = []
   state transaction : Transaction = Transaction.empty()
 
-  fun loadTop (top : Number) : Promise(Never, Void) {
+  fun loadTop (top : Number = -1) : Promise(Never, Void) {
     sequence {
       response =
         "/api/v1/transactions/top/" + Number.toString(top)

@@ -1,7 +1,7 @@
 store Application {
-  state limitHomeItemList : Number = 20
-  state refreshHomePageInSecond : Number = 15
   state page : Page = Page::Home
+  state currentPage : Maybe(Number) = Maybe.nothing()
+
   state anchor : Maybe(String) = Maybe.nothing()
 
   fun setPage (page : Page) : Promise(Never, Void) {

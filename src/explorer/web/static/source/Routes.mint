@@ -20,6 +20,13 @@ routes {
     }
   }
 
+  /addresses/page/:page (page : Number) {
+    parallel {
+      Application.setPage(Page::Addresses)
+      Stores.Addresses.getAddresses(page)
+    }
+  }
+
   /addresses/show/:address (address : String) {
     parallel {
       Application.setPage(Page::Addresses.Show)
@@ -31,6 +38,13 @@ routes {
     parallel {
       Application.setPage(Page::Blocks)
       Stores.Blocks.getBlocks(1)
+    }
+  }
+
+  /blocks/page/:page (page : Number) {
+    parallel {
+      Application.setPage(Page::Blocks)
+      Stores.Blocks.getBlocks(page)
     }
   }
 
@@ -48,6 +62,13 @@ routes {
     }
   }
 
+  /domains/page/:page (page : Number) {
+    parallel {
+      Application.setPage(Page::Domains)
+      Stores.Domains.getDomains(page)
+    }
+  }
+
   /domains/show/:name (name : String) {
     parallel {
       Application.setPage(Page::Domains.Show)
@@ -59,6 +80,13 @@ routes {
     parallel {
       Application.setPage(Page::Tokens)
       Stores.Tokens.getTokens(1)
+    }
+  }
+
+  /tokens/page/:page (page : Number) {
+    parallel {
+      Application.setPage(Page::Tokens)
+      Stores.Tokens.getTokens(page)
     }
   }
 
@@ -76,6 +104,13 @@ routes {
     }
   }
 
+  /transactions/page/:page (page : Number) {
+    parallel {
+      Application.setPage(Page::Transactions)
+      Stores.Transactions.getTransactions(page)
+    }
+  }
+
   /transactions/show/:txid (txid : String) {
     parallel {
       Application.setPage(Page::Transactions.Show)
@@ -86,8 +121,8 @@ routes {
   / {
     parallel {
       Application.setPage(Page::Home)
-      Stores.Blocks.loadTop(Application.limitHomeItemList)
-      Stores.Transactions.loadTop(Application.limitHomeItemList)
+      Stores.Blocks.loadTop()
+      Stores.Transactions.loadTop()
     }
   }
 }
