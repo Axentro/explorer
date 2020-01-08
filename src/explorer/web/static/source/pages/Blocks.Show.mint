@@ -96,15 +96,15 @@ component Pages.Blocks.Show {
           <div class="content">
             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
               <thead>
-                <{ Transaction.renderHeaderFooterTable() }>
+                <{ Transaction.renderInBlockHeaderFooterTable() }>
               </thead>
 
               <tfoot>
-                <{ Transaction.renderHeaderFooterTable() }>
+                <{ Transaction.renderInBlockHeaderFooterTable() }>
               </tfoot>
 
               <tbody>
-                <{ Array.map(Transaction.renderLine, block.transactions) }>
+                <{ Array.map(Transaction.renderInBlockLine, block.transactions) }>
               </tbody>
             </table>
           </div>

@@ -173,6 +173,75 @@ module Transaction {
     </tr>
   }
 
+  fun renderInBlockHeaderFooterTable : Html {
+    <tr>
+      <th>
+        "Transaction ID"
+      </th>
+
+      <th>
+        "Time"
+      </th>
+
+      <th>
+        "Action"
+      </th>
+
+      <th>
+        "Senders"
+      </th>
+
+      <th>
+        "Recipients"
+      </th>
+
+      <th>
+        "Token"
+      </th>
+    </tr>
+  }
+
+  fun renderInBlockLine (transaction : Transaction) : Html {
+    <tr>
+      <td>
+        <a href={"/transactions/show/" + transaction.id}>
+          <{ transaction.id }>
+        </a>
+      </td>
+
+      <td>
+        <{ DDate.formatFromTSM(transaction.timestamp) }>
+      </td>
+
+      <td>
+        <{ transaction.action }>
+      </td>
+
+      <td>
+        <{ Number.toString(Array.size(transaction.senders)) }>
+      </td>
+
+      <td>
+        <{ Number.toString(Array.size(transaction.recipients)) }>
+      </td>
+
+      <td>
+        <span
+          class={
+            "tag " + if (transaction.token == "SUSHI") {
+              "is-info"
+            } else {
+              "is-light"
+            }
+          }>
+
+          <{ transaction.token }>
+
+        </span>
+      </td>
+    </tr>
+  }
+
   fun renderSendersHeaderFooterTable : Html {
     <tr>
       <th>
