@@ -19,6 +19,18 @@ component Pages.Blocks.Show {
             </th>
 
             <td>
+              <span class="icon is-small is-left">
+                <i
+                  class={
+                    "fas " + if (block.index % 2 == 0) {
+                      "fa-building"
+                    } else {
+                      "fa-bolt"
+                    }
+                  }
+                  aria-hidden="true"/>
+              </span>
+
               <{ Number.toString(block.index) }>
             </td>
           </tr>
