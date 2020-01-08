@@ -29,6 +29,18 @@ component Pages.Transactions.Show {
             </th>
 
             <td>
+              <span class="icon is-small is-left">
+                <i
+                  class={
+                    "fas " + if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
+                      "fa-building"
+                    } else {
+                      "fa-bolt"
+                    }
+                  }
+                  aria-hidden="true"/>
+              </span>
+
               <a href={"/blocks/show/" + Number.toString(Maybe.withDefault(0, transaction.blockIndex))}>
                 <{ Number.toString(Maybe.withDefault(0, transaction.blockIndex)) }>
               </a>
