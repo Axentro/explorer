@@ -22,7 +22,7 @@ struct Config
     @server : String = "0.0.0.0",
     @port : Int32 = 3100,
     @db : String = "rethinkdb://localhost:28015/explorer_testnet",
-    @per_page = 25
+    @per_page = 20
   )
   end
 end
