@@ -19,7 +19,7 @@ module Explorer
     alias SlowBlock = NamedTuple(
       index: UInt64,
       transactions: Array(Transaction),
-      nonce: UInt64,
+      nonce: UInt64|String,
       prev_hash: String,
       merkle_tree_root: String,
       timestamp: Int64,

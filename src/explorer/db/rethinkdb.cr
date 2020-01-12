@@ -463,7 +463,7 @@ module Explorer
               kind:      t[:kind],
             }
           end,
-          nonce:            block[:nonce]?,
+          nonce:            block[:nonce]?.try(&.to_s),  # Needed because JSON (RethinkDB) doesn't support UInt64 type,
           prev_hash:        block[:prev_hash],
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],
