@@ -45,15 +45,17 @@ component Pages.Blocks.Show {
             </td>
           </tr>
 
-          <tr>
-            <th>
-              "Nonce"
-            </th>
+          if (block.index % 2 == 0) {
+            <tr>
+              <th>
+                "Nonce"
+              </th>
 
-            <td>
-              <{ Number.toString(Maybe.withDefault(0, block.nonce)) }>
-            </td>
-          </tr>
+              <td>
+                <{ Number.toString(Maybe.withDefault(0, block.nonce)) }>
+              </td>
+            </tr>
+          }
 
           <tr>
             <th>
