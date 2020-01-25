@@ -15,21 +15,15 @@ dependencies:
   crystal-rethinkdb:
     github: fenicks/crystal-rethinkdb
     branch: master
-    # path: /home/christian/workspace/crystal-rethinkdb
   pool:
     github: ysbaddaden/pool
-  # rocksdb:
-  #   github: maiha/rocksdb.cr
-  #   version: 0.5.1
   router:
     github: tbrand/router.cr
-  # sqlite3:
-  #   github: crystal-lang/crystal-sqlite3
 
 development_dependencies:
   ameba:
     github: veelenga/ameba
 
-crystal: 0.32.0
+crystal: 0.32.1
 
 license: MIT
