@@ -1,8 +1,9 @@
 store Stores.Blocks {
   state blocks : Array(Block) = []
   state block : Block = Block.empty()
+  state numberOfBlocks : Number = 0
 
-  fun loadTop (top : Number = -1) : Promise(Never, Void) {
+  fun loadTop (top : Number) : Promise(Never, Void) {
     sequence {
       response =
         "/api/v1/blocks/top/" + Number.toString(top)
