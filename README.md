@@ -30,25 +30,7 @@ Start the compiled web application (static files are in binary)
 
     # Connecting to the web admin interface on the same host
 
-    xdg-open "http://$(docker inspect --format \
-      '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080"
-
-    # Connecting to the web admin interface on a remote / virtual host via SSH
-    # Where remote is an alias for the remote user@hostname:
-
-    # start port forwarding
-    ssh -fNTL 8080:$(docker inspect --format \
-      '{{ .NetworkSettings.IPAddress }}' rethinkdb):8080 localhost
-
-    ssh -fNTL 28015:$(docker inspect --format \
-      '{{ .NetworkSettings.IPAddress }}' rethinkdb):28015 localhost
-
-    # open interface in browser
     xdg-open http://localhost:8080
-
-    # stop port forwarding
-    kill $(lsof -t -i @localhost:8080 -sTCP:listen)
-    kill $(lsof -t -i @localhost:28015 -sTCP:listen)
 
 ## Contributing
 
