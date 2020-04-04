@@ -26,7 +26,7 @@ Start the compiled web application (static files are in binary)
 
 [Link to RethinkDB docker documentation](https://docs.docker.com/samples/library/rethinkdb/)
 
-    docker run --name rethinkdb -v "$PWD:/data" -d rethinkdb
+    docker run -p 8080:8080 -p 28015:28015 --name rethinkdb -v "$PWD:/data" -d rethinkdb
 
     # Connecting to the web admin interface on the same host
 
