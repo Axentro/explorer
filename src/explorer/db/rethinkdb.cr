@@ -5,10 +5,11 @@ require "./../types/*"
 module Explorer
   module Db
     class RethinkDB
+      include Explorer::Logger
       include ::RethinkDB::Shortcuts
 
       DB_URI                     = URI.parse(CONFIG.db)
-      DB_NAME                    = DB_URI.path[1..-1]
+      DB_NAME                    = DB_URI.path[1..-1]? || "explorer_testnet"
       DB_TABLE_NAME_BLOCKS       = "blocks"
       DB_TABLE_NAME_TRANSACTIONS = "transactions"
       DB_TABLE_NAME_ADDRESSES    = "addresses"
@@ -22,20 +23,20 @@ module Explorer
 
       @@pool : ConnectionPool(::RethinkDB::Connection) = ConnectionPool.new(capacity: 10, timeout: 0.1) do
         ::RethinkDB.connect(
-          host: DB_URI.host,
-          port: DB_URI.port,
+          host: DB_URI.host || "localhost",
+          port: DB_URI.port || 28015,
           db: DB_NAME,
-          user: DB_URI.user,
-          password: DB_URI.password
+          user: DB_URI.user || "explorer_testnet",
+          password: DB_URI.password || "explorer_testnet"
         )
       end
 
       def self.db_setup
         @@pool.connection do |conn|
           unless ::RethinkDB.db_list.run(conn).as_a.includes?(DB_NAME)
-            L.warn "Database [#{DB_NAME}] doesn't exist"
+            @@logger.warning "Database [#{DB_NAME}] doesn't exist"
             ::RethinkDB.db_create(DB_NAME).run(conn)
-            L.info "Database [#{DB_NAME}] create"
+            @@logger.info "Database [#{DB_NAME}] create"
           end
         end
         build_tables
@@ -47,14 +48,14 @@ module Explorer
           @@pool.connection do |conn|
             ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.each do |idx|
               ::RethinkDB.db(DB_NAME).table(table).index_drop(idx.to_s).run(conn)
-              L.info "Index [#{idx}] from the table [#{table}] droped"
+              @@logger.info "Index [#{idx}] from the table [#{table}] droped"
             end
             ::RethinkDB.db(DB_NAME).table_drop(table).run(conn)
-            L.info "Table [#{table}] droped"
+            @@logger.info "Table [#{table}] droped"
           end
         end
       rescue e
-        L.warn "Error when droping tables and their indexes: #{e}"
+        @@logger.warning "Error when droping tables and their indexes: #{e}"
       end
 
       def self.build_tables
@@ -66,10 +67,10 @@ module Explorer
       def self.build_table(t : String)
         @@pool.connection do |conn|
           if ::RethinkDB.db(DB_NAME).table_list.run(conn).as_a.includes?(t)
-            L.info "Table [#{t}] already exists"
+            @@logger.info "Table [#{t}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table_create(t).run(conn)
-            L.info "Table [#{t}] created"
+            @@logger.info "Table [#{t}] created"
           end
         end
       end
@@ -102,10 +103,10 @@ module Explorer
       def self.build_index(index_field : String, table : String)
         @@pool.connection do |conn|
           if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.includes?(index_field)
-            L.info "Index [#{index_field}] already exists"
+            @@logger.info "Index [#{index_field}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field).run(conn)
-            L.info "Index [#{index_field}] created"
+            @@logger.info "Index [#{index_field}] created"
           end
         end
       end
@@ -114,12 +115,12 @@ module Explorer
       def self.build_index(index_field : String, table : String)
         @@pool.connection do |conn|
           if ::RethinkDB.db(DB_NAME).table(table).index_list.run(conn).as_a.includes?(index_field)
-            L.info "Index [#{index_field}] already exists"
+            @@logger.info "Index [#{index_field}] already exists"
           else
             ::RethinkDB.db(DB_NAME).table(table).index_create(index_field) do |doc|
               yield(doc)
             end.run(conn)
-            L.info "Index [#{index_field}] created"
+            @@logger.info "Index [#{index_field}] created"
           end
         end
       end
@@ -128,10 +129,10 @@ module Explorer
       def self.addresses
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
-          .map do |doc|
-            doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
-          end
-          .order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
+            .map do |doc|
+              doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
+            end
+            .order_by(::RethinkDB.desc("timestamp")).default("[]").run(conn)
         end.to_json
       end
 
@@ -139,11 +140,11 @@ module Explorer
         @@pool.connection do |conn|
           page = 1 if page <= 0
           length = CONFIG.per_page if length < 0
-          L.debug("[addresses] page: #{page} - length: #{length}")
+          @@logger.debug("[addresses] page: #{page} - length: #{length}")
 
           start = (page - 1) * length
           last = start + length
-          L.debug("[addresses] start: #{start} - last: #{last}")
+          @@logger.debug("[addresses] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
             .map do |doc|
               doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
@@ -156,7 +157,7 @@ module Explorer
             .run(conn)
         end.to_json
       rescue e
-        L.error "#{e}"
+        @@logger.error "#{e}"
       end
 
       def self.address(address : String)
@@ -174,7 +175,7 @@ module Explorer
             if a.filter({address: address}).run(conn).size == 0
               # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
               a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: timestamp}).run(conn)
-              L.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
             else
               # TODO(fenicks): Fix getting value in update RethinkDB update block
               result = a.filter({address: address}).run(conn).to_a.first
@@ -186,13 +187,13 @@ module Explorer
                 end
                 {amount: result_amount.to_s}
               end.run(conn)
-              L.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
             end
           else # tokens
             token_amount = amount
             if a.filter({address: address}).run(conn).size == 0
               a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: timestamp}).run(conn)
-              L.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
             else
               if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0
                 # TODO(fenicks): Fix getting value in update RethinkDB update block
@@ -203,7 +204,7 @@ module Explorer
                     token_amounts: u[:token_amounts].append({token: token, amount: token_amount}),
                   }
                 end.run(conn)
-                L.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
               else
                 result = a.filter({address: address}).run(conn).to_a.first
                 rt_amount : String
@@ -221,7 +222,7 @@ module Explorer
                 a.filter({address: address}).update({durability: "hard"}) do
                   {amount: (BigInt.new(result["amount"].to_s) - BigInt.new(fee)).to_s, token_amounts: result_token_amounts.to_a}
                 end.run(conn)
-                L.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
               end
             end
           end
@@ -249,8 +250,8 @@ module Explorer
             begin
               b.insert(scaled_block).run(conn)
             rescue e
-              L.warn "[BLOCK:#{scaled_block[:index]}]: #{e}"
-              L.warn "#{scaled_block}"
+              @@logger.warning "[BLOCK:#{scaled_block[:index]}]: #{e}"
+              @@logger.warning "#{scaled_block}"
             end
           end
         end
@@ -270,12 +271,12 @@ module Explorer
             amount = s[:amount]
             amount = "0" if tx[:action] == "create_token"
             address_add("sender", tx[:token], s[:address], amount, tx[:timestamp], s[:fee])
-            L.debug "[CREATE TOKEN SENDER] : #{tx[:token]}, #{s[:address]}, amount:#{amount}, fee:#{s[:fee]}" if tx[:action] == "create_token"
+            @@logger.debug "[CREATE TOKEN SENDER] : #{tx[:token]}, #{s[:address]}, amount:#{amount}, fee:#{s[:fee]}" if tx[:action] == "create_token"
           end
 
           tx[:recipients].each do |r|
             address_add("recipient", tx[:token], r[:address], r[:amount], tx[:timestamp])
-            L.debug "[CREATE TOKEN RECIPIENT] : #{tx[:token]}, #{r[:address]}, amount:#{r[:amount]}" if tx[:action] == "create_token"
+            @@logger.debug "[CREATE TOKEN RECIPIENT] : #{tx[:token]}, #{r[:address]}, amount:#{r[:amount]}" if tx[:action] == "create_token"
           end
 
           # TODO(fenicks): Add collected human readable address (SCARS/domains)
@@ -306,12 +307,23 @@ module Explorer
         @@pool.connection do |conn|
           page = 1 if page <= 0
           length = CONFIG.per_page if length < 0
-          L.debug("[blocks] page: #{page} - length: #{length}")
+          @@logger.debug("[blocks] page: #{page} - length: #{length}")
 
           start = (page - 1) * length
           last = start + length
+<<<<<<< Updated upstream
           L.debug("[blocks] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, length).default("[]").run(conn)
+=======
+          @@logger.debug("[blocks] start: #{start} - last: #{last}")
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, last).default("[]").run(conn)
+>>>>>>> Stashed changes
+        end.to_json
+      end
+
+      def self.blocks_count
+        @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).count.run(conn)
         end.to_json
       end
 
@@ -332,11 +344,11 @@ module Explorer
         @@pool.connection do |conn|
           page = 1 if page <= 0
           length = CONFIG.per_page if length < 0
-          L.debug("[domains] page: #{page} - length: #{length}")
+          @@logger.debug("[domains] page: #{page} - length: #{length}")
 
           start = (page - 1) * length
           last = start + length
-          L.debug("[domains] start: #{start} - last: #{last}")
+          @@logger.debug("[domains] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).order_by(::RethinkDB.asc("timestamp")).slice(start, last).default("[]").run(conn)
         end.to_json
       end
@@ -352,10 +364,10 @@ module Explorer
           t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS)
           if t.filter({name: domain[:name]}).run(conn).size == 0
             t.insert(domain).run(conn)
-            L.debug("[#{DB_TABLE_NAME_DOMAINS}] added: #{domain[:name]}")
+            @@logger.debug("[#{DB_TABLE_NAME_DOMAINS}] added: #{domain[:name]}")
           else
             t.filter({name: domain[:name]}).update({address: domain[:address]}).run(conn)
-            L.debug("[#{DB_TABLE_NAME_DOMAINS}] updated: #{domain[:address]} to #{domain[:name]}")
+            @@logger.debug("[#{DB_TABLE_NAME_DOMAINS}] updated: #{domain[:address]} to #{domain[:name]}")
           end
         end
       end
@@ -371,11 +383,11 @@ module Explorer
         @@pool.connection do |conn|
           page = 1 if page <= 0
           length = CONFIG.per_page if length < 0
-          L.debug("[tokens] page: #{page} - length: #{length}")
+          @@logger.debug("[tokens] page: #{page} - length: #{length}")
 
           start = (page - 1) * length
           last = start + length
-          L.debug("[tokens] start: #{start} - last: #{last}")
+          @@logger.debug("[tokens] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).order_by(::RethinkDB.asc("timestamp")).slice(start, last).default("[]").run(conn)
         end.to_json
       end
@@ -391,7 +403,7 @@ module Explorer
           t = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS)
           return if t.filter({name: token[:name]}).run(conn).size > 0
           t.insert(token).run(conn)
-          L.debug("[#{DB_TABLE_NAME_TOKENS}] added: #{token[:name]}")
+          @@logger.debug("[#{DB_TABLE_NAME_TOKENS}] added: #{token[:name]}")
         end
       end
 
@@ -416,11 +428,11 @@ module Explorer
         @@pool.connection do |conn|
           page = 1 if page <= 0
           length = CONFIG.per_page if length < 0
-          L.debug("[transactions] page: #{page} - length: #{length}")
+          @@logger.debug("[transactions] page: #{page} - length: #{length}")
 
           start = (page - 1) * length
           last = start + length
-          L.debug("[transactions] start: #{start} - last: #{last}")
+          @@logger.debug("[transactions] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).order_by(::RethinkDB.desc("timestamp")).slice(start, last).default("[]").run(conn)
         end.to_json
       end
@@ -463,7 +475,7 @@ module Explorer
               kind:      t[:kind],
             }
           end,
-          nonce:            block[:nonce]?.try(&.to_s),  # Needed because JSON (RethinkDB) doesn't support UInt64 type,
+          nonce:            block[:nonce]?.try(&.to_s), # Needed because JSON (RethinkDB) doesn't support UInt64 type,
           prev_hash:        block[:prev_hash],
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],

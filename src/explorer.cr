@@ -12,8 +12,6 @@ require "./explorer/sync/*"
 # require "./explorer/version"
 require "./explorer/web/api"
 
-L = Explorer::Logger.instance
-
 struct Config
   property node, node_pubsub, server, port, db, per_page
 
@@ -48,7 +46,7 @@ end
 begin
   R.db_setup
 rescue ex
-  L.error "[Database setup] #{ex} - #{ex.class}"
+  Explorer::Logger.log.error "[Database setup] #{ex} - #{ex.class}"
   exit -42
 end
 
@@ -58,7 +56,7 @@ spawn do
     begin
       Explorer::Sync::Blockchain.event("#{CONFIG.node}/pubsub")
     rescue ex
-      L.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex}"
+      Explorer::Logger.log.error "[Explorer::Sync::Blockchain.event(\"#{CONFIG.node}/pubsub\")] #{ex}"
     end
     sleep 5.seconds
   end
@@ -70,4 +68,4 @@ spawn do
 end
 
 # Run the explorer web application
-Explorer::Web::Api.new(CONFIG.server, CONFIG.port, L).run
+Explorer::Web::Api.new(CONFIG.server, CONFIG.port).run

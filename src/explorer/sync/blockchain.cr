@@ -4,15 +4,17 @@ require "./../node_api"
 module Explorer
   module Sync
     class Blockchain
+      include Explorer::Logger
+
       # Initialize the chain at start
       def self.sync
-        L.info "Blockchain sync started"
+        @@logger.info "Blockchain sync started"
         (NodeApi.blockchain || [] of Block).each do |block|
           R.block_add(block)
         end
-        L.info "Blockchain is synced now"
+        @@logger.info "Blockchain is synced now"
       rescue ex
-        L.error "[Explorer::Sync::Blockchain.sync] #{ex}"
+        @@logger.error "[Explorer::Sync::Blockchain.sync] #{ex}"
         exit -42
       end
 
@@ -30,11 +32,11 @@ module Explorer
         @@socket = HTTP::WebSocket.new(URI.parse(ws_pubsub_url))
 
         socket.on_message do |message|
-          L.debug "[Blockchain.event][raw message]: #{message}"
+          @@logger.debug "[Blockchain.event][raw message]: #{message}"
           block : Block = Block.from_json(message)
           if block.not_nil!
             R.block_add(block)
-            L.info "Block ##{block[:index]} added"
+            @@logger.info "Block ##{block[:index]} added"
           end
         end
 
@@ -42,15 +44,15 @@ module Explorer
           socket_close
         end
 
-        L.info "Start listening block creation from SushiChain node websocket (#{ws_pubsub_url})..."
+        @@logger.info "Start listening block creation from SushiChain node websocket (#{ws_pubsub_url})..."
         begin
           socket.run
         rescue e : Exception
-          L.error "#{e}"
+          @@logger.error "#{e}"
           socket_close
         end
       rescue ex
-        L.error "[Explorer::Sync::Blockchain.event] #{ex}"
+        @@logger.error "[Explorer::Sync::Blockchain.event] #{ex}"
       end
 
       private def self.socket
@@ -58,7 +60,7 @@ module Explorer
       end
 
       private def self.socket_close
-        L.warn "SushiChain node socket closed"
+        @@logger.warning "SushiChain node socket closed"
       end
     end
   end

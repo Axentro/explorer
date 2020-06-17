@@ -2,7 +2,9 @@ require "./filesystem"
 
 module Explorer::Web
   class Api
-    def initialize(@explorer_bind_host : String, @explorer_bind_port : Int32, @log = Explorer::Logger.new(STDOUT))
+    include Explorer::Logger
+
+    def initialize(@explorer_bind_host : String, @explorer_bind_port : Int32)
     end
 
     # TODO(fenicks): Generate Mint files before building static binary
@@ -17,7 +19,7 @@ module Explorer::Web
       end
     end
 
-    # API example:  https://developers.eos.io/keosd/v1.3.0/reference#sign_transaction
+    # API example:  https://developers.eos.io/manuals/eos/latest/nodeos/plugins/producer_api_plugin/api-reference/index
     def api_routes_v1
       prefix = "/api/v1"
 
@@ -29,7 +31,7 @@ module Explorer::Web
           if params.["page"]? && params["length"]? # /addresses/page/:page/length/:length
             page = begin params["page"].to_i32 rescue 0 end
             length = begin params["length"].to_i32 rescue 0 end
-            L.debug("#{prefix}/addresses/page/:page/length/:length ==> #{page} - #{length}")
+            log.debug("#{prefix}/addresses/page/:page/length/:length ==> #{page} - #{length}")
             context.response.print R.addresses(page, length)
           else                                 # /addresses
             context.response.print R.addresses # All tokens
@@ -47,25 +49,31 @@ module Explorer::Web
       end
 
       # /blocks
-      ["#{prefix}/blocks",
-       "#{prefix}/blocks/top/:top",
-       "#{prefix}/blocks/page/:page/length/:length"].each do |route|
-        get route do |context, params|
-          content_type_json(context)
-          if params["top"]? # /blocks/top/:top
-            top = begin params["top"].to_i32 rescue 1 end
-            L.debug("#{prefix}/blocks/top/:top ==> #{top}")
-            context.response.print R.blocks(top)
-          elsif params.["page"]? && params["length"]? # /blocks/page/:page/length/:length
-            page = begin params["page"].to_i32 rescue 0 end
-            length = begin params["length"].to_i32 rescue 0 end
-            L.debug("#{prefix}/blocks/page/:page/length/:length ==> #{page} - #{length}")
-            context.response.print R.blocks(page, length)
-          else                              # /blocks
-            context.response.print R.blocks # All blocks
-          end
-          context
-        end
+      get "#{prefix}/blocks" do |context, _|
+        content_type_json(context)
+        context.response.print R.blocks # All blocks
+        context
+      end
+
+      get "#{prefix}/blocks/count" do |context, _|
+        content_type_json(context)
+        context.response.print R.blocks_count # TODO: implement R.blocks_count method
+        context
+      end
+
+      get "#{prefix}/blocks/top/:top" do |context, params|
+        content_type_json(context)
+        top = begin params["top"].to_i32 rescue 1 end
+        context.response.print R.blocks(top)
+        context
+      end
+
+      get "#{prefix}/blocks/page/:page/length/:length" do |context, params|
+        content_type_json(context)
+        page = begin params["page"].to_i32 rescue 0 end
+        length = begin params["length"].to_i32 rescue 0 end
+        context.response.print R.blocks(page, length)
+        context
       end
 
       # /block
@@ -88,7 +96,7 @@ module Explorer::Web
           if params.["page"]? && params["length"]? # /domains/page/:page/length/:length
             page = begin params["page"].to_i32 rescue 0 end
             length = begin params["length"].to_i32 rescue 0 end
-            L.debug("#{prefix}/domains/page/:page/length/:length ==> #{page} - #{length}")
+            log.debug("#{prefix}/domains/page/:page/length/:length ==> #{page} - #{length}")
             context.response.print R.domains(page, length)
           else                               # /domains
             context.response.print R.domains # All domains
@@ -113,7 +121,7 @@ module Explorer::Web
           if params.["page"]? && params["length"]? # /tokens/page/:page/length/:length
             page = begin params["page"].to_i32 rescue 0 end
             length = begin params["length"].to_i32 rescue 0 end
-            L.debug("#{prefix}/tokens/page/:page/length/:length ==> #{page} - #{length}")
+            log.debug("#{prefix}/tokens/page/:page/length/:length ==> #{page} - #{length}")
             context.response.print R.tokens(page, length)
           else                              # /tokens
             context.response.print R.tokens # All tokens
@@ -138,12 +146,12 @@ module Explorer::Web
           content_type_json(context)
           if params["top"]? # /transactions/top/:top
             top = begin params["top"].to_i32 rescue 1 end
-            L.debug("#{prefix}/transactions/top/:top ==> #{top}")
+            log.debug("#{prefix}/transactions/top/:top ==> #{top}")
             context.response.print R.transactions(top)
           elsif params["page"]? && params["length"]? # /transactions/page/:page/length/:length
             page = begin params["page"].to_i32 rescue 0 end
             length = begin params["length"].to_i32 rescue 0 end
-            L.debug("#{prefix}/transactions/page/:page/length/:length ==> #{page} - #{length}")
+            log.debug("#{prefix}/transactions/page/:page/length/:length ==> #{page} - #{length}")
             context.response.print R.transactions(page, length)
           else                                    # /transactions
             context.response.print R.transactions # All transactions
@@ -179,7 +187,7 @@ module Explorer::Web
 
       server = HTTP::Server.new(handlers)
       server.bind_tcp(@explorer_bind_host, @explorer_bind_port)
-      @log.info "Starting the webapp at: #{@explorer_bind_host}:#{@explorer_bind_port}"
+      log.info "Starting the webapp at: #{@explorer_bind_host}:#{@explorer_bind_port}"
       server.listen
     end
 

@@ -4,6 +4,12 @@ SushiChain Explorer is an open source utility to browse activity on the Blockcha
 
 ## Development
 
+### Configure the database
+
+    r.db('rethinkdb').table('users').insert({id: 'explorer_testnet', password: 'explorer_testnet'});
+    r.dbCreate('explorer_testnet');
+    r.db('explorer_testnet').grant('explorer_testnet', {read: true, write: true, config: true});
+
 ### Build the mint webapp
 
     cd src/explorer/web/static

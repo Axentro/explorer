@@ -1,28 +1,33 @@
-module Explorer
-  class Logger < ::Logger
-    STDOUT.sync = true
+require "strange"
+require "strange/formatter/color_formatter"
 
-    def log(severity, message, progname = nil)
-      return if severity < level || !@io
-      msg = case severity
-            when Severity::DEBUG
-              message.colorize.fore(:light_gray).to_s
-            when Severity::INFO
-              message.colorize.fore(:light_green).to_s
-            when Severity::WARN
-              message.colorize.fore(:yellow).to_s
-            when Severity::ERROR, Severity::FATAL, Severity::UNKNOWN
-              message.colorize.fore(:red).to_s
-            else
-              message
-            end
-      write(severity, Time.utc, progname || @progname, msg)
+module Explorer
+  module Logger
+    @@logger = Strange.new("env", transports: [
+      Strange::ConsoleTransport.new(formatter: Formatter.new).as(Strange::Transport),
+    ])
+
+    def log
+      @@logger
     end
 
-    def self.instance : Explorer::Logger
-      @@logger ||= new(STDOUT)
-      @@logger.not_nil!.level = ::Logger::DEBUG if ENV["DEBUG"]?
-      @@logger.not_nil!
+    def self.log
+      @@logger
+    end
+
+    delegate :emerg, :alert, :crit, :error, :warning, :notice, :info, :debug, to: @@logger
+
+    {% for level in [:emerg, :alert, :crit, :error, :warning, :notice, :info, :debug] %}
+      def self.{{ level.id }}(message)
+        @@logger.{{ level.id }}(message)
+      end
+    {% end %}
+
+    class Formatter < Strange::ColorFormatter
+      def format(text : String, level : Strange::Level)
+        lvl = "[" + ("%-7.7s" % level.to_s) + "]"
+        color_message("[#{Time.utc}]#{lvl} - #{text}", level)
+      end
     end
   end
 end

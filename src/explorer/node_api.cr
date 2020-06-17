@@ -2,6 +2,8 @@ require "./types/*"
 
 module Explorer
   class NodeApi
+    include Explorer::Logger
+
     @@pool : ConnectionPool(HTTP::Client) = ConnectionPool.new(capacity: 5, timeout: 0.1) do
       HTTP::Client.new(URI.parse(CONFIG.node))
     end
@@ -19,13 +21,13 @@ module Explorer
               return BlockchainSize.from_json(json_str).result["size"] - 1
             end
           else
-            L.warn "Node api (/api/v1/blockchain/size) failure"
+            @@logger.warning "Node api (/api/v1/blockchain/size) failure"
           end
         end
       end
       0.to_u64
     rescue ex
-      L.warn "Can't retrieve block size: #{ex}"
+      @@logger.warning "Can't retrieve block size: #{ex}"
       0.to_u64
     end
 
@@ -38,13 +40,13 @@ module Explorer
               return BlockResult.from_json(json_str).result
             end
           else
-            L.warn "Node api (/api/v1/block/#{index}) failure"
+            @@logger.warning "Node api (/api/v1/block/#{index}) failure"
             return nil
           end
         end
       end
     rescue ex
-      L.warn "Can't retrieve the block: #{ex}"
+      @@logger.warning "Can't retrieve the block: #{ex}"
       nil
     end
 
@@ -57,13 +59,13 @@ module Explorer
               return BlockchainResult.from_json(json_str).result
             end
           else
-            L.warn "Node api (/api/v1/blockchain) failure"
+            @@logger.warning "Node api (/api/v1/blockchain) failure"
             return nil
           end
         end
       end
     rescue ex
-      L.warn "Can't retrieve the blockchain: #{ex}"
+      @@logger.warning "Can't retrieve the blockchain: #{ex}"
       nil
     end
   end
