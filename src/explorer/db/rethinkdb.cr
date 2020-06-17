@@ -311,13 +311,8 @@ module Explorer
 
           start = (page - 1) * length
           last = start + length
-<<<<<<< Updated upstream
-          L.debug("[blocks] start: #{start} - last: #{last}")
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, length).default("[]").run(conn)
-=======
           @@logger.debug("[blocks] start: #{start} - last: #{last}")
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).order_by(::RethinkDB.desc("index")).slice(start, last).default("[]").run(conn)
->>>>>>> Stashed changes
         end.to_json
       end
 
