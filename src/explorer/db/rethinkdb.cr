@@ -9,7 +9,7 @@ module Explorer
       include ::RethinkDB::Shortcuts
 
       DB_URI                     = URI.parse(CONFIG.db)
-      DB_NAME                    = DB_URI.path[1..-1]? || "explorer_testnet"
+      DB_NAME                    = DB_URI.path[1..-1]
       DB_TABLE_NAME_BLOCKS       = "blocks"
       DB_TABLE_NAME_TRANSACTIONS = "transactions"
       DB_TABLE_NAME_ADDRESSES    = "addresses"
