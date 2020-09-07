@@ -11,7 +11,7 @@ component Header {
           href="/">
 
           <img
-            src="/images/sushichain-nav-brand.svg"
+            src="/images/axentro-nav-brand.svg"
             width="112"
             height="28"/>
 
@@ -22,7 +22,7 @@ component Header {
           class="navbar-burger burger"
           aria-label="menu"
           aria-expanded="false"
-          data-target="navbarSushichainExplorer">
+          data-target="navbarAxentroExplorer">
 
           <span aria-hidden="true"/>
           <span aria-hidden="true"/>
@@ -32,7 +32,7 @@ component Header {
       </div>
 
       <div
-        id="navbarSushichainExplorer"
+        id="navbarAxentroExplorer"
         class="navbar-menu">
 
         <div class="navbar-end">

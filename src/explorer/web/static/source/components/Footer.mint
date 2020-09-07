@@ -4,12 +4,12 @@ component Footer {
       <div class="content has-text-centered">
         <p>
           <strong>
-            "SushiChain Explorer"
+            "Axentro Explorer"
           </strong>
 
           " by"
 
-          <a href="https://github.com/SushiChain/explorer/graphs/contributors">
+          <a href="https://github.com/Axentro/explorer/graphs/contributors">
             " many"
           </a>
 
@@ -25,7 +25,7 @@ component Footer {
         <p>
           <a
             class="icon"
-            href="https://github.com/SushiChain/explorer">
+            href="https://github.com/Axentro/explorer">
 
             <img
               src="/images/github-mark-64px.png"

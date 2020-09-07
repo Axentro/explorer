@@ -7,15 +7,15 @@
     "tests"
   ],
   "application": {
-    "name": "SushiChain Explorer",
-    "title": "SushiChain - Explorer",
+    "name": "Axentro Explorer",
+    "title": "Axentro - Explorer",
     "orientation": "portrait",
     "theme-color": "#00a0e8",
     "meta": {
       "charset": "utf-8",
-      "description": "SushiChain - Blockchain Explorer.",
+      "description": "Axentro - Blockchain Explorer.",
       "keywords": [
-        "sushichain",
+        "axentro",
         "explorer",
         "crypto",
         "currency",
@@ -27,16 +27,16 @@
         "gaming"
       ],
       "viewport": "width=device-width, initial-scale=1, shrink-to-fit=no",
-      "author": "sushichain.io",
+      "author": "axentro.io",
       "twitter:card": "summary",
-      "twitter:site": "@sushichainhq",
-      "og:url": "https://explorer.sushichain.io",
+      "twitter:site": "@axentrohq",
+      "og:url": "https://explorer.axentro.io",
       "og:type": "website",
-      "og:title": "SushiChain - Explorer",
-      "og:description": "SushiChain is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
-      "og:image": "/images/sushichain.svg"
+      "og:title": "Axentro - Explorer",
+      "og:description": "Axentro is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
+      "og:image": "/images/axentro.svg"
     },
-    "icon": "assets/sushichain.png",
+    "icon": "assets/axentro.png",
     "head": "assets/head.html"
     
   }

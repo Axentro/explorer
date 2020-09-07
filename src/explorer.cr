@@ -29,7 +29,7 @@ CONFIG = Config.new
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: explorer [arguments]"
-  parser.on("-n NODE_URL", "--node=NODE_URL", "SushiChain node URL '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
+  parser.on("-n NODE_URL", "--node=NODE_URL", "Axentro node URL '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
   parser.on("-s SERVER", "--server=SERVER", "Binding server host '#{CONFIG.server}' by default") { |server| CONFIG.server = server }
   parser.on("-p PORT", "--port=NAME", "Binding port '#{CONFIG.port}' by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB_URL", "Database URL '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
@@ -50,7 +50,7 @@ rescue ex
   exit -42
 end
 
-# SushiChain block live update from 'pubsub' SushiChain websocket
+# Axentro block live update from 'pubsub' Axentro websocket
 spawn do
   loop do
     begin

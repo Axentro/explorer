@@ -24,7 +24,7 @@ module Address {
       </th>
 
       <th>
-        "SUSHI amount"
+        "AXE amount"
       </th>
 
       <th>

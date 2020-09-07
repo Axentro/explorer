@@ -27,7 +27,7 @@ module Explorer
       #   end
       # end
 
-      # SushiChain live update from node websocket
+      # Axentro live update from node websocket
       def self.event(ws_pubsub_url : String)
         @@socket = HTTP::WebSocket.new(URI.parse(ws_pubsub_url))
 
@@ -44,7 +44,7 @@ module Explorer
           socket_close
         end
 
-        @@logger.info "Start listening block creation from SushiChain node websocket (#{ws_pubsub_url})..."
+        @@logger.info "Start listening block creation from Axentro node websocket (#{ws_pubsub_url})..."
         begin
           socket.run
         rescue e : Exception
@@ -60,7 +60,7 @@ module Explorer
       end
 
       private def self.socket_close
-        @@logger.warning "SushiChain node socket closed"
+        @@logger.warning "Axentro node socket closed"
       end
     end
   end

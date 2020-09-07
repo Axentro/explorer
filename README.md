@@ -1,6 +1,6 @@
-# SushiChain Blockchain Explorer
+# Axentro Blockchain Explorer
 
-SushiChain Explorer is an open source utility to browse activity on the Blockchain.
+Axentro Explorer is an open source utility to browse activity on the Blockchain.
 
 ## Development
 
@@ -18,7 +18,7 @@ SushiChain Explorer is an open source utility to browse activity on the Blockcha
 
 ### Run the explorer
 
-    DEBUG=1 crystal run src/explorer.cr -- -n http://testnet.sushichain.io:3000
+    DEBUG=1 crystal run src/explorer.cr -- -n http://testnet.axentro.io:3000
 
 ### Compile the binary
 
@@ -26,7 +26,7 @@ SushiChain Explorer is an open source utility to browse activity on the Blockcha
 
 Start the compiled web application (static files are in binary)
 
-    ./bin/explorer -n http://testnet.sushichain.io:3000 
+    ./bin/explorer -n http://testnet.axentro.io:3000 
 
 ### RethinkDB docker doc
 

@@ -171,11 +171,11 @@ module Explorer
       def self.address_add(who : String, token : String, address : String, amount : String, timestamp : Int64, fee : String = "0")
         a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
         @@pool.connection do |conn|
-          if token == "SUSHI"
+          if token == "AXE"
             if a.filter({address: address}).run(conn).size == 0
               # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
               a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXE] #{fee}"
             else
               # TODO(fenicks): Fix getting value in update RethinkDB update block
               result = a.filter({address: address}).run(conn).to_a.first
@@ -187,13 +187,13 @@ module Explorer
                 end
                 {amount: result_amount.to_s}
               end.run(conn)
-              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXE] #{fee}"
             end
           else # tokens
             token_amount = amount
             if a.filter({address: address}).run(conn).size == 0
               a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
             else
               if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0
                 # TODO(fenicks): Fix getting value in update RethinkDB update block
@@ -204,7 +204,7 @@ module Explorer
                     token_amounts: u[:token_amounts].append({token: token, amount: token_amount}),
                   }
                 end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
               else
                 result = a.filter({address: address}).run(conn).to_a.first
                 rt_amount : String
@@ -222,7 +222,7 @@ module Explorer
                 a.filter({address: address}).update({durability: "hard"}) do
                   {amount: (BigInt.new(result["amount"].to_s) - BigInt.new(fee)).to_s, token_amounts: result_token_amounts.to_a}
                 end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:SUSHI] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
               end
             end
           end
@@ -240,8 +240,8 @@ module Explorer
       def self.block_add(block : Block)
         scaled_block = scale_decimal(block)
 
-        # Add default SUSHI token
-        token_add({name: "SUSHI", timestamp: 0.to_i64}) if scaled_block[:index] == 0
+        # Add default AXE token
+        token_add({name: "AXE", timestamp: 0.to_i64}) if scaled_block[:index] == 0
 
         # Insert the block
         b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
