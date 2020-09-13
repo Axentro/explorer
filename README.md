@@ -13,7 +13,7 @@ Axentro Explorer is an open source utility to browse activity on the Blockchain.
 ### Build the mint webapp
 
     cd src/explorer/web/static
-    mint build
+    mint build --skip-service-worker
     cd ./../../../..
 
 ### Run the explorer
