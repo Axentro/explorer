@@ -3,8 +3,7 @@ record Sender {
   publicKey : String using "public_key",
   amount : Number,
   fee : Number,
-  signR : String using "sign_r",
-  signS : String using "sign_s"
+  signature : String
 }
 
 record Recipient {

@@ -25,7 +25,7 @@ component Pages.Addresses.Show {
 
           <tr>
             <th>
-              "AXE amount"
+              "AXNT amount"
             </th>
 
             <td>

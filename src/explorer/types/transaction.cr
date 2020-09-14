@@ -5,8 +5,7 @@ module Explorer
       public_key: String,
       amount: Int64,
       fee: Int64,
-      sign_r: String,
-      sign_s: String,
+      signature: String,
     )
 
     alias Senders = Array(Sender)
@@ -35,7 +34,7 @@ module Explorer
 
     alias TransactionDB = NamedTuple(
       id: String,
-      block_index: UInt64,
+      block_index: Int64,
       action: String,
       senders: Senders,
       recipients: Recipients,

@@ -99,7 +99,7 @@ component Pages.Transactions.Show {
             <td>
               <span
                 class={
-                  "tag " + if (transaction.token == "AXE") {
+                  "tag " + if (transaction.token == "AXNT") {
                     "is-info"
                   } else {
                     "is-light"

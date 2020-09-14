@@ -96,7 +96,7 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXE") {
+            "tag " + if (transaction.token == "AXNT") {
               "is-info"
             } else {
               "is-light"
@@ -159,7 +159,7 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXE") {
+            "tag " + if (transaction.token == "AXNT") {
               "is-info"
             } else {
               "is-light"
@@ -228,7 +228,7 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXE") {
+            "tag " + if (transaction.token == "AXNT") {
               "is-info"
             } else {
               "is-light"
@@ -256,7 +256,7 @@ module Transaction {
         "Fee "
 
         <span class="tag is-info">
-          "AXE"
+          "AXNT"
         </span>
       </th>
     </tr>

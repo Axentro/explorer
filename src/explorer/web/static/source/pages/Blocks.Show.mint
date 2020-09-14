@@ -52,7 +52,7 @@ component Pages.Blocks.Show {
               </th>
 
               <td>
-                <{ Number.toString(Maybe.withDefault(0, block.nonce)) }>
+                <{ Maybe.withDefault("0", block.nonce) }>
               </td>
             </tr>
           }

@@ -12,7 +12,7 @@ module Explorer
       @@pool
     end
 
-    def self.last_block_index : UInt64
+    def self.last_block_index : Int64
       pool.connection do |http|
         http.exec(HTTP::Request.new("GET", "/api/v1/blockchain/size")) do |response|
           if response.status_code == 200
@@ -31,7 +31,7 @@ module Explorer
       0.to_u64
     end
 
-    def self.block(index : UInt64) : Block?
+    def self.block(index : Int64) : Block?
       pool.connection do |http|
         http.exec(HTTP::Request.new("GET", "/api/v1/block/#{index}")) do |response|
           if response.status_code == 200

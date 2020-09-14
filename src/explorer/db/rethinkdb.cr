@@ -171,11 +171,11 @@ module Explorer
       def self.address_add(who : String, token : String, address : String, amount : String, timestamp : Int64, fee : String = "0")
         a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
         @@pool.connection do |conn|
-          if token == "AXE"
+          if token == "AXNT"
             if a.filter({address: address}).run(conn).size == 0
               # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
               a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXE] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXNT] #{fee}"
             else
               # TODO(fenicks): Fix getting value in update RethinkDB update block
               result = a.filter({address: address}).run(conn).to_a.first
@@ -187,13 +187,13 @@ module Explorer
                 end
                 {amount: result_amount.to_s}
               end.run(conn)
-              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXE] #{fee}"
+              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXNT] #{fee}"
             end
           else # tokens
             token_amount = amount
             if a.filter({address: address}).run(conn).size == 0
               a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
+              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
             else
               if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0
                 # TODO(fenicks): Fix getting value in update RethinkDB update block
@@ -204,7 +204,7 @@ module Explorer
                     token_amounts: u[:token_amounts].append({token: token, amount: token_amount}),
                   }
                 end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
               else
                 result = a.filter({address: address}).run(conn).to_a.first
                 rt_amount : String
@@ -222,7 +222,7 @@ module Explorer
                 a.filter({address: address}).update({durability: "hard"}) do
                   {amount: (BigInt.new(result["amount"].to_s) - BigInt.new(fee)).to_s, token_amounts: result_token_amounts.to_a}
                 end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXE] #{fee}"
+                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
               end
             end
           end
@@ -230,7 +230,7 @@ module Explorer
       end
 
       # Block
-      def self.last_block_index : UInt64
+      def self.last_block_index : Int64
         res = @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).pluck("index").max("index").default({"index": 0}).run(conn)
         end
@@ -240,8 +240,8 @@ module Explorer
       def self.block_add(block : Block)
         scaled_block = scale_decimal(block)
 
-        # Add default AXE token
-        token_add({name: "AXE", timestamp: 0.to_i64}) if scaled_block[:index] == 0
+        # Add default AXNT token
+        token_add({name: "AXNT", timestamp: 0.to_i64}) if scaled_block[:index] == 0
 
         # Insert the block
         b = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS)
@@ -450,8 +450,7 @@ module Explorer
                   public_key: s[:public_key],
                   amount:     s[:amount].to_s,
                   fee:        s[:fee].to_s,
-                  sign_r:     s[:sign_r],
-                  sign_s:     s[:sign_s],
+                  signature:  s[:signature],
                 }
               end,
               recipients: t[:recipients].map do |r|
@@ -468,7 +467,7 @@ module Explorer
               kind:      t[:kind],
             }
           end,
-          nonce:            block[:nonce]?.try(&.to_s), # Needed because JSON (RethinkDB) doesn't support UInt64 type,
+          nonce:            block[:nonce]?,
           prev_hash:        block[:prev_hash],
           merkle_tree_root: block[:merkle_tree_root],
           timestamp:        block[:timestamp],
@@ -476,8 +475,7 @@ module Explorer
           kind:             block[:kind],
           address:          block[:address],
           public_key:       block[:public_key]?,
-          sign_r:           block[:sign_r]?,
-          sign_s:           block[:sign_s]?,
+          signature:        block[:signature]?,
           hash:             block[:hash]?,
         }
       end

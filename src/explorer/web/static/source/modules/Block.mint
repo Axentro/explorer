@@ -3,7 +3,7 @@ module Block {
     {
       index = -1,
       transactions = [],
-      nonce = Maybe.just(0),
+      nonce = Maybe.just("0"),
       prevHash = "",
       merkleTreeRoot = "",
       timestamp = 0,
@@ -11,8 +11,7 @@ module Block {
       kind = "",
       address = "",
       publicKey = Maybe.just(""),
-      signR = Maybe.just(""),
-      signS = Maybe.just(""),
+      signature = Maybe.just(""),
       hash = Maybe.just("")
     }
   }

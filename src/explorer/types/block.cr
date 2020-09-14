@@ -3,7 +3,7 @@ require "./../types/transaction"
 module Explorer
   module Types
     alias FastBlock = NamedTuple(
-      index: UInt64,
+      index: Int64,
       transactions: Array(Transaction),
       prev_hash: String,
       merkle_tree_root: String,
@@ -11,15 +11,14 @@ module Explorer
       kind: String,
       address: String,
       public_key: String,
-      sign_r: String,
-      sign_s: String,
+      signature: String,
       hash: String,
     )
 
     alias SlowBlock = NamedTuple(
-      index: UInt64,
+      index: Int64,
       transactions: Array(Transaction),
-      nonce: UInt64|String,
+      nonce: String,
       prev_hash: String,
       merkle_tree_root: String,
       timestamp: Int64,
@@ -33,7 +32,7 @@ module Explorer
     struct BlockchainSize
       JSON.mapping(
         status: String,
-        result: NamedTuple(size: UInt64),
+        result: NamedTuple(size: Int64),
       )
     end
 

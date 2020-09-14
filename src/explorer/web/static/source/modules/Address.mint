@@ -24,7 +24,7 @@ module Address {
       </th>
 
       <th>
-        "AXE amount"
+        "AXNT amount"
       </th>
 
       <th>
