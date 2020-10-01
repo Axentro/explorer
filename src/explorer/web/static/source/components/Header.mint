@@ -1,84 +1,92 @@
 component Header {
   fun render : Html {
-    <nav
-      class="navbar is-fxed-top is-dark"
-      role="navigation"
-      aria-label="main navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a
+        class="navbar-brand"
+        href="/">
 
-      <div class="navbar-brand">
-        <a
-          class="navbar-item"
-          href="/">
+        <img
+          src="/images/axentro-nav-brand.svg"
+          width="112"
+          height="28"
+          class="d-inline-block align-top"
+          alt=""
+          loading="lazy"/>
 
-          <img
-            src="/images/axentro-nav-brand.svg"
-            width="112"
-            height="28"/>
+      </a>
 
-        </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
 
-        <a
-          role="button"
-          class="navbar-burger burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarAxentroExplorer">
+        <span class="navbar-toggler-icon"/>
 
-          <span aria-hidden="true"/>
-          <span aria-hidden="true"/>
-          <span aria-hidden="true"/>
-
-        </a>
-      </div>
+      </button>
 
       <div
-        id="navbarAxentroExplorer"
-        class="navbar-menu">
+        class="collapse navbar-collapse"
+        id="navbarSupportedContent">
 
-        <div class="navbar-end">
-          <a
-            class="navbar-item"
-            href="/blocks">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/blocks">
 
-            "Blocks"
+              "Blocks"
 
-          </a>
+            </a>
+          </li>
 
-          <a
-            class="navbar-item"
-            href="/transactions">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/transactions">
 
-            "Transactions"
+              "Transactions"
 
-          </a>
+            </a>
+          </li>
 
-          <a
-            class="navbar-item"
-            href="/addresses">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/addresses">
 
-            "Addresses"
+              "Addresses"
 
-          </a>
+            </a>
+          </li>
 
-          <a
-            class="navbar-item"
-            href="/domains">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/domains">
 
-            "Domains"
+              "Domains"
 
-          </a>
+            </a>
+          </li>
 
-          <a
-            class="navbar-item"
-            href="/tokens">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/tokens">
 
-            "Tokens"
+              "Tokens"
 
-          </a>
-        </div>
+            </a>
+          </li>
+        </ul>
+
+        <Search/>
 
       </div>
-
     </nav>
   }
 }

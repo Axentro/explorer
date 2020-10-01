@@ -230,11 +230,8 @@ module Explorer
       end
 
       # Block
-      def self.last_block_index : Int64
-        res = @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).pluck("index").max("index").default({"index": 0}).run(conn)
-        end
-        (res["index"].try(&.to_s) || 0).to_u64
+      def self.blockchain_total_size : Int64
+        self.blocks_count
       end
 
       def self.block_add(block : Block)

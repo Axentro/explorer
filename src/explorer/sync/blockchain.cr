@@ -8,6 +8,7 @@ module Explorer
 
       # Initialize the chain at start
       def self.sync
+        # TODO(fenicks): sync from last block height (fast and slow)
         @@logger.info "Blockchain sync started"
         (NodeApi.blockchain || [] of Block).each do |block|
           R.block_add(block)
@@ -17,15 +18,6 @@ module Explorer
         @@logger.error "[Explorer::Sync::Blockchain.sync] #{ex}"
         exit -42
       end
-
-      # TODO(fenicks): write a new sync method who check all blocks and transactions at startup and rebuild addresses stored
-      # TODO(fenicks): invoke sync method only if "--sync-db" or "-s" is specified in command line
-      # TODO(fenicks): we need block comparison or block validation mecanism ?
-      # def self.sync_db
-      #   node_block_index = NodeApi.last_block_index
-      #   Range.new(0, node_block_index).each do |iter|
-      #   end
-      # end
 
       # Axentro live update from node websocket
       def self.event(ws_pubsub_url : String)

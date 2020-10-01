@@ -2,82 +2,72 @@ component Pages.Addresses.Show {
   connect Stores.Addresses exposing { address }
 
   fun render : Html {
-    <div class="container">
-      <table class="table">
-        <thead>
-          <th colspan="2">
-            <h1 class="title">
-              "Address"
-            </h1>
-          </th>
-        </thead>
-
-        <tbody>
-          <tr>
-            <th>
-              "Address"
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <th colspan="2">
+              <h2>"Address"</h2>
             </th>
+          </thead>
 
-            <td>
-              <{ address.address }>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>"Address"</th>
 
-          <tr>
-            <th>
-              "AXNT amount"
-            </th>
+              <td>
+                <{ address.address }>
+              </td>
+            </tr>
 
-            <td>
-              <{ NNumber.toScale8(Number.toString(address.amount)) }>
-            </td>
-          </tr>
+            <tr>
+              <th>"AXNT amount"</th>
 
-          <tr>
-            <th>
-              "Number of tokens"
-            </th>
+              <td>
+                <{ NNumber.toScale8(Number.toString(address.amount)) }>
+              </td>
+            </tr>
 
-            <td>
-              <{ Number.toString(Array.size(address.tokenAmounts)) }>
-            </td>
-          </tr>
+            <tr>
+              <th>"Number of tokens"</th>
 
-          <tr>
-            <th>
-              "Number of domains"
-            </th>
+              <td>
+                <{ Number.toString(Array.size(address.tokenAmounts)) }>
+              </td>
+            </tr>
 
-            <td>
-              <{ Number.toString(Array.size(address.domains)) }>
-            </td>
-          </tr>
+            <tr>
+              <th>"Number of domains"</th>
 
-          <tr>
-            <th>
-              "Time"
-            </th>
+              <td>
+                <{ Number.toString(Array.size(address.domains)) }>
+              </td>
+            </tr>
 
-            <td>
-              <{ DDate.formatFromTSM(address.timestamp) }>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <th>"Time"</th>
 
-      <div class="columns">
+              <td>
+                <{ DDate.formatFromTSM(address.timestamp) }>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row">
         if (Array.size(address.tokenAmounts) > 0) {
-          <div class="column">
-            <div class="card has-margin-top-15 has-margin-top-5-mobile">
-              <header class="card-header">
-                <p class="card-header-title">
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">
                   <{ "Tokens (" + Number.toString(Array.size(address.tokenAmounts)) + ")" }>
-                </p>
-              </header>
+                </h5>
+              </div>
 
-              <div class="card-content">
-                <div class="content">
-                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
                     <thead>
                       <{ TokenAmount.renderHeaderFooterTable() }>
                     </thead>
@@ -97,17 +87,17 @@ component Pages.Addresses.Show {
         }
 
         if (Array.size(address.domains) > 0) {
-          <div class="column">
-            <div class="card has-margin-top-15 has-margin-top-5-mobile">
-              <header class="card-header">
-                <p class="card-header-title">
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">
                   <{ "Domains (" + Number.toString(Array.size(address.domains)) + ")" }>
-                </p>
-              </header>
+                </h5>
+              </div>
 
-              <div class="card-content">
-                <div class="content">
-                  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
                     <thead>
                       <{ Domain.renderInAddressHeaderFooterTable() }>
                     </thead>

@@ -2,38 +2,34 @@ component Pages.Tokens.Show {
   connect Stores.Tokens exposing { token }
 
   fun render : Html {
-    <div class="container">
-      <table class="table">
-        <thead>
-          <th colspan="2">
-            <h1 class="title">
-              "Token"
-            </h1>
-          </th>
-        </thead>
-
-        <tbody>
-          <tr>
-            <th>
-              "Name"
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <th colspan="2">
+              <h2>"Token"</h2>
             </th>
+          </thead>
 
-            <td>
-              <{ token.name }>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>"Name"</th>
 
-          <tr>
-            <th>
-              "Time"
-            </th>
+              <td>
+                <{ token.name }>
+              </td>
+            </tr>
 
-            <td>
-              <{ DDate.formatFromTSM(token.timestamp) }>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <th>"Time"</th>
+
+              <td>
+                <{ DDate.formatFromTSM(token.timestamp) }>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 }

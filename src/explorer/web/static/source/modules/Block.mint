@@ -22,34 +22,28 @@ module Block {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>
-        "Index"
-      </th>
+      <th>"Index"</th>
 
-      <th>
-        "Time"
-      </th>
+      <th>"Time"</th>
 
-      <th>
-        "Number of tx"
-      </th>
+      <th>"Number of tx"</th>
     </tr>
   }
 
   fun renderLine (block : Block) : Html {
     <tr>
       <td>
-        <span class="icon is-small is-left">
+        if (block.index % 2 == 0) {
           <i
-            class={
-              "fas " + if (block.index % 2 == 0) {
-                "fa-building"
-              } else {
-                "fa-bolt"
-              }
-            }
-            aria-hidden="true"/>
-        </span>
+            class="fas fa-hourglass"
+            title="slow"/>
+        } else {
+          <i
+            class="fas fa-bolt"
+            title="fast"/>
+        }
+
+        " - "
 
         <a href={"/blocks/show/" + Number.toString(block.index)}>
           <{ Number.toString(block.index) }>

@@ -2,21 +2,19 @@ component Pages.Blocks {
   connect Stores.Blocks exposing { blocks }
 
   fun render : Html {
-    <div class="container is-fluid">
-      <Search/>
-
-      <div class="card has-margin-top-15 has-margin-top-5-mobile">
-        <header class="card-header">
-          <p class="card-header-title">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">
             "Blocks"
-          </p>
-        </header>
+          </h5>
+        </div>
 
         <Paginate controller="blocks"/>
 
-        <div class="card-content">
-          <div class="content">
-            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
               <thead>
                 <{ Block.renderHeaderFooterTable() }>
               </thead>

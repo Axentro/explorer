@@ -32,7 +32,7 @@ module Explorer
     struct BlockchainSize
       JSON.mapping(
         status: String,
-        result: NamedTuple(size: Int64),
+        result: JSON::Any,
       )
     end
 

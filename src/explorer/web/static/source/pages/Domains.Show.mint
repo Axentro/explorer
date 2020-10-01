@@ -2,48 +2,42 @@ component Pages.Domains.Show {
   connect Stores.Domains exposing { domain }
 
   fun render : Html {
-    <div class="container">
-      <table class="table">
-        <thead>
-          <th colspan="2">
-            <h1 class="title">
-              "Domain"
-            </h1>
-          </th>
-        </thead>
-
-        <tbody>
-          <tr>
-            <th>
-              "Name"
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <th colspan="2">
+              <h2>"Domain"</h2>
             </th>
+          </thead>
 
-            <td>
-              <{ domain.name }>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>"Name"</th>
 
-          <tr>
-            <th>
-              "Address"
-            </th>
+              <td>
+                <{ domain.name }>
+              </td>
+            </tr>
 
-            <td>
-              <{ domain.address }>
-            </td>
-          </tr>
+            <tr>
+              <th>"Address"</th>
 
-          <tr>
-            <th>
-              "Time"
-            </th>
+              <td>
+                <{ domain.address }>
+              </td>
+            </tr>
 
-            <td>
-              <{ DDate.formatFromTSM(domain.timestamp) }>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <th>"Time"</th>
+
+              <td>
+                <{ DDate.formatFromTSM(domain.timestamp) }>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 }

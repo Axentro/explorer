@@ -121,6 +121,7 @@ routes {
   / {
     sequence {
       Application.setPage(Page::Home)
+
       parallel {
         Stores.Blocks.loadTop()
         Stores.Transactions.loadTop()

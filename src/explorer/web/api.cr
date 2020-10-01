@@ -55,9 +55,10 @@ module Explorer::Web
         context
       end
 
+      # TODO(fenicks): add slow and fast parameter
       get "#{prefix}/blocks/count" do |context, _|
         content_type_json(context)
-        context.response.print R.blocks_count # TODO: implement R.blocks_count method
+        context.response.print R.blocks_count
         context
       end
 

@@ -16,32 +16,30 @@ component Pages.Home {
   }
 
   fun render : Html {
-    <div class="container is-fluid">
-      <Search/>
-
-      <div class="columns">
-        <div class="column">
-          <div class="card has-margin-top-15 has-margin-top-5-mobile">
-            <header class="card-header">
-              <p class="card-header-title">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">
                 "Latest Blocks"
-              </p>
+              </h5>
 
-              <p class="card-header-title">
+              <h6 class="card-title">
                 <a
-                  class="button is-link is-medium"
+                  class="btn btn-primary"
                   href="/blocks"
                   aria-label="list of blocks">
 
                   "View all"
 
                 </a>
-              </p>
-            </header>
+              </h6>
+            </div>
 
-            <div class="card-content">
-              <div class="content">
-                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
                   <thead>
                     <{ Block.renderHeaderFooterTable() }>
                   </thead>
@@ -59,28 +57,28 @@ component Pages.Home {
           </div>
         </div>
 
-        <div class="column">
-          <div class="card has-margin-top-15 has-margin-top-5-mobile">
-            <header class="card-header">
-              <p class="card-header-title">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">
                 "Latest Transactions"
-              </p>
+              </h5>
 
-              <p class="card-header-title">
+              <h6 class="card-title">
                 <a
-                  class="button is-link is-flex is-medium is-pulled-left"
+                  class="btn btn-primary"
                   href="/transactions"
                   aria-label="list of transactions">
 
                   "View all"
 
                 </a>
-              </p>
-            </header>
+              </h6>
+            </div>
 
-            <div class="card-content">
-              <div class="content">
-                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
                   <thead>
                     <{ Transaction.renderHeaderFooterTable() }>
                   </thead>

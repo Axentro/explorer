@@ -1,30 +1,19 @@
 component Search {
   fun render : Html {
-    <div class="has-margin-top-15 has-margin-top-5-mobile">
-      <div class="field has-addons">
-        <p class="control has-icons-left is-expanded">
-          <input
-            class="input is-large"
-            type="text"
-            placeholder="search by blocks, transactions, addresses, domains, tokens"/>
+    <form class="form-inline my-2 my-lg-0">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="search by blocks, transactions, addresses, domains, tokens"
+        aria-label="Search"/>
 
-          <span class="icon is-medium is-left">
-            <i
-              class="fas fa-search"
-              aria-hidden="true"/>
-          </span>
-        </p>
+      <button
+        class="btn btn-outline-light my-2 my-sm-0"
+        type="submit">
 
-        <p class="control">
-          <button
-            type="submit"
-            class="button is-primary is-large">
+        "Search"
 
-            "Search"
-
-          </button>
-        </p>
-      </div>
-    </div>
+      </button>
+    </form>
   }
 }

@@ -21,33 +21,19 @@ module Transaction {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>
-        "Transaction ID"
-      </th>
+      <th>"Transaction ID"</th>
 
-      <th>
-        "Block index"
-      </th>
+      <th>"Block index"</th>
 
-      <th>
-        "Time"
-      </th>
+      <th>"Time"</th>
 
-      <th>
-        "Action"
-      </th>
+      <th>"Action"</th>
 
-      <th>
-        "Senders"
-      </th>
+      <th>"Senders"</th>
 
-      <th>
-        "Recipients"
-      </th>
+      <th>"Recipients"</th>
 
-      <th>
-        "Token"
-      </th>
+      <th>"Token"</th>
     </tr>
   }
 
@@ -60,17 +46,17 @@ module Transaction {
       </td>
 
       <td>
-        <span class="icon is-small is-left">
+        if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
           <i
-            class={
-              "fas " + if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
-                "fa-building"
-              } else {
-                "fa-bolt"
-              }
-            }
-            aria-hidden="true"/>
-        </span>
+            class="fas fa-hourglass"
+            title="slow"/>
+        } else {
+          <i
+            class="fas fa-bolt"
+            title="fast"/>
+        }
+
+        " - "
 
         <a href={"/blocks/show/" + Number.toString(Maybe.withDefault(0, transaction.blockIndex))}>
           <{ Number.toString(Maybe.withDefault(0, transaction.blockIndex)) }>
@@ -96,10 +82,10 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXNT") {
-              "is-info"
+            "badge " + if (transaction.token == "AXNT") {
+              "badge-info"
             } else {
-              "is-light"
+              "badge-light"
             }
           }>
 
@@ -123,17 +109,17 @@ module Transaction {
       </td>
 
       <td>
-        <span class="icon is-small is-left">
+        if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
           <i
-            class={
-              "fas " + if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
-                "fa-building"
-              } else {
-                "fa-bolt"
-              }
-            }
-            aria-hidden="true"/>
-        </span>
+            class="fas fa-hourglass"
+            title="slow"/>
+        } else {
+          <i
+            class="fas fa-bolt"
+            title="fast"/>
+        }
+
+        " - "
 
         <a href={"/blocks/show/" + Number.toString(Maybe.withDefault(0, transaction.blockIndex))}>
           <{ Number.toString(Maybe.withDefault(0, transaction.blockIndex)) }>
@@ -159,10 +145,10 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXNT") {
-              "is-info"
+            "badge " + if (transaction.token == "AXNT") {
+              "badge-info"
             } else {
-              "is-light"
+              "badge-light"
             }
           }>
 
@@ -175,29 +161,17 @@ module Transaction {
 
   fun renderInBlockHeaderFooterTable : Html {
     <tr>
-      <th>
-        "Transaction ID"
-      </th>
+      <th>"Transaction ID"</th>
 
-      <th>
-        "Time"
-      </th>
+      <th>"Time"</th>
 
-      <th>
-        "Action"
-      </th>
+      <th>"Action"</th>
 
-      <th>
-        "Senders"
-      </th>
+      <th>"Senders"</th>
 
-      <th>
-        "Recipients"
-      </th>
+      <th>"Recipients"</th>
 
-      <th>
-        "Token"
-      </th>
+      <th>"Token"</th>
     </tr>
   }
 
@@ -228,10 +202,10 @@ module Transaction {
       <td>
         <span
           class={
-            "tag " + if (transaction.token == "AXNT") {
-              "is-info"
+            "badge " + if (transaction.token == "AXNT") {
+              "badge-info"
             } else {
-              "is-light"
+              "badge-light"
             }
           }>
 
@@ -244,18 +218,14 @@ module Transaction {
 
   fun renderSendersHeaderFooterTable : Html {
     <tr>
-      <th>
-        "Address"
-      </th>
+      <th>"Address"</th>
 
-      <th>
-        "Amount"
-      </th>
+      <th>"Amount"</th>
 
       <th>
         "Fee "
 
-        <span class="tag is-info">
+        <span class="badge badge-info">
           "AXNT"
         </span>
       </th>
@@ -286,13 +256,9 @@ module Transaction {
 
   fun renderRecipientsHeaderFooterTable : Html {
     <tr>
-      <th>
-        "Address"
-      </th>
+      <th>"Address"</th>
 
-      <th>
-        "Amount"
-      </th>
+      <th>"Amount"</th>
     </tr>
   }
 

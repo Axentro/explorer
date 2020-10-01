@@ -12,23 +12,23 @@ module Explorer
       @@pool
     end
 
-    def self.last_block_index : Int64
+    def self.block_total_size : Int64
       pool.connection do |http|
         http.exec(HTTP::Request.new("GET", "/api/v1/blockchain/size")) do |response|
           if response.status_code == 200
             json_str = response.body_io.gets
             if json_str && !json_str.strip.empty?
-              return BlockchainSize.from_json(json_str).result["size"] - 1
+              return BlockchainSize.from_json(json_str).result["totals"]["total_size"].as_i64
             end
           else
             @@logger.warning "Node api (/api/v1/blockchain/size) failure"
           end
         end
       end
-      0.to_u64
+      0.to_i64
     rescue ex
       @@logger.warning "Can't retrieve block size: #{ex}"
-      0.to_u64
+      0.to_i64
     end
 
     def self.block(index : Int64) : Block?
@@ -51,19 +51,26 @@ module Explorer
     end
 
     def self.blockchain : Array(Block)?
-      pool.connection do |http|
-        http.exec(HTTP::Request.new("GET", "/api/v1/blockchain")) do |response|
-          if response.status_code == 200
-            json_str = response.body_io.gets
-            if json_str && !json_str.strip.empty?
-              return BlockchainResult.from_json(json_str).result
+      total_size = block_total_size
+      per_page = 20
+      max_page = (total_size / per_page).ceil
+      res = Array(Block).new
+      (0..max_page).each do |page|
+        pool.connection do |http|
+          http.exec(HTTP::Request.new("GET", "/api/v1/blockchain?page=#{page}")) do |response|
+            if response.status_code == 200
+              json_str = response.body_io.gets
+              if json_str && !json_str.strip.empty?
+                res = res + BlockchainResult.from_json(json_str).result
+              end
+            else
+              @@logger.warning "Node api (/api/v1/blockchain) failure"
+              return nil
             end
-          else
-            @@logger.warning "Node api (/api/v1/blockchain) failure"
-            return nil
           end
         end
       end
+      res
     rescue ex
       @@logger.warning "Can't retrieve the blockchain: #{ex}"
       nil

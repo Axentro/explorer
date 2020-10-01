@@ -1,11 +1,9 @@
 component Footer {
   fun render : Html {
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          <strong>
-            "Axentro Explorer"
-          </strong>
+    <footer class="card text-center">
+      <div class="card-body">
+        <p class="card-text">
+          <strong>"Axentro Explorer"</strong>
 
           " by"
 
@@ -22,7 +20,7 @@ component Footer {
           "."
         </p>
 
-        <p>
+        <p class="card-text">
           <a
             class="icon"
             href="https://github.com/Axentro/explorer">

@@ -2,113 +2,98 @@ component Pages.Blocks.Show {
   connect Stores.Blocks exposing { block }
 
   fun render : Html {
-    <div class="container">
-      <table class="table">
-        <thead>
-          <th colspan="2">
-            <h1 class="title">
-              "Block"
-            </h1>
-          </th>
-        </thead>
-
-        <tbody>
-          <tr>
-            <th>
-              "Block height"
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <th colspan="2">
+              <h2>"Block"</h2>
             </th>
+          </thead>
 
-            <td>
-              <span class="icon is-small is-left">
-                <i
-                  class={
-                    "fas " + if (block.index % 2 == 0) {
-                      "fa-building"
-                    } else {
-                      "fa-bolt"
-                    }
-                  }
-                  aria-hidden="true"/>
-              </span>
-
-              <{ Number.toString(block.index) }>
-            </td>
-          </tr>
-
-          <tr>
-            <th>
-              "Number of transations"
-            </th>
-
-            <td>
-              <{ Number.toString(Array.size(block.transactions)) }>
-            </td>
-          </tr>
-
-          if (block.index % 2 == 0) {
+          <tbody>
             <tr>
-              <th>
-                "Nonce"
-              </th>
+              <th>"Block height"</th>
 
               <td>
-                <{ Maybe.withDefault("0", block.nonce) }>
+                if (block.index % 2 == 0) {
+                  <i
+                    class="fas fa-hourglass"
+                    title="slow"/>
+                } else {
+                  <i
+                    class="fas fa-bolt"
+                    title="fast"/>
+                }
+
+                " - "
+                <{ Number.toString(block.index) }>
               </td>
             </tr>
-          }
 
-          <tr>
-            <th>
-              "Previous hash"
-            </th>
+            <tr>
+              <th>"Number of transations"</th>
 
-            <td>
-              <{ block.prevHash }>
-            </td>
-          </tr>
+              <td>
+                <{ Number.toString(Array.size(block.transactions)) }>
+              </td>
+            </tr>
 
-          <tr>
-            <th>
-              "Merkle tree root"
-            </th>
+            if (block.index % 2 == 0) {
+              <tr>
+                <th>"Nonce"</th>
 
-            <td>
-              <{ block.merkleTreeRoot }>
-            </td>
-          </tr>
+                <td>
+                  <{ Maybe.withDefault("0", block.nonce) }>
+                </td>
+              </tr>
+            }
 
-          <tr>
-            <th>
-              "Time"
-            </th>
+            <tr>
+              <th>"Previous hash"</th>
 
-            <td>
-              <{ DDate.formatFromTSM(block.timestamp) }>
-            </td>
-          </tr>
+              <td>
+                <{ block.prevHash }>
+              </td>
+            </tr>
 
-          <tr>
-            <th>
-              "Difficulty"
-            </th>
+            <tr>
+              <th>"Merkle tree root"</th>
 
-            <td>
-              <{ Number.toString(Maybe.withDefault(0, block.difficulty)) }>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td>
+                <{ block.merkleTreeRoot }>
+              </td>
+            </tr>
 
-      <div class="card has-margin-top-15 has-margin-top-5-mobile">
-        <header class="card-header">
-          <p class="card-header-title">
+            <tr>
+              <th>"Time"</th>
+
+              <td>
+                <{ DDate.formatFromTSM(block.timestamp) }>
+              </td>
+            </tr>
+
+            <tr>
+              <th>"Difficulty"</th>
+
+              <td>
+                <{ Number.toString(Maybe.withDefault(0, block.difficulty)) }>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">
             "Transactions"
-          </p>
-        </header>
+          </h5>
+        </div>
 
-        <div class="card-content">
-          <div class="content">
-            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
               <thead>
                 <{ Transaction.renderInBlockHeaderFooterTable() }>
               </thead>
