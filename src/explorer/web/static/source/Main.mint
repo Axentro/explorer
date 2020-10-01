@@ -1,5 +1,5 @@
 component Main {
-  connect Application exposing { page }
+  connect Stores.Application exposing { page }
 
   fun render : Html {
     <Layout>

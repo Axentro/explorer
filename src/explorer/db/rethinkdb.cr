@@ -230,10 +230,6 @@ module Explorer
       end
 
       # Block
-      def self.blockchain_total_size : Int64
-        self.blocks_count
-      end
-
       def self.block_add(block : Block)
         scaled_block = scale_decimal(block)
 
@@ -312,10 +308,13 @@ module Explorer
         end.to_json
       end
 
-      def self.blocks_count
-        @@pool.connection do |conn|
+      def self.blocks_page_count
+        res = @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).count.run(conn)
-        end.to_json
+        end
+        {
+          blocks_page_count: (res.as_i64 / CONFIG.per_page).ceil.to_i64,
+        }.to_json
       end
 
       def self.block(index : Int32)

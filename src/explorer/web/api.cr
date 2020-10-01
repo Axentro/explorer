@@ -56,9 +56,15 @@ module Explorer::Web
       end
 
       # TODO(fenicks): add slow and fast parameter
-      get "#{prefix}/blocks/count" do |context, _|
+      # get "#{prefix}/blocks/count" do |context, _|
+      #   content_type_json(context)
+      #   context.response.print R.blocks_count
+      #   context
+      # end
+
+      get "#{prefix}/blocks/pageCount" do |context, _|
         content_type_json(context)
-        context.response.print R.blocks_count
+        context.response.print R.blocks_page_count
         context
       end
 

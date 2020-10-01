@@ -1,16 +1,19 @@
 component Pages.Blocks {
-  connect Stores.Blocks exposing { blocks }
+  connect Stores.Blocks exposing { blocks, currentPage, pageCount }
 
   fun render : Html {
     <div class="container-fluid">
       <div class="card">
-        <div class="card-header">
+        <div class="mb-4 card-header">
           <h5 class="card-title">
             "Blocks"
           </h5>
         </div>
 
-        <Paginate controller="blocks"/>
+        <Paginate
+          controller="blocks"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
 
         <div class="card-body">
           <div class="table-responsive">
@@ -30,7 +33,10 @@ component Pages.Blocks {
           </div>
         </div>
 
-        <Paginate controller="blocks"/>
+        <Paginate
+          controller="blocks"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
       </div>
     </div>
   }

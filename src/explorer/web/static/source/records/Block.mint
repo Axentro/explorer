@@ -12,3 +12,7 @@ record Block {
   signature : Maybe(String),
   hash : Maybe(String)
 }
+
+record BlocksPageCount {
+  blocksPageCount : Number using "blocks_page_count"
+}
