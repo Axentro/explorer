@@ -10,3 +10,7 @@ record Address {
   domains : Array(Domain),
   timestamp : Number
 }
+
+record AddressesPageCount {
+  addressesPageCount : Number using "addresses_page_count"
+}

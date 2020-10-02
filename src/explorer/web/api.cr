@@ -48,6 +48,12 @@ module Explorer::Web
         context
       end
 
+      get "#{prefix}/addresses/pageCount" do |context, _|
+        content_type_json(context)
+        context.response.print R.addresses_page_count
+        context
+      end
+
       # /blocks
       get "#{prefix}/blocks" do |context, _|
         content_type_json(context)

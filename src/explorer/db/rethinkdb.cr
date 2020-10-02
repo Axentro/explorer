@@ -160,6 +160,15 @@ module Explorer
         @@logger.error "#{e}"
       end
 
+      def self.addresses_page_count
+        res = @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).count.run(conn)
+        end
+        {
+          addresses_page_count: (res.as_i64 / CONFIG.per_page).ceil.to_i64,
+        }.to_json
+      end
+
       def self.address(address : String)
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).filter({address: address}).map do |doc|

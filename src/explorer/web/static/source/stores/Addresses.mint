@@ -1,6 +1,12 @@
 store Stores.Addresses {
   state addresses : Array(Address) = []
   state address : Address = Address.empty()
+  state currentPage : Number = 1
+  state pageCount : Number = 1
+
+  fun setCurrentPage (cp : Number) : Promise(Never, Void) {
+    next { currentPage = cp }
+  }
 
   fun getAddress (address : String) : Promise(Never, Void) {
     sequence {
@@ -55,6 +61,42 @@ store Stores.Addresses {
           Address.decodes(object)
 
         next { addresses = data }
+      } catch Object.Error => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      } catch String => error {
+        sequence {
+          Debug.log(error)
+          Promise.never()
+        }
+      }
+    } catch Http.ErrorResponse => error {
+      sequence {
+        Debug.log(error)
+        Promise.never()
+      }
+    }
+  }
+
+  fun getPageCount : Promise(Never, Void) {
+    sequence {
+      response =
+        "/api/v1/addresses/pageCount"
+        |> Http.get()
+        |> Http.send()
+
+      try {
+        object =
+          response.body
+          |> Json.parse()
+          |> Maybe.toResult("Json error when retrieving addresses")
+
+        data =
+          decode object as AddressesPageCount
+
+        next { pageCount = data.addressesPageCount }
       } catch Object.Error => error {
         sequence {
           Debug.log(error)

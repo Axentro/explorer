@@ -1,14 +1,19 @@
 component Pages.Addresses {
-  connect Stores.Addresses exposing { addresses }
+  connect Stores.Addresses exposing { addresses, currentPage, pageCount }
 
   fun render : Html {
     <div class="container-fluid">
       <div class="card">
-        <div class="card-header">
+        <div class="mb-4 card-header">
           <h5 class="card-title">
             "Addresses"
           </h5>
         </div>
+
+        <Paginate
+          controller="addresses"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
 
         <div class="card-body">
           <div class="table-responsive">
@@ -27,6 +32,11 @@ component Pages.Addresses {
             </table>
           </div>
         </div>
+
+        <Paginate
+          controller="addresses"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
       </div>
     </div>
   }
