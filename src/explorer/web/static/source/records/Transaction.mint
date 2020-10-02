@@ -24,3 +24,7 @@ record Transaction {
   scaled : Number,
   kind : String
 }
+
+record TransactionsPageCount {
+  transactionsPageCount : Number using "transactions_page_count"
+}

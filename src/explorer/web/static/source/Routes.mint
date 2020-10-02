@@ -117,15 +117,17 @@ routes {
     parallel {
       Stores.Application.setPage(Page::Transactions)
       Stores.Transactions.getTransactions(1)
+      Stores.Transactions.setCurrentPage(1)
+      Stores.Transactions.getPageCount()
     }
   }
 
   /transactions/page/:page (page : Number) {
     parallel {
       Stores.Application.setPage(Page::Transactions)
-
-      /* Stores.Application.setCurrentPage(page) */
       Stores.Transactions.getTransactions(page)
+      Stores.Transactions.setCurrentPage(page)
+      Stores.Transactions.getPageCount()
     }
   }
 

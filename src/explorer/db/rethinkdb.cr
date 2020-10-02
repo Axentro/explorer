@@ -453,6 +453,15 @@ module Explorer
         end.to_json
       end
 
+      def self.transactions_page_count
+        res = @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).count.run(conn)
+        end
+        {
+          transactions_page_count: (res.as_i64 / CONFIG.per_page).ceil.to_i64,
+        }.to_json
+      end
+
       def self.transaction(txid : String)
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).get(txid).default("{}").run(conn)

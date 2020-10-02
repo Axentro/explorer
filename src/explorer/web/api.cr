@@ -185,6 +185,12 @@ module Explorer::Web
         end
       end
 
+      get "#{prefix}/transactions/pageCount" do |context, _|
+        content_type_json(context)
+        context.response.print R.transactions_page_count
+        context
+      end
+
       # /transaction
       get "#{prefix}/transaction/:txid" do |context, params|
         content_type_json(context)
