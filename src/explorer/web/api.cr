@@ -149,6 +149,12 @@ module Explorer::Web
         end
       end
 
+      get "#{prefix}/tokens/pageCount" do |context, _|
+        content_type_json(context)
+        context.response.print R.tokens_page_count
+        context
+      end
+
       # /token
       get "#{prefix}/token/:name" do |context, params|
         content_type_json(context)

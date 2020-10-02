@@ -92,15 +92,17 @@ routes {
     parallel {
       Stores.Application.setPage(Page::Tokens)
       Stores.Tokens.getTokens(1)
+      Stores.Tokens.setCurrentPage(1)
+      Stores.Tokens.getPageCount()
     }
   }
 
   /tokens/page/:page (page : Number) {
     parallel {
       Stores.Application.setPage(Page::Tokens)
-
-      /* Stores.Application.setCurrentPage(page) */
       Stores.Tokens.getTokens(page)
+      Stores.Tokens.setCurrentPage(page)
+      Stores.Tokens.getPageCount()
     }
   }
 

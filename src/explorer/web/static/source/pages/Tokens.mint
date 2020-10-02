@@ -1,14 +1,19 @@
 component Pages.Tokens {
-  connect Stores.Tokens exposing { tokens }
+  connect Stores.Tokens exposing { tokens, currentPage, pageCount }
 
   fun render : Html {
     <div class="container-fluid">
       <div class="card">
-        <div class="card-header">
+        <div class="mb-4 card-header">
           <h5 class="card-title">
             "Tokens"
           </h5>
         </div>
+
+        <Paginate
+          controller="tokens"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
 
         <div class="card-body">
           <div class="table-responsive">
@@ -27,6 +32,11 @@ component Pages.Tokens {
             </table>
           </div>
         </div>
+
+        <Paginate
+          controller="tokens"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
       </div>
     </div>
   }
