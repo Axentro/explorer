@@ -352,6 +352,15 @@ module Explorer
         end.to_json
       end
 
+      def self.domains_page_count
+        res = @@pool.connection do |conn|
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).count.run(conn)
+        end
+        {
+          domains_page_count: (res.as_i64 / CONFIG.per_page).ceil.to_i64,
+        }.to_json
+      end
+
       def self.domain(name : String)
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({name: name}).min("name").default("{}").run(conn)

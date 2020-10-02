@@ -118,6 +118,12 @@ module Explorer::Web
         end
       end
 
+      get "#{prefix}/domains/pageCount" do |context, _|
+        content_type_json(context)
+        context.response.print R.domains_page_count
+        context
+      end
+
       # /domain
       get "#{prefix}/domain/:name" do |context, params|
         content_type_json(context)

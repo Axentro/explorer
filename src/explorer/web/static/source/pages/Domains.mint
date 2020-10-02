@@ -1,14 +1,19 @@
 component Pages.Domains {
-  connect Stores.Domains exposing { domains }
+  connect Stores.Domains exposing { domains, currentPage, pageCount }
 
   fun render : Html {
     <div class="container-fluid">
       <div class="card">
-        <div class="card-header">
+        <div class="mb-4 card-header">
           <h5 class="card-title">
             "Domains"
           </h5>
         </div>
+
+        <Paginate
+          controller="domains"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
 
         <div class="card-body">
           <div class="table-responsive">
@@ -27,6 +32,11 @@ component Pages.Domains {
             </table>
           </div>
         </div>
+
+        <Paginate
+          controller="domains"
+          currentPage={currentPage}
+          maxPage={pageCount}/>
       </div>
     </div>
   }
