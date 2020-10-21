@@ -95,7 +95,7 @@ module Explorer::Web
         index = begin
           params["index"].to_i32
         rescue
-          0
+          -1
         end
         context.response.print R.block(index)
         context
