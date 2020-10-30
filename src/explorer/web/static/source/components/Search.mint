@@ -4,7 +4,7 @@ component Search {
       <input
         class="form-control mr-sm-2"
         type="search"
-        placeholder="search by blocks, transactions, addresses, domains, tokens"
+        placeholder="search by address, transaction, block, domain, token"
         aria-label="Search"/>
 
       <button
