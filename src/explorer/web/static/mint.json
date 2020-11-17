@@ -1,5 +1,5 @@
 {
-  "name": "explorer",
+  "name": "axentro-explorer",
   "source-directories": [
     "source"
   ],
@@ -34,7 +34,7 @@
       "og:type": "website",
       "og:title": "Axentro - Explorer",
       "og:description": "Axentro is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
-      "og:image": "/images/axentro.svg"
+      "og:image": "/images/axentro.png"
     },
     "icon": "assets/axentro.png",
     "head": "assets/head.html"
