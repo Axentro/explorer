@@ -12,13 +12,15 @@ dependencies:
   baked_file_system:
     github: schovi/baked_file_system
     version: 0.9.8
-  crystal-rethinkdb:
+  rethinkdb:
     github: fenicks/crystal-rethinkdb
     branch: master
   pool:
     github: ysbaddaden/pool
   router:
     github: tbrand/router.cr
+  strange:
+    github: hydecr/strange
 
 development_dependencies:
   ameba:

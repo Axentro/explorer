@@ -1,6 +1,6 @@
 require "baked_file_system"
 require "colorize"
-require "crystal-rethinkdb"
+require "rethinkdb"
 require "json"
 require "logger"
 require "option_parser"
