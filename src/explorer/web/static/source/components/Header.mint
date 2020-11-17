@@ -6,11 +6,11 @@ component Header {
         href="/">
 
         <img
-          src="/images/axentro-nav-brand.svg"
+          src="/images/axentro-nav-brand.png"
           width="112"
           height="28"
           class="d-inline-block align-top"
-          alt=""
+          alt="Axentro logo"
           loading="lazy"/>
 
       </a>
