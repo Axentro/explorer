@@ -43,8 +43,7 @@ module Explorer::Web
       # /address
       get "#{prefix}/address/:name" do |context, params|
         content_type_json(context)
-        name = params["name"]? || ""
-        context.response.print R.address(name)
+        context.response.print R.address(params["name"])
         context
       end
 
@@ -127,8 +126,7 @@ module Explorer::Web
       # /domain
       get "#{prefix}/domain/:name" do |context, params|
         content_type_json(context)
-        name = params["name"]? || ""
-        context.response.print R.domain(name)
+        context.response.print R.domain(params["name"])
         context
       end
       # /search
@@ -181,8 +179,7 @@ module Explorer::Web
       # /token
       get "#{prefix}/token/:name" do |context, params|
         content_type_json(context)
-        name = params["name"]? || ""
-        context.response.print R.token(name)
+        context.response.print R.token(params["name"])
         context
       end
 
@@ -217,8 +214,7 @@ module Explorer::Web
       # /transaction
       get "#{prefix}/transaction/:txid" do |context, params|
         content_type_json(context)
-        txid = params["txid"]? || "0"
-        context.response.print R.transaction(txid)
+        context.response.print R.transaction(params["txid"])
         context
       end
     end
