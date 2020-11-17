@@ -6,8 +6,8 @@ component Pages.Home {
     ticks =
       () : Promise(Never, Void) {
         parallel {
-          Stores.Blocks.loadTop()
-          Stores.Transactions.loadTop()
+          Stores.Blocks.loadTop(-1)
+          Stores.Transactions.loadTop(-1)
         }
       }
   }

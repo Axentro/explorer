@@ -141,8 +141,8 @@ routes {
   / {
     parallel {
       Stores.Application.setPage(Page::Home)
-      Stores.Blocks.loadTop()
-      Stores.Transactions.loadTop()
+      Stores.Blocks.loadTop(-1)
+      Stores.Transactions.loadTop(-1)
     }
   }
 }

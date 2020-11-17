@@ -132,19 +132,25 @@ module Explorer::Web
         context
       end
       # /search
-      get "#{prefix}/search/:p" do |context, params|
+      post "#{prefix}/search/:p" do |context, params|
         content_type_json(context)
 
         chan = Channel(Hash(String, JSON::Any)).new(5)
-        spawn { chan.send({"address" => JSON.parse(R.address(params["p"]))}) }
-        spawn { chan.send({"block" => JSON.parse(R.block(begin params["p"].to_i32 rescue -1 end))}) }
-        spawn { chan.send({"domain" => JSON.parse(R.domain(params["p"]))}) }
-        spawn { chan.send({"token" => JSON.parse(R.token(params["p"]))}) }
-        spawn { chan.send({"transaction" => JSON.parse(R.transaction(params["p"]))}) }
+        spawn { chan.send({"addresses" => JSON.parse(R.address(params["p"]))}) }
+        spawn { chan.send({"blocks" => JSON.parse(R.block(begin params["p"].to_i32 rescue -1 end))}) }
+        spawn { chan.send({"domains" => JSON.parse(R.domain(params["p"]))}) }
+        spawn { chan.send({"tokens" => JSON.parse(R.token(params["p"]))}) }
+        spawn { chan.send({"transactions" => JSON.parse(R.transaction(params["p"]))}) }
 
-        result = Hash(String, JSON::Any).new
-        5.times { result = result.merge(chan.receive) }
+        data = Hash(String, JSON::Any).new
+        5.times { data = data.merge(chan.receive) }
 
+        # Remove entries with empty values
+        data.delete_if { |k, v| v == "{}" }
+        result = {
+          "results":    data.size,
+          "controller": data.first_key?
+        }
         context.response.print result.to_json
         context
       end
