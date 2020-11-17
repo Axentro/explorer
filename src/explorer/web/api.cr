@@ -146,7 +146,7 @@ module Explorer::Web
         5.times { data = data.merge(chan.receive) }
 
         # Remove entries with empty values
-        data.delete_if { |k, v| v == "{}" }
+        data.delete_if { |k, v| v.size == 0 }
         result = {
           "results":    data.size,
           "controller": data.first_key?
