@@ -281,8 +281,8 @@ module Explorer
             @@logger.debug "[CREATE TOKEN RECIPIENT] : #{tx[:token]}, #{r[:address]}, amount:#{r[:amount]}" if tx[:action] == "create_token"
           end
 
-          # TODO(fenicks): Add collected human readable address (SCARS/domains)
-          if tx[:action] == "scars_buy"
+          # TODO(fenicks): Add collected human readable address (HRA/domains)
+          if tx[:action] == "hra_buy"
             domain_address = tx[:senders].first?.try(&.[:address])
             domain_add({name: tx[:message], address: domain_address, timestamp: tx[:timestamp]}) if domain_address
           end
@@ -332,7 +332,7 @@ module Explorer
         end.to_json
       end
 
-      # Domain (Scars): scars_buy, scars_sell, scars_cancel
+      # Domain (HRA): hra_buy, hra_sell, hra_cancel
       def self.domains
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).order_by(::RethinkDB.asc("timestamp")).default("[]").run(conn)
