@@ -153,7 +153,7 @@ module Explorer
             # .order_by(:amount, index: ::RethinkDB.desc("amount_length"))
             .order_by(::RethinkDB.desc("amount"))
             .slice(start, last)
-            .default({} of Nil => Nil)
+            .default({} of String => Nil)
             .run(conn)
         end.to_json
       rescue e
@@ -173,7 +173,7 @@ module Explorer
         @@pool.connection do |conn|
           ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES).filter({address: address}).map do |doc|
             doc.merge({domains: ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({address: doc["address"]}).coerce_to("array")})
-          end.min("address").default({} of Nil => Nil).run(conn)
+          end.min("address").default({} of String => Nil).run(conn)
         end.to_json
       end
 
@@ -328,7 +328,7 @@ module Explorer
 
       def self.block(index : Int32)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).filter({index: index}).min("index").default({} of Nil => Nil).run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_BLOCKS).filter({index: index}).min("index").default({} of String => Nil).run(conn)
         end.to_json
       end
 
@@ -363,7 +363,7 @@ module Explorer
 
       def self.domain(name : String)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({name: name}).min("name").default({} of Nil => Nil).run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_DOMAINS).filter({name: name}).min("name").default({} of String => Nil).run(conn)
         end.to_json
       end
 
@@ -411,7 +411,7 @@ module Explorer
 
       def self.token(name : String)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).filter({name: name}).min("name").default({} of Nil => Nil).run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TOKENS).filter({name: name}).min("name").default({} of String => Nil).run(conn)
         end.to_json
       end
 
@@ -464,7 +464,7 @@ module Explorer
 
       def self.transaction(txid : String)
         @@pool.connection do |conn|
-          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).get(txid).default({} of Nil => Nil).run(conn)
+          ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_TRANSACTIONS).get(txid).default({} of String => Nil).run(conn)
         end.to_json
       end
 
