@@ -24,7 +24,9 @@ component Pages.Domains.Show {
               <th>"Address"</th>
 
               <td>
-                <{ domain.address }>
+                <a href={"/addresses/show/" + domain.address}>
+                  <{ domain.address }>
+                </a>
               </td>
             </tr>
 

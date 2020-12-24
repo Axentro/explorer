@@ -1,6 +1,7 @@
 require "big"
 
 require "./../types/*"
+require "./../node_api"
 
 module Explorer
   module Db
@@ -177,69 +178,47 @@ module Explorer
         end.to_json
       end
 
-      def self.address_add(who : String, token : String, address : String, amount : String, timestamp : Int64, fee : String = "0")
+      def self.address_add(address : String, timestamp : Int64)
         a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
         @@pool.connection do |conn|
-          if token == "AXNT"
-            if a.filter({address: address}).run(conn).size == 0
-              # TODO(fenicks): discuss about first time address is shown fee must be zero ? If so remove the: `- BigInt.new(fee)` !
-              a.insert({address: address, amount: (BigInt.new(amount) - BigInt.new(fee)).to_s, token_amounts: [] of TokenAmount, timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXNT] #{fee}"
-            else
-              # TODO(fenicks): Fix getting value in update RethinkDB update block
-              result = a.filter({address: address}).run(conn).to_a.first
-              a.filter({address: address}).update({durability: "hard"}) do
-                result_amount : BigInt = if who == "sender"
-                  BigInt.new(result["amount"].to_s) - (BigInt.new(amount) + BigInt.new(fee))
-                else
-                  BigInt.new(result["amount"].to_s) + BigInt.new(amount) # - BigInt.new(fee)
-                end
-                {amount: result_amount.to_s}
-              end.run(conn)
-              @@logger.debug "[UPDATE ADDRESS]: #{address} - [#{token}] - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{amount} - [FEE:AXNT] #{fee}"
-            end
-          else # tokens
-            token_amount = amount
-            if a.filter({address: address}).run(conn).size == 0
-              a.insert({address: address, amount: "0", token_amounts: [{token: token, amount: token_amount}], timestamp: timestamp}).run(conn)
-              @@logger.debug "[NEW ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
-            else
-              if a.filter({address: address}).concat_map { |doc| doc[:token_amounts] }.filter({token: token}).run(conn).size == 0
-                # TODO(fenicks): Fix getting value in update RethinkDB update block
-                result = a.filter({address: address}).run(conn).to_a.first
-                a.filter({address: address}).update({durability: "hard"}) do |u|
-                  {
-                    amount:        (BigInt.new(result["amount"].to_s) - BigInt.new(fee)).to_s,
-                    token_amounts: u[:token_amounts].append({token: token, amount: token_amount}),
-                  }
-                end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [NEW TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
-              else
-                result = a.filter({address: address}).run(conn).to_a.first
-                rt_amount : String
-                rt_total : String
-                result_token_amounts = a.filter({address: address}).concat_map { |addr| addr["token_amounts"] }.run(conn).to_a.map do |rt|
-                  rt_amount = rt["amount"].to_s
-                  rt_total = if who == "sender"
-                               (BigInt.new(rt_amount) - BigInt.new(token_amount)).to_s
-                             else
-                               (BigInt.new(rt_amount) + BigInt.new(token_amount)).to_s
-                             end
-                  {amount: (rt["token"].to_s != token ? rt_amount : rt_total), token: rt["token"].as_s}
-                end
-
-                a.filter({address: address}).update({durability: "hard"}) do
-                  {amount: (BigInt.new(result["amount"].to_s) - BigInt.new(fee)).to_s, token_amounts: result_token_amounts.to_a}
-                end.run(conn)
-                @@logger.debug "[UPDATE ADDRESS]: #{address} - [EXISTING TOKEN] - #{token} - [AMOUNT]: #{who == "sender" ? "-" : "+"}#{token_amount} - [FEE:AXNT] #{fee}"
-              end
-            end
+          if a.filter({address: address}).run(conn).size == 0
+            a.insert({address: address, token_amounts: {} of String => Int64, timestamp: timestamp}).run(conn)
+            @@logger.debug "[NEW ADDRESS]: #{address}"
           end
         end
       end
 
+      def self.addresses_balances_update(address : String)
+        tokens = NodeApi.address_tokens(address)
+        a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
+        @@pool.connection do |conn|
+          a.filter({address: address}).update({durability: "hard"}) do
+            {"token_amounts" => tokens}
+          end.run(conn)
+          @@logger.debug "[UPDATE ADDRESS]: #{address} - tokens: #{tokens.not_nil!.join(", ")}"
+        end
+      end
+
+      def self.addresses_balances_update_all
+        a = ::RethinkDB.db(DB_NAME).table(DB_TABLE_NAME_ADDRESSES)
+        addrs = @@pool.connection do |conn|
+          a.run(conn)
+        end
+
+        addrs.to_a.map(&.["address"]).uniq.each do |add|
+          @@pool.connection do |conn|
+            tokens = NodeApi.address_tokens(add.to_s)
+            a.filter({address: add.to_s}).update({durability: "hard"}) do
+              {"token_amounts" => tokens}
+            end.run(conn)
+          end
+        end
+
+        @@logger.debug "[UPDATE ALL ADDRESSESS]"
+      end
+
       # Block
-      def self.block_add(block : Block)
+      def self.block_add(block : Block, update_balance : Bool)
         scaled_block = scale_decimal(block)
 
         # Add default AXNT token
@@ -264,21 +243,23 @@ module Explorer
           t.insert(b.filter({index: scaled_block[:index]}).pluck("transactions").coerce_to("array")[0]["transactions"]).run(conn)
         end
 
+        collected_addresses = [] of String
         scaled_block[:transactions].each do |tx|
+          # Transactions actions
+          # "send", "hra_buy", "hra_sell", "hra_cancel", "create_token", "update_token", "lock_token", "burn_token"
+
           # Add token created
           token_add({name: tx[:token], timestamp: tx[:timestamp]}) if tx[:action] == "create_token"
 
           # Add collected addresses
           tx[:senders].each do |s|
-            amount = s[:amount]
-            amount = "0" if tx[:action] == "create_token"
-            address_add("sender", tx[:token], s[:address], amount, tx[:timestamp], s[:fee])
-            @@logger.debug "[CREATE TOKEN SENDER] : #{tx[:token]}, #{s[:address]}, amount:#{amount}, fee:#{s[:fee]}" if tx[:action] == "create_token"
+            address_add(s[:address], tx[:timestamp])
+            collected_addresses.push(s[:address]) if update_balance
           end
 
           tx[:recipients].each do |r|
-            address_add("recipient", tx[:token], r[:address], r[:amount], tx[:timestamp])
-            @@logger.debug "[CREATE TOKEN RECIPIENT] : #{tx[:token]}, #{r[:address]}, amount:#{r[:amount]}" if tx[:action] == "create_token"
+            address_add(r[:address], tx[:timestamp])
+            collected_addresses.push(r[:address]) if update_balance
           end
 
           # TODO(fenicks): Add collected human readable address (HRA/domains)
@@ -287,6 +268,8 @@ module Explorer
             domain_add({name: tx[:message], address: domain_address, timestamp: tx[:timestamp]}) if domain_address
           end
         end
+
+        collected_addresses.each { |a| addresses_balances_update(a) } if update_balance
       end
 
       # def self.blocks_add(blocks : Array(Block))

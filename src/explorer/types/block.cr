@@ -1,3 +1,4 @@
+require "json"
 require "./../types/transaction"
 
 module Explorer
@@ -30,24 +31,26 @@ module Explorer
     alias Block = FastBlock | SlowBlock
 
     struct BlockchainSize
-      JSON.mapping(
-        status: String,
-        result: JSON::Any,
-      )
+      include JSON::Serializable
+      property status : String
+      property result : JSON::Any
     end
 
     struct BlockResult
-      JSON.mapping(
-        status: String,
-        result: Block,
-      )
+      include JSON::Serializable
+      property status : String
+      property result : Block
+    end
+
+    struct BlockchainResultData
+      include JSON::Serializable
+      property data : Array(Block)
     end
 
     struct BlockchainResult
-      JSON.mapping(
-        status: String,
-        result: Array(Block),
-      )
+      include JSON::Serializable
+      property status : String
+      property result : BlockchainResultData
     end
   end
 end

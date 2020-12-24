@@ -32,6 +32,20 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
+              <th>"Address"</th>
+
+              <td>
+                <a
+                  href={"/addresses/show/" + block.address}
+                  title={block.address}>
+
+                  <{ block.address }>
+
+                </a>
+              </td>
+            </tr>
+
+            <tr>
               <th>"Number of transations"</th>
 
               <td>

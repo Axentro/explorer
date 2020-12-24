@@ -2,8 +2,7 @@ module Address {
   fun empty : Address {
     {
       address = "",
-      amount = 0,
-      tokenAmounts = [],
+      tokenAmounts = Map.empty(),
       domains = [],
       timestamp = 0
     }
@@ -40,11 +39,19 @@ module Address {
       </td>
 
       <td>
-        <{ NNumber.toScale8(Number.toString(address.amount)) }>
+        <{
+          Number.toString(
+            (address.tokenAmounts
+            |> Map.getWithDefault("AXNT", 0.0)))
+        }>
       </td>
 
       <td>
-        <{ Number.toString(Array.size(address.tokenAmounts)) }>
+        <{
+          Number.toString(
+            (address.tokenAmounts
+            |> Map.size()))
+        }>
       </td>
 
       <td>

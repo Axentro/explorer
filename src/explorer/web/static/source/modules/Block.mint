@@ -24,6 +24,8 @@ module Block {
     <tr>
       <th>"Index"</th>
 
+      <th>"Address"</th>
+
       <th>"Time"</th>
 
       <th>"Number of tx"</th>
@@ -47,6 +49,56 @@ module Block {
 
         <a href={"/blocks/show/" + Number.toString(block.index)}>
           <{ Number.toString(block.index) }>
+        </a>
+      </td>
+
+      <td>
+        <a
+          href={"/addresses/show/" + block.address}
+          title={block.address}>
+
+          <{ block.address }>
+
+        </a>
+      </td>
+
+      <td>
+        <{ DDate.formatFromTSM(block.timestamp) }>
+      </td>
+
+      <td>
+        <{ Number.toString(Array.size(block.transactions)) }>
+      </td>
+    </tr>
+  }
+
+  fun renderLineShrink (block : Block) : Html {
+    <tr>
+      <td>
+        if (block.index % 2 == 0) {
+          <i
+            class="fas fa-hourglass"
+            title="slow"/>
+        } else {
+          <i
+            class="fas fa-bolt"
+            title="fast"/>
+        }
+
+        " - "
+
+        <a href={"/blocks/show/" + Number.toString(block.index)}>
+          <{ Number.toString(block.index) }>
+        </a>
+      </td>
+
+      <td>
+        <a
+          href={"/addresses/show/" + block.address}
+          title={block.address}>
+
+          <{ SString.substring(block.address, 0, 16) + "..." }>
+
         </a>
       </td>
 

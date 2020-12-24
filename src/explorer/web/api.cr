@@ -129,6 +129,7 @@ module Explorer::Web
         context.response.print R.domain(params["name"])
         context
       end
+
       # /search
       post "#{prefix}/search/:p" do |context, params|
         content_type_json(context)
@@ -147,7 +148,7 @@ module Explorer::Web
         data.delete_if { |k, v| v.size == 0 }
         result = {
           "results":    data.size,
-          "controller": data.first_key?
+          "controller": data.first_key?,
         }
         context.response.print result.to_json
         context

@@ -24,7 +24,11 @@ component Pages.Addresses.Show {
               <th>"AXNT amount"</th>
 
               <td>
-                <{ NNumber.toScale8(Number.toString(address.amount)) }>
+                <{
+                  Number.toString(
+                    (address.tokenAmounts
+                    |> Map.getWithDefault("AXNT", 0.0)))
+                }>
               </td>
             </tr>
 
@@ -32,7 +36,11 @@ component Pages.Addresses.Show {
               <th>"Number of tokens"</th>
 
               <td>
-                <{ Number.toString(Array.size(address.tokenAmounts)) }>
+                <{
+                  Number.toString(
+                    (address.tokenAmounts
+                    |> Map.size()))
+                }>
               </td>
             </tr>
 
@@ -56,12 +64,17 @@ component Pages.Addresses.Show {
       </div>
 
       <div class="row">
-        if (Array.size(address.tokenAmounts) > 0) {
+        if ((address.tokenAmounts
+            |> Map.size()) > 0) {
           <div class="col">
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title">
-                  <{ "Tokens (" + Number.toString(Array.size(address.tokenAmounts)) + ")" }>
+                  <{
+                    "Tokens (" + Number.toString(
+                      (address.tokenAmounts
+                      |> Map.size())) + ")"
+                  }>
                 </h5>
               </div>
 
@@ -69,15 +82,19 @@ component Pages.Addresses.Show {
                 <div class="table-responsive">
                   <table class="table table-striped table-hover">
                     <thead>
-                      <{ TokenAmount.renderHeaderFooterTable() }>
+                      <{ AddressToken.renderHeaderFooterTable() }>
                     </thead>
 
                     <tfoot>
-                      <{ TokenAmount.renderHeaderFooterTable() }>
+                      <{ AddressToken.renderHeaderFooterTable() }>
                     </tfoot>
 
                     <tbody>
-                      <{ Array.map(TokenAmount.renderLine, address.tokenAmounts) }>
+                      <{
+                        for (token, amount of address.tokenAmounts) {
+                          AddressToken.renderLine(token, amount)
+                        }
+                      }>
                     </tbody>
                   </table>
                 </div>

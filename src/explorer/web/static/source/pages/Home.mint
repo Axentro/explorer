@@ -46,7 +46,7 @@ component Pages.Home {
                   </tfoot>
 
                   <tbody>
-                    <{ Array.map(Block.renderLine, blocks) }>
+                    <{ Array.map(Block.renderLineShrink, blocks) }>
                   </tbody>
                 </table>
               </div>

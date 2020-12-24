@@ -1,43 +1,43 @@
 {
-  "name": "axentro-explorer",
-  "source-directories": [
-    "source"
-  ],
-  "test-directories": [
-    "tests"
-  ],
-  "application": {
-    "name": "Axentro Explorer",
-    "title": "Axentro - Explorer",
-    "orientation": "portrait",
-    "theme-color": "#00a0e8",
-    "meta": {
-      "charset": "utf-8",
-      "description": "Axentro - Blockchain Explorer.",
-      "keywords": [
-        "axentro",
-        "explorer",
-        "crypto",
-        "currency",
-        "blockchain",
-        "mining",
-        "dapps",
-        "distributed",
-        "game",
-        "gaming"
-      ],
-      "viewport": "width=device-width, initial-scale=1, shrink-to-fit=no",
-      "author": "axentro.io",
-      "twitter:card": "summary",
-      "twitter:site": "@axentrohq",
-      "og:url": "https://explorer.axentro.io",
-      "og:type": "website",
-      "og:title": "Axentro - Explorer",
-      "og:description": "Axentro is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
-      "og:image": "/images/axentro.svg"
-    },
-    "icon": "assets/axentro.svg",
-    "head": "assets/head.html"
-    
-  }
+    "name": "lookaxentro-explorer",
+    "source-directories": [
+        "source"
+    ],
+    "test-directories": [
+        "tests"
+    ],
+    "application": {
+        "name": "LookAxentro Explorer",
+        "title": "LookAxentro - Explorer",
+        "orientation": "portrait",
+        "theme-color": "#00a0e8",
+        "meta": {
+            "charset": "utf-8",
+            "description": "LookAxentro - Blockchain Explorer.",
+            "keywords": [
+                "axentro",
+                "explorer",
+                "crypto",
+                "currency",
+                "blockchain",
+                "mining",
+                "dapps",
+                "distributed",
+                "game",
+                "gaming"
+            ],
+            "viewport": "width=device-width, initial-scale=1, shrink-to-fit=no",
+            "author": "Christian Kakesa",
+            "twitter:card": "summary",
+            "twitter:site": "@axentrohq",
+            "og:url": "https://lookaxentro.bchain.ovh",
+            "og:type": "website",
+            "og:title": "LookAxentro - Explorer",
+            "og:description": "LookAxentro is a decentralized app platform which provides developer friendly APIs for the development of decentralized applications",
+            "og:image": "/images/lookaxentro.svg"
+        },
+        "icon": "assets/lookaxentro.svg",
+        "head": "assets/head.html"
+
+    }
 }

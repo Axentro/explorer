@@ -7,11 +7,6 @@ require "option_parser"
 require "pool/connection"
 require "router"
 
-require "./explorer/logger"
-require "./explorer/sync/*"
-# require "./explorer/version"
-require "./explorer/web/api"
-
 struct Config
   property node, node_pubsub, server, port, db, per_page
 
@@ -31,16 +26,24 @@ OptionParser.parse do |parser|
   parser.banner = "Usage: explorer [arguments]"
   parser.on("-n NODE_URL", "--node=NODE_URL", "Axentro node URL '#{CONFIG.node}' by default") { |node_url| CONFIG.node = node_url }
   parser.on("-s SERVER", "--server=SERVER", "Binding server host '#{CONFIG.server}' by default") { |server| CONFIG.server = server }
-  parser.on("-p PORT", "--port=NAME", "Binding port '#{CONFIG.port}' by default") { |port| CONFIG.port = port.to_i32 }
+  parser.on("-p PORT", "--port=PORT", "Binding port '#{CONFIG.port}' by default") { |port| CONFIG.port = port.to_i32 }
   parser.on("-d DB_URL", "--db=DB_URL", "Database URL '#{CONFIG.db}' by default") { |db_uri| CONFIG.db = db_uri }
   parser.on("--per-page=PER_PAGE", "Number of lines for list pages '#{CONFIG.per_page}' by default") { |per_page| CONFIG.per_page = per_page.to_i32 }
   parser.on("--db-clean", "Drop tables and indexes") { R.db_cleanup }
-  parser.on("-h", "--help", "Show this help") { puts parser; exit 0 }
+  parser.on("-h", "--help", "Show this help") { puts parser; exit(0) }
   parser.invalid_option do |flag|
     STDERR.puts "ERROR: #{flag} is not a valid option."
     STDERR.puts parser
+    exit(42)
   end
 end
+
+# /!\ CONFIG must be initialized before the file bellow are loaded
+
+require "./explorer/logger"
+require "./explorer/sync/*"
+# require "./explorer/version"
+require "./explorer/web/api"
 
 # Database setup
 begin

@@ -10,9 +10,16 @@ module Explorer
       def self.sync
         # TODO(fenicks): sync from last block height (fast and slow)
         @@logger.info "Blockchain sync started"
-        (NodeApi.blockchain || [] of Block).each do |block|
-          R.block_add(block)
+        total_size = NodeApi.block_total_size
+        per_page = 100
+        direction = "up"
+        max_page = (total_size / per_page).ceil
+        (0..max_page).each do |page|
+          (NodeApi.blockchain(page, per_page, direction) || [] of Block).each do |block|
+            R.block_add(block, false)
+          end
         end
+        R.addresses_balances_update_all
         @@logger.info "Blockchain is synced now"
       rescue ex
         @@logger.error "[Explorer::Sync::Blockchain.sync] #{ex}"
@@ -27,7 +34,7 @@ module Explorer
           @@logger.debug "[Blockchain.event][raw message]: #{message}"
           block : Block = Block.from_json(message)
           if block.not_nil!
-            R.block_add(block)
+            R.block_add(block, true)
             @@logger.info "Block ##{block[:index]} added"
           end
         end
