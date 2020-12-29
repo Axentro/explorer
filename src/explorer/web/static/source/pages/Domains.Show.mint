@@ -7,13 +7,17 @@ component Pages.Domains.Show {
         <table class="table table-striped table-hover">
           <thead>
             <th colspan="2">
-              <h2>"Domain"</h2>
+              <h2>
+                "Domain"
+              </h2>
             </th>
           </thead>
 
           <tbody>
             <tr>
-              <th>"Name"</th>
+              <th>
+                "Name"
+              </th>
 
               <td>
                 <{ domain.name }>
@@ -21,7 +25,9 @@ component Pages.Domains.Show {
             </tr>
 
             <tr>
-              <th>"Address"</th>
+              <th>
+                "Address"
+              </th>
 
               <td>
                 <a href={"/addresses/show/" + domain.address}>
@@ -31,7 +37,9 @@ component Pages.Domains.Show {
             </tr>
 
             <tr>
-              <th>"Time"</th>
+              <th>
+                "Time"
+              </th>
 
               <td>
                 <{ DDate.formatFromTSM(domain.timestamp) }>

@@ -22,13 +22,21 @@ module Block {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Index"</th>
+      <th>
+        "Index"
+      </th>
 
-      <th>"Address"</th>
+      <th>
+        "Address"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
 
-      <th>"Number of tx"</th>
+      <th>
+        "Number of tx"
+      </th>
     </tr>
   }
 

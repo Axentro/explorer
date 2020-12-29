@@ -7,13 +7,17 @@ component Pages.Tokens.Show {
         <table class="table table-striped table-hover">
           <thead>
             <th colspan="2">
-              <h2>"Token"</h2>
+              <h2>
+                "Token"
+              </h2>
             </th>
           </thead>
 
           <tbody>
             <tr>
-              <th>"Name"</th>
+              <th>
+                "Name"
+              </th>
 
               <td>
                 <{ token.name }>
@@ -21,7 +25,9 @@ component Pages.Tokens.Show {
             </tr>
 
             <tr>
-              <th>"Time"</th>
+              <th>
+                "Time"
+              </th>
 
               <td>
                 <{ DDate.formatFromTSM(token.timestamp) }>

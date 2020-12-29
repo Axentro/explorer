@@ -3,7 +3,9 @@ component Footer {
     <footer class="card text-center">
       <div class="card-body">
         <p class="card-text">
-          <strong>"Axentro Explorer"</strong>
+          <strong>
+            "Axentro Explorer"
+          </strong>
 
           " by"
 

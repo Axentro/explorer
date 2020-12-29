@@ -1,9 +1,13 @@
 module AddressToken {
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Token"</th>
+      <th>
+        "Token"
+      </th>
 
-      <th>"Amount"</th>
+      <th>
+        "Amount"
+      </th>
     </tr>
   }
 

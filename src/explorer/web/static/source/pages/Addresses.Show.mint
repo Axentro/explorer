@@ -7,13 +7,17 @@ component Pages.Addresses.Show {
         <table class="table table-striped table-hover">
           <thead>
             <th colspan="2">
-              <h2>"Address"</h2>
+              <h2>
+                "Address"
+              </h2>
             </th>
           </thead>
 
           <tbody>
             <tr>
-              <th>"Address"</th>
+              <th>
+                "Address"
+              </th>
 
               <td>
                 <{ address.address }>
@@ -21,7 +25,9 @@ component Pages.Addresses.Show {
             </tr>
 
             <tr>
-              <th>"AXNT amount"</th>
+              <th>
+                "AXNT amount"
+              </th>
 
               <td>
                 <{
@@ -33,7 +39,9 @@ component Pages.Addresses.Show {
             </tr>
 
             <tr>
-              <th>"Number of tokens"</th>
+              <th>
+                "Number of tokens"
+              </th>
 
               <td>
                 <{
@@ -45,7 +53,9 @@ component Pages.Addresses.Show {
             </tr>
 
             <tr>
-              <th>"Number of domains"</th>
+              <th>
+                "Number of domains"
+              </th>
 
               <td>
                 <{ Number.toString(Array.size(address.domains)) }>
@@ -53,7 +63,9 @@ component Pages.Addresses.Show {
             </tr>
 
             <tr>
-              <th>"Time"</th>
+              <th>
+                "Time"
+              </th>
 
               <td>
                 <{ DDate.formatFromTSM(address.timestamp) }>
@@ -90,11 +102,9 @@ component Pages.Addresses.Show {
                     </tfoot>
 
                     <tbody>
-                      <{
-                        for (token, amount of address.tokenAmounts) {
-                          AddressToken.renderLine(token, amount)
-                        }
-                      }>
+                      for (token, amount of address.tokenAmounts) {
+                        AddressToken.renderLine(token, amount)
+                      }
                     </tbody>
                   </table>
                 </div>

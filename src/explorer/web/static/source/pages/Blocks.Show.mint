@@ -7,13 +7,17 @@ component Pages.Blocks.Show {
         <table class="table table-striped table-hover">
           <thead>
             <th colspan="2">
-              <h2>"Block"</h2>
+              <h2>
+                "Block"
+              </h2>
             </th>
           </thead>
 
           <tbody>
             <tr>
-              <th>"Block height"</th>
+              <th>
+                "Block height"
+              </th>
 
               <td>
                 if (block.index % 2 == 0) {
@@ -32,7 +36,9 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
-              <th>"Address"</th>
+              <th>
+                "Address"
+              </th>
 
               <td>
                 <a
@@ -46,7 +52,9 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
-              <th>"Number of transations"</th>
+              <th>
+                "Number of transations"
+              </th>
 
               <td>
                 <{ Number.toString(Array.size(block.transactions)) }>
@@ -55,7 +63,9 @@ component Pages.Blocks.Show {
 
             if (block.index % 2 == 0) {
               <tr>
-                <th>"Nonce"</th>
+                <th>
+                  "Nonce"
+                </th>
 
                 <td>
                   <{ Maybe.withDefault("0", block.nonce) }>
@@ -64,7 +74,9 @@ component Pages.Blocks.Show {
             }
 
             <tr>
-              <th>"Previous hash"</th>
+              <th>
+                "Previous hash"
+              </th>
 
               <td>
                 <{ block.prevHash }>
@@ -72,7 +84,9 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
-              <th>"Merkle tree root"</th>
+              <th>
+                "Merkle tree root"
+              </th>
 
               <td>
                 <{ block.merkleTreeRoot }>
@@ -80,7 +94,9 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
-              <th>"Time"</th>
+              <th>
+                "Time"
+              </th>
 
               <td>
                 <{ DDate.formatFromTSM(block.timestamp) }>
@@ -88,7 +104,9 @@ component Pages.Blocks.Show {
             </tr>
 
             <tr>
-              <th>"Difficulty"</th>
+              <th>
+                "Difficulty"
+              </th>
 
               <td>
                 <{ Number.toString(Maybe.withDefault(0, block.difficulty)) }>

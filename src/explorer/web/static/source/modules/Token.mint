@@ -16,9 +16,13 @@ module Token {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Name"</th>
+      <th>
+        "Name"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
     </tr>
   }
 

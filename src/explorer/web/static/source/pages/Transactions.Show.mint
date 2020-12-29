@@ -7,13 +7,17 @@ component Pages.Transactions.Show {
         <table class="table table-striped table-hover">
           <thead>
             <th colspan="2">
-              <h2>"Transaction"</h2>
+              <h2>
+                "Transaction"
+              </h2>
             </th>
           </thead>
 
           <tbody>
             <tr>
-              <th>"Transaction ID"</th>
+              <th>
+                "Transaction ID"
+              </th>
 
               <td>
                 <{ transaction.id }>
@@ -21,7 +25,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Block index"</th>
+              <th>
+                "Block index"
+              </th>
 
               <td>
                 if (Maybe.withDefault(0, transaction.blockIndex) % 2 == 0) {
@@ -43,7 +49,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Action"</th>
+              <th>
+                "Action"
+              </th>
 
               <td>
                 <{ transaction.action }>
@@ -51,7 +59,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Number of senders"</th>
+              <th>
+                "Number of senders"
+              </th>
 
               <td>
                 <{ Number.toString(Array.size(transaction.senders)) }>
@@ -59,7 +69,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Number of recipients"</th>
+              <th>
+                "Number of recipients"
+              </th>
 
               <td>
                 <{ Number.toString(Array.size(transaction.recipients)) }>
@@ -67,7 +79,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Message"</th>
+              <th>
+                "Message"
+              </th>
 
               <td>
                 if ("0" == transaction.message) {
@@ -79,7 +93,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Token"</th>
+              <th>
+                "Token"
+              </th>
 
               <td>
                 <span
@@ -98,7 +114,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Previous hash"</th>
+              <th>
+                "Previous hash"
+              </th>
 
               <td>
                 if ("0" == transaction.prevHash) {
@@ -110,7 +128,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Time"</th>
+              <th>
+                "Time"
+              </th>
 
               <td>
                 <{ DDate.formatFromTSM(transaction.timestamp) }>
@@ -118,7 +138,9 @@ component Pages.Transactions.Show {
             </tr>
 
             <tr>
-              <th>"Scaled"</th>
+              <th>
+                "Scaled"
+              </th>
 
               <td>
                 if (transaction.scaled == 1) {

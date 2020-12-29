@@ -18,15 +18,25 @@ module Address {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Address"</th>
+      <th>
+        "Address"
+      </th>
 
-      <th>"AXNT amount"</th>
+      <th>
+        "AXNT amount"
+      </th>
 
-      <th>"Number of tokens"</th>
+      <th>
+        "Number of tokens"
+      </th>
 
-      <th>"Number of domains"</th>
+      <th>
+        "Number of domains"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
     </tr>
   }
 

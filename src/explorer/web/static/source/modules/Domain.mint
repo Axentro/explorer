@@ -17,11 +17,17 @@ module Domain {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Name"</th>
+      <th>
+        "Name"
+      </th>
 
-      <th>"Address"</th>
+      <th>
+        "Address"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
     </tr>
   }
 
@@ -47,9 +53,13 @@ module Domain {
 
   fun renderInAddressHeaderFooterTable : Html {
     <tr>
-      <th>"Name"</th>
+      <th>
+        "Name"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
     </tr>
   }
 

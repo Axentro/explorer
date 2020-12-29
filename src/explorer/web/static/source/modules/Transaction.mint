@@ -21,19 +21,33 @@ module Transaction {
 
   fun renderHeaderFooterTable : Html {
     <tr>
-      <th>"Transaction ID"</th>
+      <th>
+        "Transaction ID"
+      </th>
 
-      <th>"Block index"</th>
+      <th>
+        "Block index"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
 
-      <th>"Action"</th>
+      <th>
+        "Action"
+      </th>
 
-      <th>"Senders"</th>
+      <th>
+        "Senders"
+      </th>
 
-      <th>"Recipients"</th>
+      <th>
+        "Recipients"
+      </th>
 
-      <th>"Token"</th>
+      <th>
+        "Token"
+      </th>
     </tr>
   }
 
@@ -161,17 +175,29 @@ module Transaction {
 
   fun renderInBlockHeaderFooterTable : Html {
     <tr>
-      <th>"Transaction ID"</th>
+      <th>
+        "Transaction ID"
+      </th>
 
-      <th>"Time"</th>
+      <th>
+        "Time"
+      </th>
 
-      <th>"Action"</th>
+      <th>
+        "Action"
+      </th>
 
-      <th>"Senders"</th>
+      <th>
+        "Senders"
+      </th>
 
-      <th>"Recipients"</th>
+      <th>
+        "Recipients"
+      </th>
 
-      <th>"Token"</th>
+      <th>
+        "Token"
+      </th>
     </tr>
   }
 
@@ -218,9 +244,13 @@ module Transaction {
 
   fun renderSendersHeaderFooterTable : Html {
     <tr>
-      <th>"Address"</th>
+      <th>
+        "Address"
+      </th>
 
-      <th>"Amount"</th>
+      <th>
+        "Amount"
+      </th>
 
       <th>
         "Fee "
@@ -256,9 +286,13 @@ module Transaction {
 
   fun renderRecipientsHeaderFooterTable : Html {
     <tr>
-      <th>"Address"</th>
+      <th>
+        "Address"
+      </th>
 
-      <th>"Amount"</th>
+      <th>
+        "Amount"
+      </th>
     </tr>
   }
 
