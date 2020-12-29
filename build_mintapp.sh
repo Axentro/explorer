@@ -1,6 +1,6 @@
 #!/bin/sh -uex
 
-# Build Axentro static binaries for GNU/Linux x86_64 via Docker
+# Build Axentro explorer Mint app
 
 MY_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)/src/explorer/web/static
 if [ -d $MY_DIR/dist ]
