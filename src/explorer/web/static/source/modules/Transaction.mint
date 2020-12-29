@@ -269,6 +269,28 @@ module Transaction {
           href={"/addresses/show/" + sender.address}
           title={sender.address}>
 
+          <{ sender.address }>
+
+        </a>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(sender.amount)) }>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(sender.fee)) }>
+      </td>
+    </tr>
+  }
+
+  fun renderSendersLineShrink (sender : Sender) : Html {
+    <tr>
+      <td>
+        <a
+          href={"/addresses/show/" + sender.address}
+          title={sender.address}>
+
           <{ SString.substring(sender.address, 0, 16) + "..." }>
 
         </a>
@@ -297,6 +319,24 @@ module Transaction {
   }
 
   fun renderRecipientsLine (recipient : Recipient) : Html {
+    <tr>
+      <td>
+        <a
+          href={"/addresses/show/" + recipient.address}
+          title={recipient.address}>
+
+          <{ recipient.address }>
+
+        </a>
+      </td>
+
+      <td>
+        <{ NNumber.toScale8(Number.toString(recipient.amount)) }>
+      </td>
+    </tr>
+  }
+
+  fun renderRecipientsLineShrink (recipient : Recipient) : Html {
     <tr>
       <td>
         <a

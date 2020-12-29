@@ -176,7 +176,11 @@ component Pages.Transactions.Show {
                     </tfoot>
 
                     <tbody>
-                      <{ Array.map(Transaction.renderSendersLine, transaction.senders) }>
+                      if (Array.size(transaction.recipients) == 0) {
+                        Array.map(Transaction.renderSendersLine, transaction.senders)
+                      } else {
+                        Array.map(Transaction.renderSendersLineShrink, transaction.senders)
+                      }
                     </tbody>
                   </table>
                 </div>
@@ -206,11 +210,15 @@ component Pages.Transactions.Show {
                     </tfoot>
 
                     <tbody>
-                      <{
+                      if (Array.size(transaction.senders) == 0) {
                         Array.map(
                           Transaction.renderRecipientsLine,
                           transaction.recipients)
-                      }>
+                      } else {
+                        Array.map(
+                          Transaction.renderRecipientsLineShrink,
+                          transaction.recipients)
+                      }
                     </tbody>
                   </table>
                 </div>
