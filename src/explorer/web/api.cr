@@ -9,13 +9,10 @@ module Explorer::Web
 
     # Default routes, @see("web/static/source/Routes.mint")
     def web_routes
-      ["/",
-       "/*"].each do |route|
-        get route do |context, _|
-          content_type_html(context)
-          context.response.print Filesystem.get?("index.html").try(&.gets_to_end)
-          context
-        end
+      get "/" do |context, _|
+        content_type_html(context)
+        context.response.print Filesystem.get?("index.html").try(&.gets_to_end)
+        context
       end
     end
 
@@ -231,9 +228,9 @@ module Explorer::Web
       web_routes
 
       handlers = [
-        HTTP::LogHandler.new(STDOUT),
-        HTTP::ErrorHandler.new,
+        Explorer::Web::LogHandler.new,
         route_handler,
+        Explorer::Web::ErrorHandler.new,
       ]
 
       server = HTTP::Server.new(handlers)
@@ -268,5 +265,58 @@ module Explorer::Web
     end
 
     include ::Router
+  end
+
+  class ErrorHandler
+    include HTTP::Handler
+
+    def call(context : HTTP::Server::Context)
+      context.response.reset
+      context.response.content_type = "text/html"
+      context.response.status = :ok
+      context.response.print Filesystem.get?("index.html").try(&.gets_to_end)
+    end
+  end
+
+  class LogHandler
+    include HTTP::Handler
+    include Explorer::Logger
+
+    def call(context)
+      start = Time.monotonic
+
+      begin
+        call_next(context)
+      ensure
+        elapsed = Time.monotonic - start
+        elapsed_text = elapsed_text(elapsed)
+
+        req = context.request
+        res = context.response
+
+        addr =
+          {% begin %}
+          case remote_address = req.remote_address
+          when nil
+            "-"
+          {% unless flag?(:win32) %}
+          when Socket::IPAddress
+            remote_address.address
+          {% end %}
+          else
+            remote_address
+          end
+          {% end %}
+
+        log.info "[http-log] #{addr} - #{req.method} #{req.resource} #{req.version} - #{res.status_code} (#{elapsed_text})"
+      end
+    end
+
+    private def elapsed_text(elapsed)
+      minutes = elapsed.total_minutes
+      return "#{minutes.round(2)}m" if minutes >= 1
+
+      "#{elapsed.total_seconds.humanize(precision: 2, significant: false)}s"
+    end
   end
 end
